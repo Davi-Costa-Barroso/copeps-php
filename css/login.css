@@ -1,0 +1,87 @@
+ *{
+ 	margin:  0;
+ 	padding: 0;
+ }
+
+
+ .container { 
+ 	width: 570px;
+ 	height: 470px;	 
+  	margin-top: 80px;
+  	margin-left: 95px;
+  	background: #dce8e8;
+  	top: 50%;
+  	left: 40%;
+  	transform: translate(-40%, 8%);
+
+  	position: relative;
+}
+
+
+
+
+#tamanho{			
+
+	-webkit-box-shadow: -2px 5px 15px -1px #000000; 
+	box-shadow: -2px 5px 15px -1px #000000;
+}
+
+
+.fa-eye{
+	position: absolute;
+	top: 255px;  /* 45px alturaa do olho*/
+	right: 10px;
+	cursor: pointer;
+}
+
+
+
+div {
+	position: relative;
+	width: 490px;  /*Comprimento dos imputs e do botao*/
+}
+
+
+input {
+	border-radius: 0;
+	padding: 5px;
+	margin-bottom: 14px;
+	width: 100%;
+	box-sizing: border-box;
+}
+
+
+body {
+	font-family: Helvetica;
+
+}		
+
+button{
+	margin-top: 11px;
+}
+
+
+.cont{
+	 text-align: right; 
+	 margin-top: 25px;
+}
+
+a{
+
+	text-decoration: none;
+	font-size: 18px;
+}
+.cont a:hover{
+	
+	background-color: #f2f5f0;
+	
+}
+
+
+.form-select{
+
+	color: black;
+			
+}
+
+
