@@ -1,0 +1,10 @@
+{
+    "require": {
+        "phpoffice/phpword": "*",
+        "mpdf/mpdf": "*",
+        "dompdf/dompdf": "*"
+    },
+    "config": {
+        "process-timeout": 2000
+    }
+}
