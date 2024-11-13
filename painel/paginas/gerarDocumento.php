@@ -7,12 +7,11 @@ function replaceTextInDocx($sourceFilePath, $destFilePath, $search, $replace) {
     
     if ($zip->open($destFilePath) === TRUE) {
         $xml = $zip->getFromName('word/document.xml');
+        $xml = mb_convert_encoding($xml, 'UTF-8', 'auto'); 
         $xml = str_replace($search, $replace, $xml);
         $zip->deleteName('word/document.xml'); 
         $zip->addFromString('word/document.xml', $xml); 
         $zip->close();
-    } else {
-        echo "Falha ao abrir o arquivo DOCX.";
     }
 }
 
@@ -22,8 +21,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ];
 
     $filePath = '../../docs/relatorioParecer.docx';
-    $editedFileName = 'relatorio_parecer_modificado.docx';
-    $editedFilePath = '../../docs' . $editedFileName;
+    $dataAtual = date('Y-m-d_H-i-s');
+    $editedFileName = 'parecer_' . $dataAtual . '.docx';
+    $editedFilePath = '../../docs/' . $editedFileName;
 
     replaceTextInDocx($filePath, $editedFilePath, 'numeroParecer', $dados['numeroParecer']);
 
