@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $filePath = '../../docs/relatorioParecer.docx';
     $editedFileName = 'relatorio_parecer_modificado.docx';
-    $editedFilePath = 'C:/xampp/htdocs/loginusuario/docs/' . $editedFileName;
+    $editedFilePath = '../../docs' . $editedFileName;
 
     replaceTextInDocx($filePath, $editedFilePath, 'numeroParecer', $dados['numeroParecer']);
 
