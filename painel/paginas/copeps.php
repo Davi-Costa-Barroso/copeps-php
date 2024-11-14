@@ -645,25 +645,6 @@ if (@$copeps == 'ocultar') {
 	</div>
 </div>
 
-<script>
-	// Quando a página é carregada
-	document.addEventListener("DOMContentLoaded", function() {
-		// Obtém o ano atual usando PHP
-		var anoAtual = "<?php echo date("Y"); ?>";
-
-		// Define o número inicial do parecer
-		var numeroParecer = 1;
-
-		// Garante que o número do parecer tenha sempre quatro dígitos
-		var numeroParecerFormatado = String(numeroParecer).padStart(2, '0');
-
-		// Combinação do número do parecer e do ano
-		var numeroParecerCompleto = numeroParecerFormatado + '/' + anoAtual;
-
-		// Define o valor do campo de número do parecer
-		document.getElementById("numeroParecer").value = numeroParecerCompleto;
-	});
-</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="text/javascript">
@@ -1137,10 +1118,9 @@ var dadosCoordenador = {
 
 			fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-				body: new URLSearchParams({
-					numeroParecer: dadosIniciais.numeroParecer,
-					// Adicione outros dados aqui, se necessário
+				headers: {'Content-Type': 'application/json'},
+				body: JSON.stringify({
+					dadosIniciais: dadosIniciais,
 				})
 			})
 			.then(response => response.blob())
