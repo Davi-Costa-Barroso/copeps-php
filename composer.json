@@ -2,7 +2,8 @@
     "require": {
         "phpoffice/phpword": "*",
         "mpdf/mpdf": "*",
-        "dompdf/dompdf": "*"
+        "dompdf/dompdf": "*",
+        "convertapi/convertapi-php": "^3.0"
     },
     "config": {
         "process-timeout": 2000

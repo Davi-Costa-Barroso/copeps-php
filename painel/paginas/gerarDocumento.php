@@ -1,16 +1,17 @@
 <?php
 require '../../vendor/autoload.php';  
+use ConvertApi\ConvertApi;
 
-function replaceTextInDocx($sourceFilePath, $destFilePath, $dados) {
-    copy($sourceFilePath, $destFilePath);
+function substituirTextoNoDocx($caminhoArquivoOrigem, $caminhoArquivoDestino, $dados) {
+    copy($caminhoArquivoOrigem, $caminhoArquivoDestino);
     $zip = new ZipArchive;
     
-    if ($zip->open($destFilePath) === TRUE) {
+    if ($zip->open($caminhoArquivoDestino) === TRUE) {
         $xml = $zip->getFromName('word/document.xml');
         $xml = mb_convert_encoding($xml, 'UTF-8', 'auto'); 
 
-        foreach ($dados as $key => $value) {
-            $xml = str_replace($key, $value, $xml);
+        foreach ($dados as $chave => $valor) {
+            $xml = str_replace($chave, $valor, $xml);
         }
 
         $zip->deleteName('word/document.xml'); 
@@ -20,29 +21,37 @@ function replaceTextInDocx($sourceFilePath, $destFilePath, $dados) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $jsonData = file_get_contents('php://input');
-    $dados = json_decode($jsonData, true);
+    $dadosJson = file_get_contents('php://input');
+    $dados = json_decode($dadosJson, true);
     
     $dadosIniciais = $dados['dadosIniciais'];
 
-    $filePath = '../../docs/relatorioParecer.docx';
+    $caminhoArquivoDocx = '../../docs/relatorioParecer.docx';
     $dataAtual = date('Y-m-d_H-i-s');
-    $editedFileName = 'parecer_' . $dataAtual . '.docx';
-    $editedFilePath = '../../docs/' . $editedFileName;
+    $nomeArquivoEditadoDocx = 'parecer_' . $dataAtual . '.docx';
+    $caminhoArquivoEditadoDocx = '../../docs/' . $nomeArquivoEditadoDocx;
 
-    replaceTextInDocx($filePath, $editedFilePath, $dadosIniciais);
+    $caminhoPdfGerado = '../../docs/relatorio_' . $dataAtual . '.pdf';
+
+    substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dadosIniciais);
+
+    ConvertApi::setApiCredentials('secret_mmHuw1YZ6vk30CLY');
+
+    $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
+    $resultado->saveFiles($caminhoPdfGerado); 
 
     header('Content-Description: File Transfer');
-    header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-    header('Content-Disposition: attachment; filename="' . $editedFileName . '"');
+    header('Content-Type: application/pdf');
     header('Content-Transfer-Encoding: binary');
     header('Expires: 0');
     header('Cache-Control: must-revalidate');
     header('Pragma: public');
-    header('Content-Length: ' . filesize($editedFilePath));
-    readfile($editedFilePath);
+    header('Content-Length: ' . filesize($caminhoPdfGerado));
 
-    unlink($editedFilePath);
+    readfile($caminhoPdfGerado);
+
+    unlink($caminhoArquivoEditadoDocx);
+    unlink($caminhoPdfGerado);
     exit();
 }
 ?>

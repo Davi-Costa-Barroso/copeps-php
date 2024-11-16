@@ -513,7 +513,7 @@ if (@$copeps == 'ocultar') {
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="submit" id="salvar" name="salvar" class="btn btn-primary">Salvar</button>
+									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-primary">Baixar parecer</button>
 								</div>
 
 							</div>
@@ -645,9 +645,21 @@ if (@$copeps == 'ocultar') {
 	</div>
 </div>
 
+<div id="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
+    <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+</div>
+
+<style>
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+</style>
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 
 <script type="text/javascript">
+	$('#loading').hide();
 	function mudarRelatorio() {
 		// Obtém o valor do input radio selecionado
 		var escolhido = document.querySelector('input[name="tipo-desenvolvimento"]:checked').value;
@@ -984,6 +996,7 @@ if (@$copeps == 'ocultar') {
 		});
 	});
 
+$('#loading').hide();
 var dadosIniciais = {
     numeroParecer: "",
     anoParecer: "",
@@ -1106,8 +1119,10 @@ var dadosCoordenador = {
 	});
 
 	$(document).ready(function() {
-		$('#salvar').click(function(event) {
+		$('#baixarParecer').click(function(event) {
 			event.preventDefault(); 
+
+			$('#loading').show()
 
 			preencherDadosIniciais()
 			preencherDadosDocumento()
@@ -1115,6 +1130,8 @@ var dadosCoordenador = {
 			console.log(dadosIniciais)
 			console.log(dadosDocumento)
 			console.log(dadosCoordenador)
+
+			const nomeArquivo = `PARECER N º ${dadosIniciais.numeroParecer}, de ${dadosIniciais.anoParecer} - OC ${dadosIniciais.numeroOficio} - ITEM ${dadosIniciais.itemOficio}.pdf`;
 
 			fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
 				method: 'POST',
@@ -1129,12 +1146,13 @@ var dadosCoordenador = {
 				const a = document.createElement('a');
 				a.style.display = 'none';
 				a.href = url;
-				a.download = 'relatorio_parecer.docx';
+				a.download = nomeArquivo;
 				document.body.appendChild(a);
 				a.click();
 				window.URL.revokeObjectURL(url);
 			})
-			.catch(error => console.error('Erro ao gerar o documento:', error));
+			.catch(error => console.error('Erro ao gerar o documento:', error))
+			.finally(()=>$('#loading').hide());
 		});
 	});
 
