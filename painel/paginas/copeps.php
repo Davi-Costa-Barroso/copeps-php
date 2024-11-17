@@ -187,9 +187,18 @@ if (@$copeps == 'ocultar') {
 									<label for="mesesSelect">Período do Projeto:</label>
 									<select class="form-control" id="mesesSelect" name="meses" required>
 										<?php
-										for ($i = 3; $i <= 24; $i++) {
+										 $numeros = [
+											1 => "Um", 2 => "Dois", 3 => "Três", 4 => "Quatro", 5 => "Cinco", 
+											6 => "Seis", 7 => "Sete", 8 => "Oito", 9 => "Nove", 10 => "Dez", 
+											11 => "Onze", 12 => "Doze", 13 => "Treze", 14 => "Quatorze", 15 => "Quinze", 
+											16 => "Dezesseis", 17 => "Dezessete", 18 => "Dezoito", 19 => "Dezenove", 
+											20 => "Vinte", 21 => "Vinte e um", 22 => "Vinte e dois", 23 => "Vinte e três", 24 => "Vinte e quatro"
+										];
+									
+										for ($i = 1; $i <= 24; $i++) {
 											$texto = ($i == 1) ? "mês" : "meses";
-											echo "<option value=\"$i\">$i ($texto)</option>";
+											$label = $i . " (" . $numeros[$i] . ") " . $texto;
+											echo "<option value=\"$label\">$label</option>";
 										}
 										?>
 									</select>
@@ -324,9 +333,9 @@ if (@$copeps == 'ocultar') {
 										<label for="titulacaoCoordenador">Titulação do Coordenador:</label>
 										<select class="form-control" id="titulacaoCoordenador" name="titulacaoCoordenador">
 											<option value="" disabled selected>- Selecione -</option>
-											<option value="tec-adm">Tec. Adm.</option>
-											<option value="prof-me">Prof. Me.</option>
-											<option value="prof-dr">Prof. Dr.</option>
+											<option value="Tec. Adm.">Tec. Adm.</option>
+											<option value="Prof. Me.">Prof. Me.</option>
+											<option value="Prof. Dr.">Prof. Dr.</option>
 										</select>
 									</div>
 								</div>
@@ -336,13 +345,13 @@ if (@$copeps == 'ocultar') {
 										<label for="faculdadeCoordenador">Faculdade do Coordenador:</label>
 										<select class="form-control" id="faculdadeCoordenador" name="faculdadeCoordenador">
 											<option value="" disabled selected>- Selecione -</option>
-											<option value="camtuc">Campus Universitário de Tucuruí - CAMTUC</option>
-											<option value="facfis">Faculdade de Física - FACFIS</option>
-											<option value="faesa">Faculdade de Engenharia Sanitária e Ambiental - FAESA</option>
-											<option value="fec">Faculdade de Engenharia Civil - FEC</option>
-											<option value="fecomp">Faculdade de Engenharia de Computação - FECOMP</option>
-											<option value="fee">Faculdade de Engenharia Elétrica - FEE</option>
-											<option value="fem">Faculdade de Engenharia Mecânica - FEM</option>
+											<option value="Campus Universitário de Tucuruí - CAMTUC">Campus Universitário de Tucuruí - CAMTUC</option>
+											<option value="Faculdade de Física - FACFIS">Faculdade de Física - FACFIS</option>
+											<option value="Faculdade de Engenharia Sanitária e Ambiental - FAESA">Faculdade de Engenharia Sanitária e Ambiental - FAESA</option>
+											<option value="Faculdade de Engenharia Civil - FEC">Faculdade de Engenharia Civil - FEC</option>
+											<option value="Faculdade de Engenharia de Computação - FECOMP">Faculdade de Engenharia de Computação - FECOMP</option>
+											<option value="Faculdade de Engenharia Elétrica - FEE">Faculdade de Engenharia Elétrica - FEE</option>
+											<option value="Faculdade de Engenharia Mecânica - FEM">Faculdade de Engenharia Mecânica - FEM</option>
 										</select>
 									</div>
 								</div>
@@ -685,6 +694,10 @@ if (@$copeps == 'ocultar') {
 				// Substitui o conteúdo atual do elemento com id 'listar_relatorios' pelo novo <select>
 				$('#listar_relatorios').html(select);
 
+				dados.nomeRelatorio = select.val();
+				select.change(function() {
+					dados.nomeRelatorio = $(this).val();
+				});
 				// Quando o segundo select muda, criar o terceiro select se necessário
 				select.change(function() {
 					var escolhidoSegundoSelect = select.val();
@@ -766,7 +779,7 @@ if (@$copeps == 'ocultar') {
 	function mostrarBlocosRequisitos(escolha, horasSelecionadas) {
 		console.log('Escolha:', escolha);
 		console.log('Horas selecionadas:', horasSelecionadas);
-
+		dados.horasSelecionadas = horasSelecionadas;
 		// Oculta ambos os blocos
 		$('#bloco_pesquisa').hide();
 		$('#bloco_ensino').hide();
@@ -997,7 +1010,7 @@ if (@$copeps == 'ocultar') {
 	});
 
 $('#loading').hide();
-var dadosIniciais = {
+var dados = {
     numeroParecer: "",
     anoParecer: "",
     numeroOficio: "",
@@ -1006,21 +1019,18 @@ var dadosIniciais = {
     dataEnvio: "",
     textoAnalisado: "",
     tituloProjetoAnalisado: "",
-    documentosEnviados: ""
-};
+    documentosEnviados: "",
 
-var dadosDocumento = {
-    tipoDocumento: "",
+	tipoDocumento: "",
+	nomeRelatorio: "",
     periodoProjeto: "",
     cargaHoraria: "",
-};
 
-var dadosCoordenador = {
-    nome: "",
-    sexo: "",
-    titulacao: "",
-    faculdade: "",
-    possuiOutro: null
+	nomeCoordenador: "",
+    sexoCoordenador: "",
+    titulacaoCoordenador: "",
+    faculdadeCoordenador: "",
+    possuiOutroCoordenador: null
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1040,32 +1050,17 @@ var dadosCoordenador = {
 		$('#mensagem').addClass('')
 	});
 
-	function preencherDadosIniciais(){
-		dadosIniciais.numeroParecer = $("#numeroParecer").val();
-		dadosIniciais.anoParecer = $("#ano").val();
-		dadosIniciais.numeroOficio = $("#numeroOficio").val();
-		dadosIniciais.anoOficio = $("#anoexercicio_field").val();
-		dadosIniciais.itemOficio = $("#item_field").val();
-		dadosIniciais.dataEnvio = $("#data").val();
-		dadosIniciais.textoAnalisado = $("#obs1").val();
-		dadosIniciais.tituloProjetoAnalisado = $("#obs2").val();
-		dadosIniciais.documentosEnviados = $("#obs3").val();
-	}
-
 	$("#seguinte_aba2").click(function() {		
-		preencherDadosIniciais()
-		console.log('dadosIniciais: ', dadosIniciais)
-
-		if (!dadosIniciais.numeroOficio) {
+		if (!$("#numeroParecer").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o Campo número do Ofício!")
-		} else if (!dadosIniciais.textoAnalisado) {
+		} else if (!$("#obs1").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o campo texto a ser analisado!")
-		} else if (!dadosIniciais.tituloProjetoAnalisado) {
+		} else if (!$("#obs2").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o campo título do Projeto a ser analisado!")
-		} else if (!dadosIniciais.documentosEnviados) {
+		} else if (!$("#obs3").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o campo documentos enviados!")
 		} else {
@@ -1074,25 +1069,15 @@ var dadosCoordenador = {
 		}
 	});
 
-
-	function preencherDadosDocumento(){
-		dadosDocumento.tipoDocumento = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
-		dadosDocumento.periodoProjeto = $("#mesesSelect").val();
-		dadosDocumento.cargaHoraria = $("#tipo-carga").val();
-	}
-
 	$("#seguinte_aba3").click(function() {
-
-		preencherDadosDocumento()
-		console.log('dadosDocumento: ', dadosDocumento)
-
-		if (!dadosDocumento.tipoDocumento) {
+		const tipoDocumento = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null
+		if (!tipoDocumento) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o Campo Tipo de Documento Relatório! ")
-		} else if (!dadosDocumento.periodoProjeto) {
+		} else if (!$("#mesesSelect").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Selecione o Tempo vigência do Relatório!")
-		} else if (!dadosDocumento.cargaHoraria) {
+		} else if (!$("#tipo-carga").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Inclua as horas do projeto!")
 		} else {
@@ -1101,19 +1086,140 @@ var dadosCoordenador = {
 		}
 	});
 
-	function preencherDadosCoordenador(){
-		dadosCoordenador.nome = $("#nome_coordenador").val();
-		dadosCoordenador.sexo = $("#sexoCoordenador").val();
-		dadosCoordenador.titulacao = $("#titulacaoCoordenador").val();
-		dadosCoordenador.faculdade = $("#faculdadeCoordenador").val();
-		dadosCoordenador.possuiOutro = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
+	function validarCampos(){
+		if (!dados.numeroParecer) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe número do parecer");
+			return false;
+		}
+
+		if (!dados.anoParecer) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe ano do parecer");
+			return false;
+		}
+
+		if (!dados.numeroOficio) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe número do ofício");
+			return false;
+		}
+
+		if (!dados.anoOficio) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe ano do ofício");
+			return false;
+		}
+
+		if (!dados.itemOficio) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe item do ofício");
+			return false;
+		}
+
+		if (!dados.dataEnvio) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe a data de envio");
+			return false;
+		}
+
+		if (!dados.textoAnalisado) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o texto analisado");
+			return false;
+		}
+
+		if (!dados.tituloProjetoAnalisado) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o título do projeto analisado");
+			return false;
+		}
+
+		if (!dados.documentosEnviados) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe os documentos enviados");
+			return false;
+		}
+
+		if (!dados.tipoDocumento) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o tipo do documento");
+			return false;
+		}
+
+		if (!dados.nomeRelatorio) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o relatório");
+			return false;
+		}
+
+		if (!dados.periodoProjeto) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o período do projeto");
+			return false;
+		}
+
+		if (!dados.cargaHoraria) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe a carga horária");
+			return false;
+		}
+
+		if (!dados.nomeCoordenador) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o nome do coordenador");
+			return false;
+		}
+
+		if (!dados.sexoCoordenador) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe o sexo do coordenador");
+			return false;
+		}
+
+		if (!dados.titulacaoCoordenador) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe a titulação do coordenador");
+			return false;
+		}
+
+		if (!dados.faculdadeCoordenador) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe a faculdade do coordenador");
+			return false;
+		}
+
+		if (dados.possuiOutroCoordenador === null) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe se possui outro coordenador");
+			return false;
+		}
+		return true;
+	}
+
+	function preencherDados(){
+		dados.numeroParecer = $("#numeroParecer").val();
+		dados.anoParecer = $("#ano").val();
+		dados.numeroOficio = $("#numeroOficio").val();
+		dados.anoOficio = $("#anoexercicio_field").val();
+		dados.itemOficio = $("#item_field").val();
+		dados.dataEnvio = $("#data").val();
+		dados.textoAnalisado = $("#obs1").val();
+		dados.tituloProjetoAnalisado = $("#obs2").val();
+		dados.documentosEnviados = $("#obs3").val();
+
+		dados.tipoDocumento = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
+		dados.periodoProjeto = $("#mesesSelect").val();
+		dados.cargaHoraria = $("#tipo-carga").val();
+
+		dados.nomeCoordenador = $("#nome_coordenador").val();
+		dados.sexoCoordenador = $("#sexoCoordenador").val();
+		dados.titulacaoCoordenador = $("#titulacaoCoordenador").val();
+		dados.faculdadeCoordenador = $("#faculdadeCoordenador").val();
+		dados.possuiOutroCoordenador = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
 	}
 
 	$("#seguinte_aba4").click(function() {
-	
-		preencherDadosCoordenador();
-		console.log('dadosCoordenador: ', dadosCoordenador)
-
 		$('#myTab a[href="#extra"]').tab('show');
 		$('#mensagem').text("")
 	});
@@ -1122,23 +1228,23 @@ var dadosCoordenador = {
 		$('#baixarParecer').click(function(event) {
 			event.preventDefault(); 
 
+			preencherDados()
+			console.log(dados)
+			if(!validarCampos()) return;
+
+			if(dados.cargaHoraria === 'desabilitado'){
+				dados.cargaHoraria = 'sem alocação de Carga Horária';
+			} else{
+				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
+			}
+
+			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
+			
 			$('#loading').show()
-
-			preencherDadosIniciais()
-			preencherDadosDocumento()
-			preencherDadosCoordenador()
-			console.log(dadosIniciais)
-			console.log(dadosDocumento)
-			console.log(dadosCoordenador)
-
-			const nomeArquivo = `PARECER N º ${dadosIniciais.numeroParecer}, de ${dadosIniciais.anoParecer} - OC ${dadosIniciais.numeroOficio} - ITEM ${dadosIniciais.itemOficio}.pdf`;
-
 			fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
 				method: 'POST',
 				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify({
-					dadosIniciais: dadosIniciais,
-				})
+				body: JSON.stringify({dados})
 			})
 			.then(response => response.blob())
 			.then(blob => {

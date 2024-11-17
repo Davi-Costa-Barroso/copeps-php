@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dadosJson = file_get_contents('php://input');
     $dados = json_decode($dadosJson, true);
     
-    $dadosIniciais = $dados['dadosIniciais'];
+    $dados = $dados['dados'];
 
     $caminhoArquivoDocx = '../../docs/relatorioParecer.docx';
     $dataAtual = date('Y-m-d_H-i-s');
@@ -33,7 +33,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     $caminhoPdfGerado = '../../docs/relatorio_' . $dataAtual . '.pdf';
 
-    substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dadosIniciais);
+    substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
 
     ConvertApi::setApiCredentials('secret_mmHuw1YZ6vk30CLY');
 
