@@ -1031,6 +1031,8 @@ var dados = {
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
     possuiOutroCoordenador: null
+
+	nomeRelatorio: "",
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1217,6 +1219,8 @@ var dados = {
 		dados.titulacaoCoordenador = $("#titulacaoCoordenador").val();
 		dados.faculdadeCoordenador = $("#faculdadeCoordenador").val();
 		dados.possuiOutroCoordenador = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
+
+		dados.nomeRelatorio = $("#nome_relatorio").val();
 	}
 
 	$("#seguinte_aba4").click(function() {
