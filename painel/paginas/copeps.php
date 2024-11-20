@@ -1021,10 +1021,11 @@ var dados = {
     tituloProjetoAnalisado: "",
     documentosEnviados: "",
 
-	tipoDocumento: "",
+	TIPODOCUMENTO: "",
 	nomeRelatorio: "",
     periodoProjeto: "",
     cargaHoraria: "",
+	pedidoAprovacao: "",
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
@@ -1070,8 +1071,8 @@ var dados = {
 	});
 
 	$("#seguinte_aba3").click(function() {
-		const tipoDocumento = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null
-		if (!tipoDocumento) {
+		const TIPODOCUMENTO = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null
+		if (!TIPODOCUMENTO) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o Campo Tipo de Documento Relatório! ")
 		} else if (!$("#mesesSelect").val()) {
@@ -1141,7 +1142,7 @@ var dados = {
 			return false;
 		}
 
-		if (!dados.tipoDocumento) {
+		if (!dados.TIPODOCUMENTO) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o tipo do documento");
 			return false;
@@ -1208,9 +1209,10 @@ var dados = {
 		dados.tituloProjetoAnalisado = $("#obs2").val();
 		dados.documentosEnviados = $("#obs3").val();
 
-		dados.tipoDocumento = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
+		dados.TIPODOCUMENTO = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
 		dados.periodoProjeto = $("#mesesSelect").val();
 		dados.cargaHoraria = $("#tipo-carga").val();
+		// nomeRelatorio esta sendo adicionado na função mudarRelatorio()
 
 		dados.nomeCoordenador = $("#nome_coordenador").val();
 		dados.sexoCoordenador = $("#sexoCoordenador").val();
@@ -1218,7 +1220,6 @@ var dados = {
 		dados.faculdadeCoordenador = $("#faculdadeCoordenador").val();
 		dados.possuiOutroCoordenador = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
 
-		dados.nomeRelatorio = $("#nome_relatorio").val();
 	}
 
 	$("#seguinte_aba4").click(function() {
@@ -1231,17 +1232,29 @@ var dados = {
 			event.preventDefault(); 
 
 			preencherDados()
-			console.log(dados)
+			// Aqui verifica se todos os campos necessarios foram preenchidos.
 			if(!validarCampos()) return;
 
+			// Aqui define como deve ser a frase quando tem ou não carga horaria
 			if(dados.cargaHoraria === 'desabilitado'){
 				dados.cargaHoraria = 'sem alocação de Carga Horária';
 			} else{
 				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
 			}
-
+			
+			if(dados.TIPODOCUMENTO === 'nao'){
+				dados.TIPODOCUMENTO = "DESCRIÇÃO";
+				// Novo campo que so existe se for 'nao': pedidoAprovacao
+				dados.pedidoAprovacao = 'pedido de aprovação de';
+			}else{
+				dados.TIPODOCUMENTO = "RELATÓRIO";
+				dados.pedidoAprovacao = '';
+			}
+			console.log(dados)
+			// Aqui define o nome do arquivo PDF
 			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
 			
+			// Aqui faz a requisção para baixar o PARECER em PDF
 			$('#loading').show()
 			fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
 				method: 'POST',
