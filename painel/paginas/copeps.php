@@ -1031,8 +1031,6 @@ var dados = {
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
     possuiOutroCoordenador: null
-
-	nomeRelatorio: "",
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
