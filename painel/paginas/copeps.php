@@ -1021,7 +1021,7 @@ var dados = {
     tituloProjetoAnalisado: "",
     documentosEnviados: "",
 
-	TIPODOCUMENTO: "",
+	TIPODOCUMENTO: "RELATÓRIO",
 	nomeRelatorio: "",
     periodoProjeto: "",
     cargaHoraria: "",
@@ -1245,7 +1245,8 @@ var dados = {
 			if(dados.TIPODOCUMENTO === 'nao'){
 				dados.TIPODOCUMENTO = "DESCRIÇÃO";
 				// Novo campo que so existe se for 'nao': pedidoAprovacao
-				dados.pedidoAprovacao = 'pedido de aprovação de';
+				// codigo \u00A0 serve para deixar espaço em branco.
+				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
 			}else{
 				dados.TIPODOCUMENTO = "RELATÓRIO";
 				dados.pedidoAprovacao = '';
