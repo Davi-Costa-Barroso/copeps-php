@@ -1026,6 +1026,10 @@ var dados = {
     periodoProjeto: "",
     cargaHoraria: "",
 	pedidoAprovacao: "",
+	letra: "",
+	aprovacao: "",
+	artgo: "",
+	capitulo: "",
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
@@ -1247,10 +1251,23 @@ var dados = {
 				// Novo campo que so existe se for 'nao': pedidoAprovacao
 				// codigo \u00A0 serve para deixar espaço em branco.
 				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
+				dados.letra = "i";
+				dados.aprovacao = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”.";
 			}else{
 				dados.TIPODOCUMENTO = "RELATÓRIO";
 				dados.pedidoAprovacao = '';
+				dados.letra = "j";
+				dados.aprovacao = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”."
 			}
+			if (dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
+				dados.artgo = "192 a 197";
+				dados.capitulo = "VII, da Extensão";
+    
+			}else{
+				dados.artgo = "184 a 191";
+				dados.capitulo = "VI, da Pesquisa";
+			}
+
 			console.log(dados)
 			// Aqui define o nome do arquivo PDF
 			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
