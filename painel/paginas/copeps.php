@@ -1039,7 +1039,10 @@ var dados = {
     sexoCoordenador: "",
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
-    possuiOutroCoordenador: null
+    possuiOutroCoordenador: null,
+
+	objetivoDescricaoProposta: "",
+	objetivoProjeto: "",
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1203,6 +1206,12 @@ var dados = {
 			$('#mensagem').text("Informe se possui outro coordenador");
 			return false;
 		}
+
+		if (!dados.descricaoProposta) {
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe descrição de proposta.");
+			return false;
+		}
 		return true;
 	}
 
@@ -1252,13 +1261,19 @@ var dados = {
 			}
 			
 			if(dados.TIPODOCUMENTO === 'nao'){
+				// Topico 1
+				dados.TIPODOCUMENTO = "DESCRIÇÃO";
+				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
+				dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
+				dados.objetivoProjeto = 'O objetivo do projeto é';
+
 				if(dados.nomeRelatorio === 'Projeto de Ensino' || dados.nomeRelatorio === 'Projeto de Pesquisa' || dados.nomeRelatorio === 'Alocação de Carga horária' || dados.nomeRelatorio === 'Projeto Pedagógico Curso de Pós-Graduação Lato Sensu'){
 					dados.artgo = "184 a 191";
 					dados.capitulo = "VI, da Pesquisa";
 					
 					dados.proj_Ana_Enc = "analisado";
 					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral. Deste modo, o relator afirma que a proposta está de acordo com as diretrizes da Instituição.";
-					dados.descricaoProposta = "";
+					
 					dados.parag7 = "";
 				}else{
 					dados.artgo = "192 a 197";
@@ -1269,13 +1284,16 @@ var dados = {
 					dados.descricaoProposta = "";
 					dados.parag7 = "";
 				}
-				dados.TIPODOCUMENTO = "DESCRIÇÃO";
-				// Novo campo que so existe se for 'nao': pedidoAprovacao
-				// codigo \u00A0 serve para deixar espaço em branco.
-				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
+
 				dados.letra = "i";
 				dados.aprovacao = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”.";
 			}else{
+				// Topico 1
+				dados.TIPODOCUMENTO = "RELATÓRIO";
+				dados.pedidoAprovacao = '';
+				dados.objetivoDescricaoProposta = "";
+				dados.objetivoProjeto = "";
+
 				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
 					dados.artgo = "192 a 197";
 					dados.capitulo = "VII, da Extensão";
@@ -1283,8 +1301,7 @@ var dados = {
 					dados.artgo = "184 a 191";
 					dados.capitulo = "VI, da Pesquisa";
 				}
-				dados.TIPODOCUMENTO = "RELATÓRIO";
-				dados.pedidoAprovacao = '';
+				
 				dados.letra = "j";
 				dados.aprovacao = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
 			
