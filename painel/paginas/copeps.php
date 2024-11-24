@@ -1030,6 +1030,10 @@ var dados = {
 	aprovacao: "",
 	artgo: "",
 	capitulo: "",
+	proj_Ana_Enc: "",
+	paragrafo7: "",
+	parag7: "",
+	descricaoProposta: "",
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
@@ -1212,6 +1216,7 @@ var dados = {
 		dados.textoAnalisado = $("#obs1").val();
 		dados.tituloProjetoAnalisado = $("#obs2").val();
 		dados.documentosEnviados = $("#obs3").val();
+		dados.descricaoProposta = $("#obs4").val();
 
 		dados.TIPODOCUMENTO = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
 		dados.periodoProjeto = $("#mesesSelect").val();
@@ -1247,6 +1252,23 @@ var dados = {
 			}
 			
 			if(dados.TIPODOCUMENTO === 'nao'){
+				if(dados.nomeRelatorio === 'Projeto de Ensino' || dados.nomeRelatorio === 'Projeto de Pesquisa' || dados.nomeRelatorio === 'Alocação de Carga horária' || dados.nomeRelatorio === 'Projeto Pedagógico Curso de Pós-Graduação Lato Sensu'){
+					dados.artgo = "184 a 191";
+					dados.capitulo = "VI, da Pesquisa";
+					
+					dados.proj_Ana_Enc = "analisado";
+					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral. Deste modo, o relator afirma que a proposta está de acordo com as diretrizes da Instituição.";
+					dados.descricaoProposta = "";
+					dados.parag7 = "";
+				}else{
+					dados.artgo = "192 a 197";
+					dados.capitulo = "VII, da Extensão";
+
+					dados.proj_Ana_Enc = "analisado";
+					dados.paragrafo7 = "na definição de extensão estabelecida no art. 192 do Regimento Geral da UFPA, pois é um processo educativo e científico articulado ao ensino e à pesquisa, de modo indissociável, que promove a relação transformadora entre a Universidade e a sociedade por meio de ações acadêmicas de natureza contínua que visem tanto à qualificação prática e à formação cidadã do discente quanto à melhoria da qualidade de vida da comunidade envolvida. O financiamento do projeto será com recursos próprios e pleiteando recursos externos, atendendo ao disposto no art. 195 do Regimento Geral. Deste modo, o relator afirma que a proposta está de acordo com as diretrizes da Instituição.";
+					dados.descricaoProposta = "";
+					dados.parag7 = "";
+				}
 				dados.TIPODOCUMENTO = "DESCRIÇÃO";
 				// Novo campo que so existe se for 'nao': pedidoAprovacao
 				// codigo \u00A0 serve para deixar espaço em branco.
@@ -1254,18 +1276,21 @@ var dados = {
 				dados.letra = "i";
 				dados.aprovacao = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”.";
 			}else{
+				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
+					dados.artgo = "192 a 197";
+					dados.capitulo = "VII, da Extensão";
+				}else{
+					dados.artgo = "184 a 191";
+					dados.capitulo = "VI, da Pesquisa";
+				}
 				dados.TIPODOCUMENTO = "RELATÓRIO";
 				dados.pedidoAprovacao = '';
 				dados.letra = "j";
-				dados.aprovacao = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”."
-			}
-			if (dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
-				dados.artgo = "192 a 197";
-				dados.capitulo = "VII, da Extensão";
-    
-			}else{
-				dados.artgo = "184 a 191";
-				dados.capitulo = "VI, da Pesquisa";
+				dados.aprovacao = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
+			
+				dados.proj_Ana_Enc = "encerrado";
+				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se";
+				dados.parag7 = ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral.";
 			}
 
 			console.log(dados)
