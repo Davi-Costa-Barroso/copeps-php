@@ -333,9 +333,6 @@ if (@$copeps == 'ocultar') {
 										<label for="titulacaoCoordenador">Titulação do Coordenador:</label>
 										<select class="form-control" id="titulacaoCoordenador" name="titulacaoCoordenador">
 											<option value="" disabled selected>- Selecione -</option>
-											<option value="Tec. Adm.">Tec. Adm.</option>
-											<option value="Prof. Me.">Prof. Me.</option>
-											<option value="Prof. Dr.">Prof. Dr.</option>
 										</select>
 									</div>
 								</div>
@@ -393,9 +390,6 @@ if (@$copeps == 'ocultar') {
 									<label for="titulacaoOutroCoordenador">Titulação do Outro Coordenador:</label>
 									<select class="form-control" id="titulacaoOutroCoordenador" name="titulacaoOutroCoordenador">
 										<option value="" disabled selected>- Selecione -</option>
-										<option value="tec-adm">Tec. Adm.</option>
-										<option value="prof-ma">Profª. Ma.</option>
-										<option value="prof-dra">Profª. Drª.</option>
 									</select>
 								</div>
 							</div>
@@ -1021,6 +1015,7 @@ var dados = {
     tituloProjetoAnalisado: "",
     documentosEnviados: "",
 
+
 	TIPODOCUMENTO: "RELATÓRIO",
 	nomeRelatorio: "",
     periodoProjeto: "",
@@ -1037,9 +1032,16 @@ var dados = {
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
+	pronomeCoordenador: "",
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
+	descricaoCoordenadores: "",
     possuiOutroCoordenador: null,
+
+	nomeViceCoordenador: "",
+	pronomeViceCoordenador: "",
+	sexoViceCoordenador: "",
+	titulacaoViceCoordenador: "",
 
 	objetivoDescricaoProposta: "",
 	objetivoProjeto: "",
@@ -1097,6 +1099,49 @@ var dados = {
 			$('#mensagem').text("")
 		}
 	});
+
+	function atualizarOpcoesTitulacaoCoordenador() {
+		var selectTitulacaoCoordenador = document.getElementById("titulacaoCoordenador");
+		var sexoCoordenador = document.getElementById("sexoCoordenador").value;
+
+		selectTitulacaoCoordenador.innerHTML = '<option value="" disabled selected>- Selecione -</option>';
+		if (sexoCoordenador === "masculino") {
+			selectTitulacaoCoordenador.innerHTML += `
+				<option value="Tec. Adm.">Tec. Adm.</option>
+				<option value="Prof. Me.">Prof. Me.</option>
+				<option value="Prof. Dr.">Prof. Dr.</option>
+			`;
+		} else if (sexoCoordenador === "feminino") {
+			selectTitulacaoCoordenador.innerHTML += `
+				<option value="Tec. Adm.">Tec. Adm.</option>
+				<option value="Profª. Ma.">Profª. Ma.</option>
+				<option value="Profª. Drª.">Profª. Drª.</option>
+			`;
+		}
+	}
+
+	function atualizarOpcoesTitulacaoOutroCoordenador() {
+		var selectTitulacaoOutroCoordenador = document.getElementById("titulacaoOutroCoordenador");
+		var sexoOutroCoordenador = document.getElementById("sexoOutroCoordenador").value;
+
+		selectTitulacaoOutroCoordenador.innerHTML = '<option value="" disabled selected>- Selecione -</option>';
+		if (sexoOutroCoordenador === "masculino") {
+			selectTitulacaoOutroCoordenador.innerHTML += `
+				<option value="Tec. Adm.">Tec. Adm.</option>
+				<option value="Prof. Me.">Prof. Me.</option>
+				<option value="Prof. Dr.">Prof. Dr.</option>
+			`;
+		} else if (sexoOutroCoordenador === "feminino") {
+			selectTitulacaoOutroCoordenador.innerHTML += `
+				<option value="Tec. Adm.">Tec. Adm.</option>
+				<option value="Profª. Ma.">Profª. Ma.</option>
+				<option value="Profª. Drª.">Profª. Drª.</option>
+			`;
+		}
+	}
+	document.getElementById("sexoCoordenador").addEventListener("change", atualizarOpcoesTitulacaoCoordenador);
+	document.getElementById("sexoOutroCoordenador").addEventListener("change", atualizarOpcoesTitulacaoOutroCoordenador);
+
 
 	function validarCampos(){
 		if (!dados.numeroParecer) {
@@ -1237,6 +1282,19 @@ var dados = {
 		dados.titulacaoCoordenador = $("#titulacaoCoordenador").val();
 		dados.faculdadeCoordenador = $("#faculdadeCoordenador").val();
 		dados.possuiOutroCoordenador = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
+		
+		if(dados.possuiOutroCoordenador === "sim") {
+			dados.nomeViceCoordenador = $("#nomeOutroCoordenador").val();
+			dados.sexoViceCoordenador = $("#sexoOutroCoordenador").val();
+			dados.titulacaoViceCoordenador = $("#titulacaoOutroCoordenador").val();
+		}
+		else {
+			dados.textoComViceCoordenador = ""
+			dados.nomeViceCoordenador = ""
+			dados.pronomeViceCoordenador =  ""
+			dados.sexoViceCoordenador =  ""
+			dados.titulacaoViceCoordenador = "" 	
+		}
 
 	}
 
@@ -1252,6 +1310,29 @@ var dados = {
 			preencherDados()
 			// Aqui verifica se todos os campos necessarios foram preenchidos.
 			if(!validarCampos()) return;
+
+
+			if(dados.sexoCoordenador === "masculino") {
+				dados.pronomeCoordenador = "o"
+			}
+			else{
+				dados.pronomeCoordenador = "a"
+			}
+
+			if(dados.possuiOutroCoordenador === "sim") {
+				if(dados.sexoViceCoordenador === "masculino") {
+					dados.pronomeViceCoordenador = "o"
+					dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenador" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
+				}
+				else{
+					dados.pronomeViceCoordenador = "a"
+					dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenadora" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
+
+				}
+
+			}
+			dados.descricaoCoordenadores = "d" + dados.pronomeCoordenador + " " + dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
+
 
 			// Aqui define como deve ser a frase quando tem ou não carga horaria
 			if(dados.cargaHoraria === 'desabilitado'){
