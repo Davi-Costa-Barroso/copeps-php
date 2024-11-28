@@ -1015,7 +1015,6 @@ var dados = {
     tituloProjetoAnalisado: "",
     documentosEnviados: "",
 
-
 	TIPODOCUMENTO: "RELATÓRIO",
 	nomeRelatorio: "",
     periodoProjeto: "",
@@ -1045,6 +1044,11 @@ var dados = {
 
 	objetivoDescricaoProposta: "",
 	objetivoProjeto: "",
+	proposicaoOuRelatorio:"",
+	aprovacaoFaculdade:"",
+	paragrafo2: "",
+	numeroDoc: "",
+	dataAprovacao: null
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1141,6 +1145,21 @@ var dados = {
 	}
 	document.getElementById("sexoCoordenador").addEventListener("change", atualizarOpcoesTitulacaoCoordenador);
 	document.getElementById("sexoOutroCoordenador").addEventListener("change", atualizarOpcoesTitulacaoOutroCoordenador);
+
+	function ajustarFormatoData(data) {
+		const meses = [
+        "janeiro", "fevereiro", "março", "abril", "maio", "junho",
+        "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
+    	];
+
+    	const partes = data.split("-");
+
+		const ano = partes[0]; // Ano
+		const mes = parseInt(partes[1], 10) - 1; // Mês (convertendo para índice do array)
+		const dia = partes[2]; // Dia
+
+		return `${dia} de ${meses[mes]} de ${ano}`;
+	}
 
 
 	function validarCampos(){
@@ -1295,8 +1314,10 @@ var dados = {
 			dados.sexoViceCoordenador =  ""
 			dados.titulacaoViceCoordenador = "" 	
 		}
-
-	}
+		dados.aprovacaoFaculdade = $("#aprovacaoFaculdade").val();
+		dados.numeroDoc = $('#numeroDocumento').val();
+		dados.dataAprovacao = $("#qualDia").val()
+	}	
 
 	$("#seguinte_aba4").click(function() {
 		$('#myTab a[href="#extra"]').tab('show');
@@ -1347,6 +1368,7 @@ var dados = {
 				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
 				dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
 				dados.objetivoProjeto = 'O objetivo do projeto é';
+				dados.proposicaoOuRelatorio = "A proposição";
 
 				if(dados.nomeRelatorio === 'Projeto de Ensino' || dados.nomeRelatorio === 'Projeto de Pesquisa' || dados.nomeRelatorio === 'Alocação de Carga horária' || dados.nomeRelatorio === 'Projeto Pedagógico Curso de Pós-Graduação Lato Sensu'){
 					dados.artgo = "184 a 191";
@@ -1374,6 +1396,7 @@ var dados = {
 				dados.pedidoAprovacao = '';
 				dados.objetivoDescricaoProposta = "";
 				dados.objetivoProjeto = "";
+				dados.proposicaoOuRelatorio = "O relatório"
 
 				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
 					dados.artgo = "192 a 197";
@@ -1389,6 +1412,37 @@ var dados = {
 				dados.proj_Ana_Enc = "encerrado";
 				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se";
 				dados.parag7 = ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral.";
+			}
+
+			// verificar o pronome do relatório ou proposição
+			let pronomeRelatorio = ""
+
+			if(dados.proposicaoOuRelatorio === "A proposição") {
+				pronomeRelatorio = "a";
+			}
+			else{
+				pronomeRelatorio = "o";
+
+			}
+
+			// verificar o pronome da faculdade
+			let pronomeFaculdade = ""
+			if(dados.faculdadeCoordenador.startsWith("F")) {
+				pronomeFaculdade = "a";
+			}
+			else{
+				pronomeFaculdade = "o";
+
+			}
+
+			if(dados.aprovacaoFaculdade === "ad-referendum") {
+				dados.paragrafo2 = dados.proposicaoOuRelatorio + " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + ajustarFormatoData(dados.dataAprovacao) + ", e o projeto é " + dados.cargaHoraria
+			}
+			else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
+				dados.paragrafo2 = dados.proposicaoOuRelatorio + " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+			}
+			else{
+				dados.paragrafo2 = dados.proposicaoOuRelatorio + " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 
 			console.log(dados)
