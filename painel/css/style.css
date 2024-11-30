@@ -3143,6 +3143,11 @@ h3.w3_inner_tittle.two {
 .bs-component {
     position: relative;
 }
+
+#add-input {
+  margin-top: 10px;
+}
+
 .btn {
     display: inline-block;
     margin-bottom: 0;
@@ -3162,6 +3167,7 @@ h3.w3_inner_tittle.two {
     -ms-user-select: none;
     user-select: none;
 }
+
 .btn-block {
     display: block;
     width: 100%;
@@ -8533,4 +8539,9 @@ h4.asd label {
     margin-bottom: 10px; 
     margin-left:5px;
   }
+
+}
+
+.in-doc {
+  margin-bottom: 10px;
 }

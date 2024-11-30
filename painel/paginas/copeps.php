@@ -134,18 +134,21 @@ if (@$copeps == 'ocultar') {
 							</div>
 
 							<div class="form-group">
-								<label>TEXTO A SER ANÁLISADO:* <small>(Max 10000 Caracteres)</small></label>
+								<label>TEXTO A SER ANALISADO:* <small>(Max 10000 Caracteres)</small></label>
 								<textarea maxlength="1000" type="text" class="textareag" name="obs1" id="obs1" required></textarea>
 							</div>
 
 							<div class="form-group">
-								<label>TITULO DO PROJETO A SER ANALIZADO:*</label>
+								<label>TITULO DO PROJETO A SER ANALISADO:*</label>
 								<textarea maxlength="500" type="text" class="textareag" name="obs2" id="obs2" required></textarea>
 							</div>
 
 							<div class="form-group">
-								<label>DOCUMENTOS ENVIADOS:* <small>(Max 500 Caracteres)</small></label>
-								<textarea maxlength="500" type="text" class="textareag" name="obs3" id="obs3" required></textarea>
+								<label>DOCUMENTOS ENVIADOS:* <small>(Máx. 6)</small></label>
+								<div id="input-container">
+									<input oninput="verificarInput()" type="text" class="in-doc form-control" name="docs[]" id="doc1" required>
+								</div>
+								<button disabled type="button" id="add-input" class="btn btn-primary" onclick="addInput()">Adicionar Novo Documento</button>
 							</div>
 
 							<hr>
@@ -1013,7 +1016,7 @@ var dados = {
     dataEnvio: "",
     textoAnalisado: "",
     tituloProjetoAnalisado: "",
-    documentosEnviados: "",
+    documentosEnviados: [],
 
 	TIPODOCUMENTO: "RELATÓRIO",
 	nomeRelatorio: "",
@@ -1048,7 +1051,8 @@ var dados = {
 	aprovacaoFaculdade:"",
 	paragrafo2: "",
 	numeroDoc: "",
-	dataAprovacao: null
+	dataAprovacao: null,
+	obs5: "",
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1078,10 +1082,11 @@ var dados = {
 		} else if (!$("#obs2").val()) {
 			$('#mensagem').addClass('text-danger')
 			$('#mensagem').text("Preencha o campo título do Projeto a ser analisado!")
-		} else if (!$("#obs3").val()) {
-			$('#mensagem').addClass('text-danger')
-			$('#mensagem').text("Preencha o campo documentos enviados!")
-		} else {
+		} else if (!$("#doc1").val()) {
+		 	$('#mensagem').addClass('text-danger')
+		 	$('#mensagem').text("Adicione pelo menos um documento!")
+		}
+		else {
 			$('#myTab a[href="#profile"]').tab('show');
 			$('#mensagem').text("")
 		}
@@ -1212,9 +1217,9 @@ var dados = {
 		}
 
 		if (!dados.documentosEnviados) {
-			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe os documentos enviados");
-			return false;
+		 	$('#mensagem').addClass('text-danger');
+		 	$('#mensagem').text("Informe os documentos enviados");
+		 	return false;
 		}
 
 		if (!dados.TIPODOCUMENTO) {
@@ -1288,7 +1293,6 @@ var dados = {
 		dados.dataEnvio = $("#data").val();
 		dados.textoAnalisado = $("#obs1").val();
 		dados.tituloProjetoAnalisado = $("#obs2").val();
-		dados.documentosEnviados = $("#obs3").val();
 		dados.descricaoProposta = $("#obs4").val();
 
 		dados.TIPODOCUMENTO = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
@@ -1317,6 +1321,20 @@ var dados = {
 		dados.aprovacaoFaculdade = $("#aprovacaoFaculdade").val();
 		dados.numeroDoc = $('#numeroDocumento').val();
 		dados.dataAprovacao = $("#qualDia").val()
+		dados.obs5 = $("#obs5").val()
+		dados.obs5 = '"' + dados.obs5 + '"'
+
+		// let contLetras = 0;
+		documentosEnviados = []
+
+		for (let i = 1; i <= 6; i++) {
+			if($(`#doc${i}`).val()) {
+				documentosEnviados.push(`(${String.fromCharCode(97 + (i))}) ` + $(`#doc${i}`).val())
+				
+			}			
+		}
+		dados.documentosEnviados = documentosEnviados.join('; ')
+
 	}	
 
 	$("#seguinte_aba4").click(function() {
@@ -1435,15 +1453,22 @@ var dados = {
 
 			}
 
+			// paragrafo 2
 			if(dados.aprovacaoFaculdade === "ad-referendum") {
-				dados.paragrafo2 = dados.proposicaoOuRelatorio + " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + ajustarFormatoData(dados.dataAprovacao) + ", e o projeto é " + dados.cargaHoraria
+				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + ajustarFormatoData(dados.dataAprovacao) + ", e o projeto é " + dados.cargaHoraria
 			}
 			else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
-				dados.paragrafo2 = dados.proposicaoOuRelatorio + " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+			}
+			else if (dados.aprovacaoFaculdade === "ata-reuniao-extraordinaria"){
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 			else{
-				dados.paragrafo2 = dados.proposicaoOuRelatorio + " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
 			}
+
+			// parágrafo 3
+			dados.paragrafo3 = dados.dataEnvio
 
 			console.log(dados)
 			// Aqui define o nome do arquivo PDF
@@ -1567,4 +1592,43 @@ var dados = {
 			}
 		});
 	}
+	let inputCount = 1;
+
+	function verificarInput() {
+		const addButton = document.getElementById("add-input");
+
+		if(document.getElementById(`doc${inputCount}`).value) {
+			addButton.disabled = false; 
+		}
+		else {
+			addButton.disabled = true; 
+		}
+	}
+
+	function addInput() {
+		const container = document.getElementById("input-container");
+		const addButton = document.getElementById("add-input");
+
+		if (inputCount < 6) {
+			inputCount++;
+			const newInput = document.createElement("input");
+
+			newInput.type = "text";
+			newInput.className = "in-doc form-control";
+			newInput.name = `docs[]`;
+			newInput.id = `doc${inputCount}`;
+			newInput.required = true;
+			newInput.oninput = verificarInput;
+			container.appendChild(newInput);
+			addButton.disabled = true; 
+
+
+		} else {
+			addButton.disabled = true; 
+		}
+
+	}
+		
+		
+    
 </script>
