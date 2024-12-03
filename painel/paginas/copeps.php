@@ -1034,7 +1034,7 @@ var dados = {
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
-	pronomeCoordenador: "",
+	PRNCoordenador: "",
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
 	descricaoCoordenadores: "",
@@ -1053,6 +1053,14 @@ var dados = {
 	numeroDoc: "",
 	dataAprovacao: null,
 	obs5: "",
+	
+	sexoRelator: "",
+	pronomeRelator: "",
+	pronomeTxt: "",
+
+	situacaoRelatorio: "",
+	aprovOuReprov: ""
+
 };
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
@@ -1324,7 +1332,6 @@ var dados = {
 		dados.obs5 = $("#obs5").val()
 		dados.obs5 = '"' + dados.obs5 + '"'
 
-		// let contLetras = 0;
 		documentosEnviados = []
 
 		for (let i = 1; i <= 6; i++) {
@@ -1334,8 +1341,14 @@ var dados = {
 			}			
 		}
 		dados.documentosEnviados = documentosEnviados.join('; ')
+		dados.sexoRelator = $("#sexoRelator").val()
 
-	}	
+		const selecionado = document.querySelector('input[name="parecerRelator"]:checked');
+		if (selecionado) {
+			dados.situacaoRelatorio =  selecionado.value
+		} 
+
+    }
 
 	$("#seguinte_aba4").click(function() {
 		$('#myTab a[href="#extra"]').tab('show');
@@ -1352,10 +1365,10 @@ var dados = {
 
 
 			if(dados.sexoCoordenador === "masculino") {
-				dados.pronomeCoordenador = "o"
+				dados.PRNCoordenador = "o"
 			}
 			else{
-				dados.pronomeCoordenador = "a"
+				dados.PRNCoordenador = "a"
 			}
 
 			if(dados.possuiOutroCoordenador === "sim") {
@@ -1370,7 +1383,7 @@ var dados = {
 				}
 
 			}
-			dados.descricaoCoordenadores = "d" + dados.pronomeCoordenador + " " + dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
+			dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
 
 
 			// Aqui define como deve ser a frase quando tem ou não carga horaria
@@ -1467,8 +1480,25 @@ var dados = {
 				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
 			}
 
-			// parágrafo 3
-			dados.paragrafo3 = dados.dataEnvio
+
+			// III. Voto
+			if(dados.sexoRelator === "feminino") {
+				dados.pronomeRelator = "a"
+				dados.pronomeTxt = "a"
+			}
+			else{
+				dados.pronomeRelator = "o"
+				dados.pronomeTxt = ""
+			}
+			
+			if(dados.situacaoRelatorio === "aprovado") {
+				dados.aprovOuReprov = "Aprovação"
+			}
+			else{
+				dados.aprovOuReprov = "Reprovação"
+
+			}
+			
 
 			console.log(dados)
 			// Aqui define o nome do arquivo PDF
