@@ -8,6 +8,7 @@ require_once("../../../conexao.php");
 
 $query = $pdo->query("SELECT * from $tabela order by id desc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
+
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML

@@ -416,7 +416,7 @@ if (@$copeps == 'ocultar') {
 										<select class="form-control sel" name="nomeRelator" id="nomeRelator" required style="width:100%;">
 											<option value="" disabled selected>- Selecione -</option>
 											<?php
-											$query = $pdo->query("SELECT * FROM membros order by nome asc");
+											$query = $pdo->query("SELECT * FROM membros where comissao = 1 order by nome asc ");
 											$res = $query->fetchAll(PDO::FETCH_ASSOC);
 											for ($i = 0; $i < @count($res); $i++) {
 												foreach ($res[$i] as $key => $value) {
@@ -556,7 +556,6 @@ if (@$copeps == 'ocultar') {
 						<span><b>Telefone: </b></span><span id="telefone_dados"></span>
 					</div>
 
-
 					<div class="col-md-8" style="margin-bottom: 5px">
 						<span><b>Email: </b></span><span id="email_dados"></span>
 					</div>
@@ -571,9 +570,14 @@ if (@$copeps == 'ocultar') {
 					</div>
 
 					<div class="col-md-6" style="margin-bottom: 5px">
+						<span><b>Tipo de Membro: </b></span><span id="tipo_membro"></span>
+					</div>
+
+					<div class="col-md-6" style="margin-bottom: 5px">
 						<span><b>Comissão: </b></span><span id="comissao_dados"></span>
 					</div>
 
+					
 					<div class="col-md-6" style="margin-bottom: 5px">
 						<span><b>Ativo: </b></span><span id="ativo_dados"></span>
 					</div>
@@ -679,6 +683,7 @@ if (@$copeps == 'ocultar') {
 			},
 			dataType: 'json',
 			success: function(result) {
+				console.log(result)
 				// Cria um novo <select> com as opções retornadas do PHP
 				var select = $('<select class="form-select" name="tipo" id="tipo">');
 				for (var i = 0; i < result.length; i++) {
@@ -998,10 +1003,12 @@ if (@$copeps == 'ocultar') {
 
 	//Ajax p/a Ler os documento:  Select2 p/a formulario de membros 
 	$(document).ready(function() {
+		console.log("Valor de pag:", pag);
+
 
 		$('#myTab a[href="#home"]').tab('show'); //comando que abre a aba inicial da modal.
 
-		$('.sel2').select2({
+		$('.sel').select2({
 			dropdownParent: $('#modalForm')
 		});
 	});
@@ -1023,18 +1030,18 @@ var dados = {
     periodoProjeto: "",
     cargaHoraria: "",
 	pedidoAprovacao: "",
-	letra: "",
-	aprovacao: "",
+	alinea: "",
+	paragrafo5: "",
 	artgo: "",
 	capitulo: "",
 	proj_Ana_Enc: "",
 	paragrafo7: "",
-	parag7: "",
 	descricaoProposta: "",
 
 	nomeCoordenador: "",
     sexoCoordenador: "",
 	PRNCoordenador: "",
+	PRNTxtCoordenador: "",
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
 	descricaoCoordenadores: "",
@@ -1053,15 +1060,79 @@ var dados = {
 	numeroDoc: "",
 	dataAprovacao: null,
 	obs5: "",
-	
+
+	nomeRelator: "",
 	sexoRelator: "",
-	pronomeRelator: "",
+	pronRelat: "",
 	pronomeTxt: "",
 
 	situacaoRelatorio: "",
-	aprovOuReprov: ""
+	aprovOuReprov: "",
+
+	paragrafo8: "", 
+	comentariosParecer: "",
+	paragrafo9: "",
+	dataAtual: "",
+
+	nomePresid: "",
+	nomeDocTit1: "",
+	nomeDocTit2: "",
+	nomeDocSup1: "",
+	nomeDocSup2: "",
+	nomeTecTit: "",
+	nomeTecSup: "",
+	nomeDiscTit: "",
+	nomeDiscSup: ""
+
 
 };
+
+
+listarMembrosComissao(function(result) {
+	var contTit = 1;
+	var contSup = 1;
+	result.forEach(element => {
+		if (element.tipo_membro === "Presidente") {
+			dados.nomePresid = element.nome;
+		}
+		else if(element.tipo_membro === "Titular" && element.cargo === 2) {
+			if(contTit === 1) {
+				dados.nomeDocTit1 = element.nome;
+			}
+			else{
+				dados.nomeDocTit2 = element.nome;
+
+			}
+			contTit ++;
+		}
+		else if(element.tipo_membro === "Suplente" && element.cargo === 2) {
+			if(contSup === 1) {
+				dados.nomeDocSup1 = element.nome;
+			}
+			else{
+				dados.nomeDocSup2 = element.nome;
+
+			}
+			contSup++;
+		}
+		else if(element.tipo_membro === "Titular" && element.cargo === 3) {
+			dados.nomeDiscTit = element.nome;
+
+		}
+		else if(element.tipo_membro === "Suplente" && element.cargo === 3) {
+			dados.nomeDiscSup = element.nome;
+
+		}
+		else if(element.tipo_membro === "Titular" && element.cargo === 4) {
+			dados.nomeTecTit = element.nome;
+
+		}
+		else  {
+			dados.nomeTecSup = element.nome;
+		}
+		
+	});
+});
 
 	//Ajax p/a avançar nas abas quando o botao for clicado
 
@@ -1172,6 +1243,18 @@ var dados = {
 		const dia = partes[2]; // Dia
 
 		return `${dia} de ${meses[mes]} de ${ano}`;
+	}
+
+	function getDataAtual() {
+		const dataAtual = new Date();
+
+		const ano = String(dataAtual.getFullYear()); // Pega os dois últimos dígitos do ano
+		const mes = String(dataAtual.getMonth() + 1).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+		const dia = String(dataAtual.getDate()).padStart(2, '0'); // Adiciona zero à esquerda se necessário
+
+		const dataFormatada = `${ano}-${mes}-${dia}`;
+
+		return ajustarFormatoData(dataFormatada)
 	}
 
 
@@ -1348,6 +1431,15 @@ var dados = {
 			dados.situacaoRelatorio =  selecionado.value
 		} 
 
+		dados.comentariosParecer = $("#obs6").val()
+		
+		const relator = document.getElementById('nomeRelator')
+    	const selectedText = relator.options[relator.selectedIndex].text;
+    	console.log(selectedText); // Exibe o nome selecionado no console
+		
+
+		dados.nomeRelator = selectedText;
+
     }
 
 	$("#seguinte_aba4").click(function() {
@@ -1362,13 +1454,33 @@ var dados = {
 			preencherDados()
 			// Aqui verifica se todos os campos necessarios foram preenchidos.
 			if(!validarCampos()) return;
+			
 
 
+			if(dados.sexoRelator === "feminino") {
+				dados.pronRelat = "a"
+				dados.pronomeTxt = "a"
+			}
+			else{
+				dados.pronRelat = "o"
+				dados.pronomeTxt = ""
+			}
+			
+			if(dados.situacaoRelatorio === "aprovado") {
+				dados.aprovOuReprov = "Aprovação"
+				dados.paragrafo9 = "são suficientes para considerá-la aprovada, ratificando a decisão da Subunidade"
+			}
+			else{
+				dados.aprovOuReprov = "Reprovação"
+				dados.paragrafo9 = "não são suficientes para considerá-la aprovada, discordando da decisão da Subunidade"
+			}
 			if(dados.sexoCoordenador === "masculino") {
 				dados.PRNCoordenador = "o"
+				dados.PRNTxtCoordenador = ""
 			}
 			else{
 				dados.PRNCoordenador = "a"
+				dados.PRNTxtCoordenador = "a"
 			}
 
 			if(dados.possuiOutroCoordenador === "sim") {
@@ -1382,67 +1494,6 @@ var dados = {
 
 				}
 
-			}
-			dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
-
-
-			// Aqui define como deve ser a frase quando tem ou não carga horaria
-			if(dados.cargaHoraria === 'desabilitado'){
-				dados.cargaHoraria = 'sem alocação de Carga Horária';
-			} else{
-				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
-			}
-			
-			if(dados.TIPODOCUMENTO === 'nao'){
-				// Topico 1
-				dados.TIPODOCUMENTO = "DESCRIÇÃO";
-				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
-				dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
-				dados.objetivoProjeto = 'O objetivo do projeto é';
-				dados.proposicaoOuRelatorio = "A proposição";
-
-				if(dados.nomeRelatorio === 'Projeto de Ensino' || dados.nomeRelatorio === 'Projeto de Pesquisa' || dados.nomeRelatorio === 'Alocação de Carga horária' || dados.nomeRelatorio === 'Projeto Pedagógico Curso de Pós-Graduação Lato Sensu'){
-					dados.artgo = "184 a 191";
-					dados.capitulo = "VI, da Pesquisa";
-					
-					dados.proj_Ana_Enc = "analisado";
-					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral. Deste modo, o relator afirma que a proposta está de acordo com as diretrizes da Instituição.";
-					
-					dados.parag7 = "";
-				}else{
-					dados.artgo = "192 a 197";
-					dados.capitulo = "VII, da Extensão";
-
-					dados.proj_Ana_Enc = "analisado";
-					dados.paragrafo7 = "na definição de extensão estabelecida no art. 192 do Regimento Geral da UFPA, pois é um processo educativo e científico articulado ao ensino e à pesquisa, de modo indissociável, que promove a relação transformadora entre a Universidade e a sociedade por meio de ações acadêmicas de natureza contínua que visem tanto à qualificação prática e à formação cidadã do discente quanto à melhoria da qualidade de vida da comunidade envolvida. O financiamento do projeto será com recursos próprios e pleiteando recursos externos, atendendo ao disposto no art. 195 do Regimento Geral. Deste modo, o relator afirma que a proposta está de acordo com as diretrizes da Instituição.";
-					dados.descricaoProposta = "";
-					dados.parag7 = "";
-				}
-
-				dados.letra = "i";
-				dados.aprovacao = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”.";
-			}else{
-				// Topico 1
-				dados.TIPODOCUMENTO = "RELATÓRIO";
-				dados.pedidoAprovacao = '';
-				dados.objetivoDescricaoProposta = "";
-				dados.objetivoProjeto = "";
-				dados.proposicaoOuRelatorio = "O relatório"
-
-				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
-					dados.artgo = "192 a 197";
-					dados.capitulo = "VII, da Extensão";
-				}else{
-					dados.artgo = "184 a 191";
-					dados.capitulo = "VI, da Pesquisa";
-				}
-				
-				dados.letra = "j";
-				dados.aprovacao = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
-			
-				dados.proj_Ana_Enc = "encerrado";
-				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se";
-				dados.parag7 = ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral.";
 			}
 
 			// verificar o pronome do relatório ou proposição
@@ -1466,6 +1517,69 @@ var dados = {
 
 			}
 
+
+			// I.TIPODOCUMENTO
+			dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
+
+			// Aqui define como deve ser a frase quando tem ou não carga horaria
+			if(dados.cargaHoraria === 'desabilitado'){
+				dados.cargaHoraria = 'sem alocação de Carga Horária';
+				dados.paragrafo8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
+			} else{
+				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
+				dados.paragrafo8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
+			}
+			
+			if(dados.TIPODOCUMENTO === 'nao'){
+				// Topico 1
+				dados.TIPODOCUMENTO = "DESCRIÇÃO";
+				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
+				dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
+				dados.objetivoProjeto = 'O objetivo do projeto é';
+				dados.proposicaoOuRelatorio = "A proposição";
+				dados.alinea = "i";
+				dados.paragrafo5 = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”.";
+
+				if(dados.nomeRelatorio === "Projeto de Extensão") {
+					dados.artgo = "192 a 197";
+					dados.capitulo = "VII, da Extensão";
+					dados.proj_Ana_Enc = "analisado";
+					dados.paragrafo7 = "na definição de extensão estabelecida no art. 192 do Regimento Geral da UFPA, pois é um processo educativo e científico articulado ao ensino e à pesquisa, de modo indissociável, que promove a relação transformadora entre a Universidade e a sociedade por meio de ações acadêmicas de natureza contínua que visem tanto à qualificação prática e à formação cidadã do discente quanto à melhoria da qualidade de vida da comunidade envolvida. O financiamento do projeto será com recursos próprios e pleiteando recursos externos, atendendo ao disposto no art. 195 do Regimento Geral."
+					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição.";
+
+				}
+				else{
+					dados.artgo = "184 a 191";
+					dados.capitulo = "VI, da Pesquisa";
+					
+					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral."
+					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição.";
+				}
+
+			}else{
+				// Topico 1
+				dados.TIPODOCUMENTO = "RELATÓRIO";
+				dados.pedidoAprovacao = '';
+				dados.objetivoDescricaoProposta = "";
+				dados.objetivoProjeto = "";
+				dados.proposicaoOuRelatorio = "O relatório"
+				dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
+				dados.alinea = "j";
+				dados.proj_Ana_Enc = "encerrado";
+				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dqados.descricaoProposta 
+								+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral."
+
+				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
+					dados.artgo = "192 a 197";
+					dados.capitulo = "VII, da Extensão";
+				}else{
+					dados.artgo = "184 a 191";
+					dados.capitulo = "VI, da Pesquisa";
+
+				}
+							
+			}
+			
 			// paragrafo 2
 			if(dados.aprovacaoFaculdade === "ad-referendum") {
 				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + ajustarFormatoData(dados.dataAprovacao) + ", e o projeto é " + dados.cargaHoraria
@@ -1480,26 +1594,10 @@ var dados = {
 				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
 			}
 
+			dados.dataAtual = getDataAtual()
 
-			// III. Voto
-			if(dados.sexoRelator === "feminino") {
-				dados.pronomeRelator = "a"
-				dados.pronomeTxt = "a"
-			}
-			else{
-				dados.pronomeRelator = "o"
-				dados.pronomeTxt = ""
-			}
 			
-			if(dados.situacaoRelatorio === "aprovado") {
-				dados.aprovOuReprov = "Aprovação"
-			}
-			else{
-				dados.aprovOuReprov = "Reprovação"
-
-			}
 			
-
 			console.log(dados)
 			// Aqui define o nome do arquivo PDF
 			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
@@ -1561,6 +1659,7 @@ var dados = {
 				$('#mensagem_permissao').text('');
 			}
 		});
+
 	}
 
 	//Ajax função Add permissoes
@@ -1658,7 +1757,28 @@ var dados = {
 		}
 
 	}
-		
+	function listarMembrosComissao(callback) {
+    // Faz a requisição AJAX
+		$.ajax({
+			url: 'paginas/' + pag + '/buscar_membros_comissao.php', 
+			method: 'GET',
+			dataType: 'json',
+			success: function(result) {
+				if (result.error) {
+					console.error(result.error);
+					return;
+				}
+				console.log(result)
+				callback(result);
+
+
+			},
+			error: function(xhr, status, error) {
+				console.error('Erro ao buscar membros:', error);
+			}
+		});
+	}
+
 		
     
 </script>

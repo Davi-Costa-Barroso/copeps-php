@@ -3,10 +3,9 @@
 $id_usuario = $_SESSION['id'];
  
 $nivel_usuario = $_SESSION['nivel']; 
-$tabela = 'membros';
 require_once("../../../conexao.php");
 
-$query = $pdo->query("SELECT * from $tabela order by id desc");
+$query = $pdo->query("SELECT * from membros where comissao = 1 order by id desc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
@@ -18,6 +17,7 @@ echo <<<HTML
 	<th>Nome</th>		
 	<th class="esc">Email</th>
 	<th class="esc">Nível</th>	
+	<th class="esc">Tipo de Membro</th>
 	<th class="esc">Comissão</th>
 	<th class="esc">Matrícula</th>
 	<th class="esc">Telefone</th>	
@@ -38,6 +38,7 @@ for($i=0; $i<$linhas; $i++){
 	$email = $res[$i]['email'];	
 	$foto = $res[$i]['foto'];
 	$cargo = $res[$i]['cargo']; //chave estrangeira que guarda id da tabela cargo
+	$tipo_membro = $res[$i]['tipo_membro'];
 	$comissao = $res[$i]['comissao'];
 	$endereco = $res[$i]['endereco'];
 	$cidade = $res[$i]['cidade'];
@@ -88,6 +89,7 @@ echo <<<HTML
 </td>
 <td class="esc">{$email}</td>
 <td class="esc">{$nome_cargo}</td>
+<td class="esc">{$tipo_membro}</td>
 <td class="esc">{$nome_comissao}</td>
 <td class="esc">{$matricula}</td>
 <td class="esc">{$telefone}</td>
@@ -113,7 +115,7 @@ echo <<<HTML
 	</li>
 
 	<!-- Mostrar Dados --> 
-	<big><a href="#" onclick="mostrar('{$nome}','{$cpf}','{$telefone}','{$email}', '{$nome_cargo}', '{$nome_comissao}','{$ativo}','{$dataF}','{$endereco}','{$cidade}', '{$estado}','{$pais}','{$matricula}','{$obs}', '{$foto}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>	
+	<big><a href="#" onclick="mostrar('{$nome}','{$cpf}','{$telefone}','{$email}', '{$nome_cargo}', '{$nome_comissao}', '{$tipo_membro}', '{$ativo}','{$dataF}','{$endereco}','{$cidade}', '{$estado}','{$pais}','{$matricula}','{$obs}', '{$foto}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>	
 
 
 </td>
@@ -199,7 +201,7 @@ HTML;
 
 <!-- Ajax função mostrar -->
 <script type="text/javascript">//tem que ser na mesma orderm do mostrar acima
-	function mostrar(nome, cpf, telefone, email, cargo, comissao, ativo, data, endereco, cidade, estado, pais, matricula, obs, foto){
+	function mostrar(nome, cpf, telefone, email, cargo, comissao, tipoMembro, ativo, data, endereco, cidade, estado, pais, matricula, obs, foto){
 
 		for(let letra of obs){  				
 			if (letra === '+'){
@@ -212,7 +214,8 @@ HTML;
     	$('#telefone_dados').text(telefone);
     	$('#email_dados').text(email);
     	$('#cargo_dados').text(cargo);
-    	$('#comissao_dados').text(comissao);
+		$('#tipo_membro').text(tipoMembro);
+		$('#comissao_dados').text(comissao);
     	$('#ativo_dados').text(ativo);
     	$('#data_dados').text(data);
     	$('#endereco_dados').text(endereco);
@@ -227,8 +230,6 @@ HTML;
     	$('#modalDados').modal('show');
 	}
 </script>
-
-
 
 
 <!-- Ajax função limpar campos -->

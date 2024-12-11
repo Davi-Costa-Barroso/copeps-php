@@ -1,9 +1,10 @@
-$(document).ready(function() {    
+$(document).ready(function() {  
+ 
     listar();    
 } );
 
 //listar
-function listar(p1, p2, p3, p4, p5, p6){  
+function listar( p1, p2, p3, p4, p5, p6){  
     $.ajax({
         url: 'paginas/' + pag + "/listar.php",
         method: 'POST',
