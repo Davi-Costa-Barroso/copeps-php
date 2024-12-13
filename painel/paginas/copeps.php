@@ -75,28 +75,6 @@ if (@$copeps == 'ocultar') {
 									<input type="text" class="form-control" id="numeroOficio" name="numeroOficio" required>
 								</div>
 
-								<div class="col-md-2">
-									<label for="anoanoexercicio_field">Ano Ofício:</label>
-									<select name="anoexercicio_field" class="form-control" id="anoexercicio_field">
-										<option value="2028">2030</option>
-										<option value="2028">2029</option>
-										<option value="2028">2028</option>
-										<option value="2027">2027</option>
-										<option value="2026">2026</option>
-										<option value="2025">2025</option>
-										<option value="2024">2024</option>
-										<option value="2023" selected="">2023</option>
-										<option value="2022">2022</option>
-										<option value="2021">2021</option>
-										<option value="2020">2020</option>
-										<option value="2019">2019</option>
-										<option value="2018">2018</option>
-										<option value="2017">2017</option>
-										<option value="2016">2016</option>
-										<option value="2015">2015</option>
-									</select>
-								</div>
-
 							</div>
 
 							<div class="row">
@@ -1018,7 +996,6 @@ var dados = {
     numeroParecer: "",
     anoParecer: "",
     numeroOficio: "",
-    anoOficio: "",
     itemOficio: "",
     dataEnvio: "",
     textoAnalisado: "",
@@ -1277,12 +1254,6 @@ listarMembrosComissao(function(result) {
 			return false;
 		}
 
-		if (!dados.anoOficio) {
-			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe ano do ofício");
-			return false;
-		}
-
 		if (!dados.itemOficio) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe item do ofício");
@@ -1379,7 +1350,6 @@ listarMembrosComissao(function(result) {
 		dados.numeroParecer = $("#numeroParecer").val();
 		dados.anoParecer = $("#ano").val();
 		dados.numeroOficio = $("#numeroOficio").val();
-		dados.anoOficio = $("#anoexercicio_field").val();
 		dados.itemOficio = $("#item_field").val();
 		dados.dataEnvio = $("#data").val();
 		dados.textoAnalisado = $("#obs1").val();
@@ -1566,7 +1536,7 @@ listarMembrosComissao(function(result) {
 				dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
 				dados.alinea = "j";
 				dados.proj_Ana_Enc = "encerrado";
-				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dqados.descricaoProposta 
+				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dados.descricaoProposta 
 								+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral."
 
 				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
@@ -1579,16 +1549,16 @@ listarMembrosComissao(function(result) {
 				}
 							
 			}
-			
+			dados.dataAprovacao = ajustarFormatoData(dados.dataAprovacao) || '';
 			// paragrafo 2
 			if(dados.aprovacaoFaculdade === "ad-referendum") {
-				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + ajustarFormatoData(dados.dataAprovacao) + ", e o projeto é " + dados.cargaHoraria
+				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + dados.dataAprovacao + ", e o projeto é " + dados.cargaHoraria
 			}
 			else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 			else if (dados.aprovacaoFaculdade === "ata-reuniao-extraordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + ajustarFormatoData(dados.dataAprovacao) + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 			else{
 				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
