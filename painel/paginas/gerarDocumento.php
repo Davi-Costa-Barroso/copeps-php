@@ -21,37 +21,42 @@ function substituirTextoNoDocx($caminhoArquivoOrigem, $caminhoArquivoDestino, $d
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $dadosJson = file_get_contents('php://input');
-    $dados = json_decode($dadosJson, true);
-    
-    $dados = $dados['dados'];
+    try{
+        $dadosJson = file_get_contents('php://input');
+        $dados = json_decode($dadosJson, true);
+        
+        $dados = $dados['dados'];
 
-    $caminhoArquivoDocx = '../../docs/relatorioParecer.docx';
-    $dataAtual = date('Y-m-d_H-i-s');
-    $nomeArquivoEditadoDocx = 'parecer_' . $dataAtual . '.docx';
-    $caminhoArquivoEditadoDocx = '../../docs/' . $nomeArquivoEditadoDocx;
+        $caminhoArquivoDocx = '../../docs/relatorioParecer.docx';
+        $dataAtual = date('Y-m-d_H-i-s');
+        $nomeArquivoEditadoDocx = 'parecer_' . $dataAtual . '.docx';
+        $caminhoArquivoEditadoDocx = '../../docs/' . $nomeArquivoEditadoDocx;
 
-    $caminhoPdfGerado = '../../docs/relatorio_' . $dataAtual . '.pdf';
+        $caminhoPdfGerado = '../../docs/relatorio_' . $dataAtual . '.pdf';
 
-    substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
+        substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
 
-    ConvertApi::setApiCredentials('secret_mmHuw1YZ6vk30CLY');
+        ConvertApi::setApiCredentials('secret_IhqDw42KktD4C1Mg');
 
-    $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
-    $resultado->saveFiles($caminhoPdfGerado); 
+        $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
+        $resultado->saveFiles($caminhoPdfGerado); 
 
-    header('Content-Description: File Transfer');
-    header('Content-Type: application/pdf');
-    header('Content-Transfer-Encoding: binary');
-    header('Expires: 0');
-    header('Cache-Control: must-revalidate');
-    header('Pragma: public');
-    header('Content-Length: ' . filesize($caminhoPdfGerado));
+        header('Content-Description: File Transfer');
+        header('Content-Type: application/pdf');
+        header('Content-Transfer-Encoding: binary');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate');
+        header('Pragma: public');
+        header('Content-Length: ' . filesize($caminhoPdfGerado));
 
-    readfile($caminhoPdfGerado);
+        readfile($caminhoPdfGerado);
 
-    unlink($caminhoArquivoEditadoDocx);
-    unlink($caminhoPdfGerado);
-    exit();
+        unlink($caminhoArquivoEditadoDocx);
+        unlink($caminhoPdfGerado);
+        exit();
+    } catch (Exception $e) {
+        error_log("Erro no processo de geração do PDF: " . $e->getMessage());
+        http_response_code(500);
+    }
 }
 ?>
