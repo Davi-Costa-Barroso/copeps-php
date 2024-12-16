@@ -204,65 +204,222 @@ if (@$copeps == 'ocultar') {
 							<div class="row bloqueado" id="bloco_pesquisa">
 								<div class="col-md-12">
 									<div class="modal-body">
-										<h4 class="modal-title" id="exampleModalLabel1" style="font-weight: bold;text-decoration: underline;">REQUISITOS PARA APROVAÇÃO DO PROJETO DE PESQUISA, PARA ATÉ 10 HORAS</h4>
+										<h4 class="modal-title" id="exampleModalLabel1" style="font-weight: bold;text-decoration: underline;">
+											REQUISITOS PARA APROVAÇÃO DO PROJETO DE PESQUISA, PARA ATÉ 
+											<span class="listar_checkbox5horas">
+												5 HORAS
+											</span>
+											<span class="listar_checkbox10horas">
+												10 HORAS
+											</span>
+											<span class="listar_checkbox15horas">
+												15 HORAS
+											</span>
+											<span class="listar_checkbox20horas">
+												20 HORAS
+											</span>
+										</h4>
 									</div>
 
 									<label>
-										<input type="checkbox" value="ra10" id="requisito_a10" name="requisito_a10" onchange="contarCheckbox10()"> a) Orientação de pelo menos 1 discente da graduação, da pós-graduação, da educação básica ou do ensino técnico e tecnológico, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+										<input type="checkbox" value="ra_pesquisa" id="requisito_a_pesquisa" name="requisito_a_pesquisa" onchange="contarCheckboxPesquisa()"> 
+										a) Orientação de pelo menos 
+										<span class="listar_checkbox5horas listar_checkbox10horas">1 dicente</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">2 dicentes</span>
+										da graduação, da educação básica ou do ensino técnico e tecnológico, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+									</label><br><br>
 
-									</label><br><br>
 									<label>
-										<input type="checkbox" value="rc10" id="requisito_c10" name="requisito_c10" onchange="contarCheckbox10()"> c) Apresentação de pelo menos um trabalho em evento científico, por ano, no período de vigência do projeto anterior;
+										<input type="checkbox" value="rc10" id="requisito_c10_pesquisa" name="requisito_c10_pesquisa" onchange="contarCheckbox10()"> 
+										b) Apresentação de pelo menos um trabalho em evento científico, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
-									<label>
-										<input type="checkbox" value="rd10" id="requisito_d10" name="requisito_d10" onchange="contarCheckbox10()"> d) Orientação ou coorientação na pós-graduação stricto sensu;
-									</label><br><br>
-									<label>
-										<input type="checkbox" value="rb10" id="requisito_b10" name="requisito_b10" onchange="contarCheckbox10()"> b) Publicação em média de um artigo em revista indexada, ou livro, ou capítulo de livro, por ano, no período de vigência do projeto anterior;
 
-									</label><br><br>
 									<label>
-										<input type="checkbox" value="re10" id="requisito_e10" name="requisito_e10" onchange="contarCheckbox10()"> e) Aprovação do projeto em edital da UFPA ou de agência de fomento.
+										<input type="checkbox" value="rd10" id="requisito_d10_pesquisa" name="requisito_d10_pesquisa" onchange="contarCheckbox10()"> 
+										c) Orientação ou coorientação na pós-graduação stricto sensu;
 									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="rb10" id="requisito_b10_pesquisa" name="requisito_b10_pesquisa" onchange="contarCheckbox10()"> 
+										d) Publicação em média de um artigo em revista indexada
+										<span class="listar_checkbox5horas listar_checkbox10horas">, ou livro, ou capítulo de livro, por ano, no período de vigência do projeto anterior;</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">por ano, no período de vigência do projeto anterior;</span>
+									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="re10" id="requisito_e10_pesquisa" name="requisito_e10_pesquisa" onchange="contarCheckbox10()"> 
+										e) Aprovação do projeto em edital da UFPA ou de agência de fomento.
+									</label><br><br>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12 text-center 
+									listar_checkbox5horas 
+									listar_checkbox10horas 
+									listar_checkbox15horas
+									listar_checkbox20horas
+									" style="margin-top: 20px; font-size: 20px;" >
+										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
+										<span class="contador">0</span>/3
+									</div>
 								</div>
 							</div>
 
 							<div class="row bloqueado" id="bloco_ensino">
 								<div class="col-md-12">
 									<div class="modal-body">
-										<h4 class="modal-title" id="exampleModalLabel2" style="font-weight: bold;text-decoration: underline;">REQUISITOS PARA APROVAÇÃO DO PROJETO DE ENSINO, PARA ATÉ 20 HORAS</h4>
+										<h4 class="modal-title" id="exampleModalLabel2" style="font-weight: bold;text-decoration: underline;">
+											REQUISITOS PARA APROVAÇÃO DO PROJETO DE ENSINO, PARA ATÉ
+											<span class="listar_checkbox5horas">
+												5 HORAS
+											</span>
+											<span class="listar_checkbox10horas">
+												10 HORAS
+											</span>
+											<span class="listar_checkbox15horas">
+												15 HORAS
+											</span>
+											<span class="listar_checkbox20horas">
+												20 HORAS
+											</span>
+										</h4>
 									</div>
 
 									<label>
-										<input type="checkbox" value="ra20" id="requisito_a20" name="requisito_a20" onchange="contarCheckbox20()"> a) Orientação de pelo menos 2 discentes da graduação, da pós-graduação, da educação básica ou do ensino técnico e tecnológico em projeto de ensino, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+										<input type="checkbox" value="ra_ensino" id="requisito_a" name="requisito_a" onchange="contarCheckboxEnsino()"> 
+										a) Orientação de pelo menos
+										<span class="listar_checkbox5horas listar_checkbox10horas">1 dicente</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">2 dicentes</span>
+										da graduação, da pós-graduação, da educação básica ou do ensino técnico e tecnológico em projeto de ensino, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+									</label><br><br>
 
-									</label><br><br>
 									<label>
-										<input type="checkbox" value="rc20" id="requisito_c20" name="requisito_c20" onchange="contarCheckbox20()"> c) Apresentação de pelo menos um trabalho em evento científico, por ano, no período de vigência do projeto anterior;
+										<input type="checkbox" value="rb_ensino" id="requisito_b" name="requisito_b" onchange="contarCheckboxEnsino()"> 
+										b) Uma apresentação em evento de uma unidade institucional, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
+
 									<label>
-										<input type="checkbox" value="rd20" id="requisito_d20" name="requisito_d20" onchange="contarCheckbox20()"> d) Orientação ou coorientação na pós-graduação stricto sensu;
+										<input type="checkbox" value="rc_ensino" id="requisito_c" name="requisito_c" onchange="contarCheckboxEnsino()"> 
+										c) 
+										<span class="listar_checkbox5horas">Publicação do resultado do projeto em periódico;</span>
+										<span class="listar_checkbox10horas">Publicação do resultado do projeto em periódico;</span>
+										<span class="listar_checkbox15horas">Uma publicação em revista indexada;</span>
+										<span class="listar_checkbox20horas">Uma publicação em revista indexada;</span>
 									</label><br><br>
+
 									<label>
-										<input type="checkbox" value="rb20" id="requisito_b20" name="requisito_b20" onchange="contarCheckbox20()"> b) Publicação em média de um artigo em revista indexada por ano, no período de vigência do projeto anterior;
+										<input type="checkbox" value="rd_ensino" id="requisito_d" name="requisito_d" onchange="contarCheckboxEnsino()"> 
+										d) Aprovação do projeto em edital da UFPA ou agência 
+										<span class="listar_checkbox5horas">externa;</span>
+										<span class="listar_checkbox10horas">externa;</span>
+										<span class="listar_checkbox15horas">de fomento;</span>
+										<span class="listar_checkbox20horas">de fomento;</span>
 									</label><br><br>
+
 									<label>
-										<input type="checkbox" value="re20" id="requisito_e20" name="requisito_e20" onchange="contarCheckbox20()"> e) Aprovação do projeto em edital da UFPA ou de agência de fomento.
+										<input type="checkbox" value="re_ensino" id="requisito_e" name="requisito_e" onchange="contarCheckboxEnsino()"> 
+										e) Elaboração de material didático concreto;
 									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="rf_ensino" id="requisito_f" name="requisito_f" onchange="contarCheckboxEnsino()"> 
+										f) Elaboração de material didático virtual;
+									</label><br><br>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12 text-center 
+									listar_checkbox5horas 
+									listar_checkbox10horas 
+									listar_checkbox15horas
+									listar_checkbox20horas
+									" style="margin-top: 20px; font-size: 20px;" >
+										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
+										<span class="contador">0</span>
+										/
+										<span class="listar_checkbox5horas listar_checkbox10horas">3</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">4</span>
+									</div>
 								</div>
 							</div>
 
-							<div class="row">
-								<!-- Div para exibir o número de checkboxes selecionados 10 horas -->
-								<div class="col-md-12 text-center" style="margin-top: 20px; font-size: 20px;" id="listar_checkbox10horas">
-									REQUISITOS PARA APROVAÇÃO DO PROJETO: <span id="contador10">0</span>/3
-								</div>
-							</div>
+							<div class="row bloqueado" id="bloco_extensao">
+								<div class="col-md-12">
+									<div class="modal-body">
+										<h4 class="modal-title" id="exampleModalLabel3" style="font-weight: bold;text-decoration: underline;">
+											REQUISITOS PARA APROVAÇÃO DO PROJETO DE EXTENSÃO, PARA ATÉ
+											<span class="listar_checkbox5horas">
+												5 HORAS
+											</span>
+											<span class="listar_checkbox10horas">
+												10 HORAS
+											</span>
+											<span class="listar_checkbox15horas">
+												15 HORAS
+											</span>
+											<span class="listar_checkbox20horas">
+												20 HORAS
+											</span>
+										</h4>
+									</div>
 
-							<div class="row">
-								<!-- Div para exibir o número de checkboxes selecionados 20 horas -->
-								<div class="col-md-12 text-center" style="margin-top: 20px; font-size: 20px;" id="listar_checkbox20horas">
-									REQUISITOS PARA APROVAÇÃO DO PROJETO: <span id="contador20">0</span>/3
+
+									<label>
+										<input type="checkbox" value="ra_extensao" id="requisito_a_extensao" name="requisito_a_extensao" onchange="contarCheckboxExtensao()"> 
+										Orientação de pelo menos
+										<span class="listar_checkbox5horas listar_checkbox10horas">
+											1 dicente da graduação, da pós-graduação, da educação básica ou do ensino técnico e tecnológico em projeto de ensino, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+										</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">
+											2 dicentes da graduação, a educação básica ou do ensino técnico e tecnológico em projeto de ensino, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
+										</span>
+									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="rb_extensao" id="requisito_b_extensao" name="requisito_b_extensao" onchange="contarCheckboxExtensao()"> 
+										<span class="listar_checkbox5horas listar_checkbox10horas">
+											Realização de uma oficina, palestra ou painel nas jornadas dos campi por ano, no período de vigência do projeto anterior;
+										</span>
+
+										<span class="listar_checkbox15horas listar_checkbox20horas">
+											Publicação em média de um artigo em revista indexada por ano, no período de vigência do projeto anterior;
+										</span>
+										
+									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="rc_extensao" id="requisito_c_extensao" name="requisito_c_extensao" onchange="contarCheckboxExtensao()"> 				
+										<span class="listar_checkbox5horas listar_checkbox10horas">
+											Publicação de um resumo expandido em Anais, por ano;
+										</span>
+
+										<span class="listar_checkbox15horas listar_checkbox20horas">
+											Aprovação do projeto em edital da UFPA ou agência de formento;
+										</span>
+									</label><br><br>
+
+									<label>
+										<input type="checkbox" value="rd_extensao" id="requisito_d_extensao" name="requisito_d_extensao" onchange="contarCheckboxExtensao()"> 
+										<span class="listar_checkbox5horas listar_checkbox10horas">
+											Elaboração de uma cartilha, por ano, no período de vigência do projeto anterior.
+										</span>
+
+										<span class="listar_checkbox15horas listar_checkbox20horas">
+											Apresentação, à PROEX, de proposta original de atualização ou inovação das atividades de extensão de um curso de graduação da UFPA.
+										</span>
+									</label><br><br>
+								</div>
+
+								<div class="row">
+									<div class="col-md-12 text-center 
+									listar_checkbox5horas 
+									listar_checkbox10horas 
+									listar_checkbox15horas
+									listar_checkbox20horas
+									" style="margin-top: 20px; font-size: 20px;" >
+										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
+										<span class="contador">0</span>/3
+									</div>
 								</div>
 							</div>
 
@@ -271,8 +428,10 @@ if (@$copeps == 'ocultar') {
 									display: none;
 								}
 
-								#listar_checkbox10horas,
-								#listar_checkbox20horas {
+								.listar_checkbox5horas, 
+								.listar_checkbox10horas, 
+								.listar_checkbox15horas,
+								.listar_checkbox20horas {
 									display: none;
 								}
 							</style>
@@ -757,52 +916,56 @@ if (@$copeps == 'ocultar') {
 	}
 
 	function mostrarBlocosRequisitos(escolha, horasSelecionadas) {
-		console.log('Escolha:', escolha);
-		console.log('Horas selecionadas:', horasSelecionadas);
+		
+		if(!dados.nomeRelatorio){
+			$('#mensagem').addClass('text-danger').text("Informe relatório");
+		}
 		dados.horasSelecionadas = horasSelecionadas;
-		// Oculta ambos os blocos
+
 		$('#bloco_pesquisa').hide();
 		$('#bloco_ensino').hide();
+		$('#bloco_extensao').hide();
+		
+		$('.listar_checkbox5horas').hide();
+		$('.listar_checkbox10horas').hide();
+		$('.listar_checkbox15horas').hide();
+		$('.listar_checkbox20horas').hide();
 
-		// Exibe o bloco correspondente à escolha de horas
-		if (escolha === 'simc' && (horasSelecionadas === '10 (Dez) horas' || horasSelecionadas === '5 (Cinco) horas')) {
-			console.log('Exibindo pesquisa-projeto e listar_checkbox10horas');
-			$('#bloco_pesquisa').show();
-		} else if (escolha === 'simc' && (horasSelecionadas === '20 (Vinte) horas' || horasSelecionadas === '15 (Quinze) horas')) {
-			console.log('Exibindo ensino-projeto e listar_checkbox20horas');
-			$('#bloco_ensino').show();
-		}
+		if(escolha === 'simc'){
+			
+			if(dados.nomeRelatorio.toLowerCase().includes("ensino")){
+				$('#bloco_ensino').show();
+			}else if(dados.nomeRelatorio.toLowerCase().includes("pesquisa")){
+				$('#bloco_pesquisa').show();
+			}else if(dados.nomeRelatorio.toLowerCase().includes("extensão")){
+				$('#bloco_extensao').show();
+			}
 
-		// Atualiza a mensagem conforme a escolha de horas
-		if (horasSelecionadas === '10 (Dez) horas' || horasSelecionadas === '5 (Cinco) horas') {
-			$('#listar_checkbox10horas').show();
-			$('#listar_checkbox20horas').hide();
-		} else if (horasSelecionadas === '20 (Vinte) horas' || horasSelecionadas === '15 (Quinze) horas') {
-			$('#listar_checkbox10horas').hide();
-			$('#listar_checkbox20horas').show();
-		} else {
-			// Se não for 10, 5, 20 ou 15 horas, oculta ambas as mensagens
-			$('#listar_checkbox10horas').hide();
-			$('#listar_checkbox20horas').hide();
+			if (horasSelecionadas === '5 (Cinco) horas') {
+				$('.listar_checkbox5horas').show();
+			} else if (horasSelecionadas === '10 (Dez) horas') {
+				$('.listar_checkbox10horas').show();
+			} else if (horasSelecionadas === '15 (Quinze) horas') {
+				$('.listar_checkbox15horas').show();
+			} else if (horasSelecionadas === '20 (Vinte) horas') {
+				$('.listar_checkbox20horas').show();
+			}
 		}
 	}
 
-	$(document).on('change', '#tipo-carga', function() {
-		var horasSelecionadas = $(this).val();
+	$(document).on('change', '#tipo-carga, #tipo', function() {
+		var horasSelecionadas = $('#tipo-carga').val();
 		var escolha = $('input[name="tipo-carga"]:checked').val();
 		console.log('Mudança de horas. Nova seleção:', horasSelecionadas);
 		console.log('Escolha atual:', escolha);
 		mostrarBlocosRequisitos(escolha, horasSelecionadas);
 	});
 
-	// Função para contar checkboxes para 10 horas
-	function contarCheckbox10() {
-		var totalSelecionados = $('input[name^="requisito_a10"]:checked, input[name^="requisito_b10"]:checked, input[name^="requisito_c10"]:checked, input[name^="requisito_d10"]:checked, input[name^="requisito_e10"]:checked').length;
-		console.log('Total selecionado para 10 horas:', totalSelecionados);
-		$('#contador10').text(totalSelecionados);
-		// Faz a requisição AJAX para 10 horas
+	function contarCheckboxPesquisa() {
+		var totalSelecionados = $('input[name^="ra_pesquisa"]:checked, input[name^="rb_pesquisa"]:checked, input[name^="rc_pesquisa"]:checked, input[name^="rd_pesquisa"]:checked, input[name^="re_pesquisa"]:checked').length;
+		$('.contador').text(totalSelecionados);
 		$.ajax({
-			url: 'paginas/' + pag + '/listar_checkbox10horas.php',
+			url: 'paginas/' + pag + '/listar_checkboxPesquisa.php',
 			method: 'POST',
 			data: {
 				escolhido3: totalSelecionados
@@ -821,14 +984,11 @@ if (@$copeps == 'ocultar') {
 		});
 	}
 
-	// Função para contar checkboxes para 20 horas
-	function contarCheckbox20() {
-		var totalSelecionados2 = $('input[name^="requisito_a20"]:checked, input[name^="requisito_b20"]:checked, input[name^="requisito_c20"]:checked, input[name^="requisito_d20"]:checked, input[name^="requisito_e20"]:checked').length;
-		console.log('Total selecionado para 20 horas:', totalSelecionados2);
-		$('#contador20').text(totalSelecionados2);
-		// Faz a requisição AJAX para 20 horas
+	function contarCheckboxEnsino() {
+		var totalSelecionados2 = $('input[name^="requisito_a"]:checked, input[name^="requisito_b"]:checked, input[name^="requisito_c"]:checked, input[name^="requisito_d"]:checked, input[name^="requisito_e"]:checked, input[name^="requisito_f"]:checked').length;
+		$('.contador').text(totalSelecionados2);
 		$.ajax({
-			url: 'paginas/' + pag + '/listar_checkbox20horas.php',
+			url: 'paginas/' + pag + '/listar_checkboxEnsino.php',
 			method: 'POST',
 			data: {
 				escolhido4: totalSelecionados2
@@ -847,6 +1007,28 @@ if (@$copeps == 'ocultar') {
 		});
 	}
 
+	function contarCheckboxExtensao() {
+		var totalSelecionados2 = $('input[name^="requisito_a_extensao"]:checked, input[name^="requisito_b_extensao"]:checked, input[name^="requisito_c_extensao"]:checked, input[name^="requisito_d_extensao"]:checked').length;
+		$('.contador').text(totalSelecionados2);
+		$.ajax({
+			url: 'paginas/' + pag + '/listar_checkboxExtensao.php',
+			method: 'POST',
+			data: {
+				escolhido5: totalSelecionados2
+			},
+			dataType: 'json',
+			success: function(result) {
+				if (result.success) {
+					// Faça algo com a resposta do servidor, se necessário
+				} else {
+					console.error('Erro no servidor.');
+				}
+			},
+			error: function(xhr, status, error) {
+				console.error('Erro na requisição AJAX: ' + status + ' - ' + error);
+			}
+		});
+	}
 
 	// Função para reiniciar o contador no servidor
 	function reiniciarContador(horas) {
