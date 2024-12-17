@@ -1535,7 +1535,7 @@ listarMembrosComissao(function(result) {
 		dados.anoParecer = $("#ano").val();
 		dados.numeroOficio = $("#numeroOficio").val();
 		dados.itemOficio = $("#item_field").val();
-		dados.dataEnvio = $("#data").val();
+		dados.dataEnvio = ajustarFormatoData($("#data").val()) || '';
 		dados.textoAnalisado = $("#obs1").val();
 		dados.tituloProjetoAnalisado = $("#obs2").val();
 		dados.descricaoProposta = $("#obs4").val();
