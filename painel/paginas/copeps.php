@@ -1416,7 +1416,7 @@ listarMembrosComissao(function(result) {
 		return ajustarFormatoData(dataFormatada)
 	}
 
-
+	// Verifica se todos os campos foram preenchidos antes de baixar o relatorio
 	function validarCampos(){
 		if (!dados.numeroParecer) {
 			$('#mensagem').addClass('text-danger');
@@ -1528,6 +1528,7 @@ listarMembrosComissao(function(result) {
 		return true;
 	}
 
+	// Pega os dados do formulario do parecer e coloca no objeto dados para depois preencher no doc
 	function preencherDados(){
 		dados.numeroParecer = $("#numeroParecer").val();
 		dados.anoParecer = $("#ano").val();
