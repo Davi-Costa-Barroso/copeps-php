@@ -230,24 +230,24 @@ if (@$copeps == 'ocultar') {
 									</label><br><br>
 
 									<label>
-										<input type="checkbox" value="rc10" id="requisito_c10_pesquisa" name="requisito_c10_pesquisa" onchange="contarCheckbox10()"> 
+										<input type="checkbox" value="rb_pesquisa" id="requisito_b_pesquisa" name="requisito_b_pesquisa" onchange="contarCheckboxPesquisa()"> 
 										b) Apresentação de pelo menos um trabalho em evento científico, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
 
 									<label>
-										<input type="checkbox" value="rd10" id="requisito_d10_pesquisa" name="requisito_d10_pesquisa" onchange="contarCheckbox10()"> 
+										<input type="checkbox" value="rc_pesquisa" id="requisito_c_pesquisa" name="requisito_c_pesquisa" onchange="contarCheckboxPesquisa()"> 
 										c) Orientação ou coorientação na pós-graduação stricto sensu;
 									</label><br><br>
 
 									<label>
-										<input type="checkbox" value="rb10" id="requisito_b10_pesquisa" name="requisito_b10_pesquisa" onchange="contarCheckbox10()"> 
+										<input type="checkbox" value="rd_pesquisa" id="requisito_d_pesquisa" name="requisito_d_pesquisa" onchange="contarCheckboxPesquisa()"> 
 										d) Publicação em média de um artigo em revista indexada
 										<span class="listar_checkbox5horas listar_checkbox10horas">, ou livro, ou capítulo de livro, por ano, no período de vigência do projeto anterior;</span>
 										<span class="listar_checkbox15horas listar_checkbox20horas">por ano, no período de vigência do projeto anterior;</span>
 									</label><br><br>
 
 									<label>
-										<input type="checkbox" value="re10" id="requisito_e10_pesquisa" name="requisito_e10_pesquisa" onchange="contarCheckbox10()"> 
+										<input type="checkbox" value="re_pesquisa" id="requisito_e_pesquisa" name="requisito_e_pesquisa" onchange="contarCheckboxPesquisa()"> 
 										e) Aprovação do projeto em edital da UFPA ou de agência de fomento.
 									</label><br><br>
 								</div>
@@ -260,7 +260,7 @@ if (@$copeps == 'ocultar') {
 									listar_checkbox20horas
 									" style="margin-top: 20px; font-size: 20px;" >
 										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
-										<span class="contador">0</span>/3
+										<span class="contadorPesquisa">0</span>/3
 									</div>
 								</div>
 							</div>
@@ -335,7 +335,7 @@ if (@$copeps == 'ocultar') {
 									listar_checkbox20horas
 									" style="margin-top: 20px; font-size: 20px;" >
 										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
-										<span class="contador">0</span>
+										<span class="contadorEnsino">0</span>
 										/
 										<span class="listar_checkbox5horas listar_checkbox10horas">3</span>
 										<span class="listar_checkbox15horas listar_checkbox20horas">4</span>
@@ -418,7 +418,7 @@ if (@$copeps == 'ocultar') {
 									listar_checkbox20horas
 									" style="margin-top: 20px; font-size: 20px;" >
 										REQUISITOS PARA APROVAÇÃO DO PROJETO: 
-										<span class="contador">0</span>/3
+										<span class="contadorExtensao">0</span>/3
 									</div>
 								</div>
 							</div>
@@ -962,8 +962,8 @@ if (@$copeps == 'ocultar') {
 	});
 
 	function contarCheckboxPesquisa() {
-		var totalSelecionados = $('input[name^="ra_pesquisa"]:checked, input[name^="rb_pesquisa"]:checked, input[name^="rc_pesquisa"]:checked, input[name^="rd_pesquisa"]:checked, input[name^="re_pesquisa"]:checked').length;
-		$('.contador').text(totalSelecionados);
+		var totalSelecionados = $('input[name^="requisito_a_pesquisa"]:checked, input[name^="requisito_b_pesquisa"]:checked, input[name^="requisito_c_pesquisa"]:checked, input[name^="requisito_d_pesquisa"]:checked, input[name^="requisito_e_pesquisa"]:checked').length;
+		$('.contadorPesquisa').text(totalSelecionados);
 		$.ajax({
 			url: 'paginas/' + pag + '/listar_checkboxPesquisa.php',
 			method: 'POST',
@@ -985,8 +985,9 @@ if (@$copeps == 'ocultar') {
 	}
 
 	function contarCheckboxEnsino() {
+		console.log($('input[name^="requisito_a"]:checked'))
 		var totalSelecionados2 = $('input[name^="requisito_a"]:checked, input[name^="requisito_b"]:checked, input[name^="requisito_c"]:checked, input[name^="requisito_d"]:checked, input[name^="requisito_e"]:checked, input[name^="requisito_f"]:checked').length;
-		$('.contador').text(totalSelecionados2);
+		$('.contadorEnsino').text(totalSelecionados2);
 		$.ajax({
 			url: 'paginas/' + pag + '/listar_checkboxEnsino.php',
 			method: 'POST',
@@ -1009,7 +1010,7 @@ if (@$copeps == 'ocultar') {
 
 	function contarCheckboxExtensao() {
 		var totalSelecionados2 = $('input[name^="requisito_a_extensao"]:checked, input[name^="requisito_b_extensao"]:checked, input[name^="requisito_c_extensao"]:checked, input[name^="requisito_d_extensao"]:checked').length;
-		$('.contador').text(totalSelecionados2);
+		$('.contadorExtensao').text(totalSelecionados2);
 		$.ajax({
 			url: 'paginas/' + pag + '/listar_checkboxExtensao.php',
 			method: 'POST',
