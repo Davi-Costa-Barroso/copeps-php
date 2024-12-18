@@ -224,8 +224,8 @@ if (@$copeps == 'ocultar') {
 									<label>
 										<input type="checkbox" value="ra_pesquisa" id="requisito_a_pesquisa" name="requisito_a_pesquisa" onchange="contarCheckboxPesquisa()"> 
 										a) Orientação de pelo menos 
-										<span class="listar_checkbox5horas listar_checkbox10horas">1 dicente</span>
-										<span class="listar_checkbox15horas listar_checkbox20horas">2 dicentes</span>
+										<span class="listar_checkbox5horas listar_checkbox10horas">1 discente</span>
+										<span class="listar_checkbox15horas listar_checkbox20horas">2 discentes</span>
 										da graduação, da educação básica ou do ensino técnico e tecnológico, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
 
@@ -287,20 +287,20 @@ if (@$copeps == 'ocultar') {
 
 									<label>
 										<input type="checkbox" value="ra_ensino" id="requisito_a" name="requisito_a" onchange="contarCheckboxEnsino()"> 
-										a) Orientação de pelo menos
-										<span class="listar_checkbox5horas listar_checkbox10horas">1 dicente</span>
-										<span class="listar_checkbox15horas listar_checkbox20horas">2 dicentes</span>
+									  Orientação de pelo menos
+										<span class="listar_checkbox5horas listar_checkbox10horas"> 1 discente </span>
+										<span class="listar_checkbox15horas listar_checkbox20horas"> 2 discentes</span>
 										da graduação, da pós-graduação, da educação básica ou do ensino técnico e tecnológico em projeto de ensino, bolsista ou voluntário, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
 
 									<label>
 										<input type="checkbox" value="rb_ensino" id="requisito_b" name="requisito_b" onchange="contarCheckboxEnsino()"> 
-										b) Uma apresentação em evento de uma unidade institucional, por ano, no período de vigência do projeto anterior;
+										 Uma apresentação em evento de uma unidade institucional, por ano, no período de vigência do projeto anterior;
 									</label><br><br>
 
 									<label>
 										<input type="checkbox" value="rc_ensino" id="requisito_c" name="requisito_c" onchange="contarCheckboxEnsino()"> 
-										c) 
+										
 										<span class="listar_checkbox5horas">Publicação do resultado do projeto em periódico;</span>
 										<span class="listar_checkbox10horas">Publicação do resultado do projeto em periódico;</span>
 										<span class="listar_checkbox15horas">Uma publicação em revista indexada;</span>
@@ -309,7 +309,7 @@ if (@$copeps == 'ocultar') {
 
 									<label>
 										<input type="checkbox" value="rd_ensino" id="requisito_d" name="requisito_d" onchange="contarCheckboxEnsino()"> 
-										d) Aprovação do projeto em edital da UFPA ou agência 
+										Aprovação do projeto em edital da UFPA ou agência 
 										<span class="listar_checkbox5horas">externa;</span>
 										<span class="listar_checkbox10horas">externa;</span>
 										<span class="listar_checkbox15horas">de fomento;</span>
@@ -318,12 +318,12 @@ if (@$copeps == 'ocultar') {
 
 									<label>
 										<input type="checkbox" value="re_ensino" id="requisito_e" name="requisito_e" onchange="contarCheckboxEnsino()"> 
-										e) Elaboração de material didático concreto;
+										Elaboração de material didático concreto;
 									</label><br><br>
 
 									<label>
 										<input type="checkbox" value="rf_ensino" id="requisito_f" name="requisito_f" onchange="contarCheckboxEnsino()"> 
-										f) Elaboração de material didático virtual;
+										 Elaboração de material didático virtual.
 									</label><br><br>
 								</div>
 
@@ -1164,8 +1164,6 @@ if (@$copeps == 'ocultar') {
 
 	//Ajax p/a Ler os documento:  Select2 p/a formulario de membros 
 	$(document).ready(function() {
-		console.log("Valor de pag:", pag);
-
 
 		$('#myTab a[href="#home"]').tab('show'); //comando que abre a aba inicial da modal.
 
@@ -1230,6 +1228,7 @@ var dados = {
 	aprovOuReprov: "",
 
 	paragrafo8: "", 
+	partePrg8: "",
 	comentariosParecer: "",
 	paragrafo9: "",
 	dataAtual: "",
@@ -1242,9 +1241,8 @@ var dados = {
 	nomeTecTit: "",
 	nomeTecSup: "",
 	nomeDiscTit: "",
-	nomeDiscSup: ""
-
-
+	nomeDiscSup: "",
+	elementosCargaHoraria: []
 };
 
 
@@ -1613,9 +1611,7 @@ listarMembrosComissao(function(result) {
 			preencherDados()
 			// Aqui verifica se todos os campos necessarios foram preenchidos.
 			if(!validarCampos()) return;
-			
-
-
+				
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
 				dados.pronomeTxt = "a"
@@ -1683,13 +1679,31 @@ listarMembrosComissao(function(result) {
 			// Aqui define como deve ser a frase quando tem ou não carga horaria
 			if(dados.cargaHoraria === 'desabilitado'){
 				dados.cargaHoraria = 'sem alocação de Carga Horária';
-				dados.paragrafo8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes"
+				dados.partePrg8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
 			} else{
+				let textos = [];
+				let horasSelecionadasNumero = parseInt(dados.horasSelecionadas.split(' ')[0]);
+				let elementosCH = [];
+
 				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
-				dados.paragrafo8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
+				dados.partePrg8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
+				
+				elementosCH = capturarCheckboxesEspecificos(horasSelecionadasNumero, dados.nomeRelatorio)
+				textos = elementosCH.map((element, index) => `(${String.fromCharCode(97 + index)}) ${element.texto.trim().replace(/[;.]$/, '')}`);
+				console.log(textos)
+
+				if (textos.length > 1) {
+					let penultimoEultimo = textos.slice(-2).map(txt => txt.replace(/[;.]$/, '')).join(' e '); // Remove o ";" e une com " e "
+					dados.elementosCargaHoraria = textos.slice(0, -2).join(' ') + (textos.length > 2 ? ' ' : '') + penultimoEultimo;
+				} else if (textos.length === 1) {
+					dados.elementosCargaHoraria = textos[0]; // Apenas um elemento
+				} else {
+					dados.elementosCargaHoraria = []; // Nenhum elemento
+				}
 			}
 			
 			if(dados.TIPODOCUMENTO === 'nao'){
+				dados.paragrafo8 = "Acerca da quantidade de horas a serem alocadas, por se tratar de um projeto" + dados.cargaHoraria + "para " +  dados.PRNCoordenador + " " +  dados.coordenadorPRNTxtCoordenador + ", " + dados.partePrg8 
 				// Topico 1
 				dados.TIPODOCUMENTO = "DESCRIÇÃO";
 				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
@@ -1726,7 +1740,7 @@ listarMembrosComissao(function(result) {
 				dados.letra = "j";
 				dados.proj_Ana_Enc = "encerrado";
 				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dados.descricaoProposta 
-								+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral."
+								+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral"
 
 				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
 					dados.artgo = "192 a 197";
@@ -1736,6 +1750,7 @@ listarMembrosComissao(function(result) {
 					dados.capitulo = "VI, da Pesquisa";
 
 				}
+				dados.paragrafo8 = "As atividades de coordenação de projeto foram exercidas " + dados.cargaHoraria + " de carga horária. Portanto, deveria atender às exigências do Anexo 1 da Resolução 4.918, de 2017, do CONSEPE. Verificou-se, na documentação encaminhada, que foram atendidos os seguintes quesitos, nos termos da Resolução: "  + dados.elementosCargaHoraria + ". Assim, consideram-se cumpridas as exigências e disposições presentes no capítulo mencionado do Regimento Geral"
 							
 			}
 			dados.dataAprovacao = ajustarFormatoData(dados.dataAprovacao) || '';
@@ -1935,6 +1950,58 @@ listarMembrosComissao(function(result) {
 			}
 		});
 	}
+
+	function capturarCheckboxesEspecificos(horas, tipoDocumento) {
+    // Define os checkboxes relevantes com base no tipo de documento
+    let seletores = "";
+    switch (tipoDocumento) {
+        case "Relatório Parcial de Projeto de Pesquisa" || "Projeto de Pesquisa" || "Relatório Final de Projeto de Pesquisa":
+            seletores = 'input[name^="requisito_a_pesquisa"], input[name^="requisito_b_pesquisa"], input[name^="requisito_c_pesquisa"], input[name^="requisito_d_pesquisa"], input[name^="requisito_e_pesquisa"]';
+            break;
+        case "Relatório Parcial de Projeto de Ensino" || "Projeto de Ensino" || "Relatório Final de Projeto de Ensino" :
+            seletores = 'input[name^="requisito_a"], input[name^="requisito_b"], input[name^="requisito_c"], input[name^="requisito_d"], input[name^="requisito_e"], input[name^="requisito_f"]';
+            break;
+        case "Relatório Parcial de Projeto de Extensão" || "Projeto de Extensão" || "Relatório Final de Projeto de Extensão":
+            seletores = 'input[name^="requisito_a_extensao"], input[name^="requisito_b_extensao"], input[name^="requisito_c_extensao"], input[name^="requisito_d_extensao"]';
+            break;
+        default:
+            console.error("Tipo de documento desconhecido:", tipoDocumento);
+            return [];
+    }
+
+    // Seleciona os checkboxes com base nos seletores definidos
+    const checkboxesRelevantes = document.querySelectorAll(seletores);
+
+    let resultados = [];
+
+    // Itera sobre os checkboxes relevantes
+    checkboxesRelevantes.forEach((checkbox) => {
+        if (checkbox.checked) {
+            let textoAssociado = "";
+            let elementosIrmaos = checkbox.parentNode.childNodes;
+
+            elementosIrmaos.forEach(elemento => {
+                if (elemento.nodeType === Node.TEXT_NODE) {
+                    textoAssociado += elemento.textContent.trim();
+                } else if (elemento.nodeType === Node.ELEMENT_NODE && elemento.tagName === 'SPAN') {
+                    if (elemento.classList.contains(`listar_checkbox${horas}horas`)) {
+                        textoAssociado += elemento.textContent.trim();
+                    }
+                }
+            });
+
+            resultados.push({
+                valor: checkbox.value,
+                texto: textoAssociado,
+            });
+        }
+    });
+
+    return resultados;
+}
+
+
+
 
 		
     
