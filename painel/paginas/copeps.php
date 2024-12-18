@@ -1683,7 +1683,7 @@ listarMembrosComissao(function(result) {
 			// Aqui define como deve ser a frase quando tem ou não carga horaria
 			if(dados.cargaHoraria === 'desabilitado'){
 				dados.cargaHoraria = 'sem alocação de Carga Horária';
-				dados.paragrafo8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
+				dados.paragrafo8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes"
 			} else{
 				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
 				dados.paragrafo8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
@@ -1710,8 +1710,8 @@ listarMembrosComissao(function(result) {
 					dados.artgo = "184 a 191";
 					dados.capitulo = "VI, da Pesquisa";
 					
-					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral"
-					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição.";
+					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral."
+					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição";
 				}
 				dados.proj_Ana_Enc = "analisado";
 
@@ -1722,7 +1722,7 @@ listarMembrosComissao(function(result) {
 				dados.objetivoDescricaoProposta = "";
 				dados.objetivoProjeto = "";
 				dados.proposicaoOuRelatorio = "O relatório"
-				dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”.";
+				dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”";
 				dados.letra = "j";
 				dados.proj_Ana_Enc = "encerrado";
 				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dados.descricaoProposta 
@@ -1753,9 +1753,7 @@ listarMembrosComissao(function(result) {
 				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
 			}
 
-			dados.dataAtual = getDataAtual()
-
-			
+			dados.dataAtual = getDataAtual()	
 			
 			console.log(dados)
 			// Aqui define o nome do arquivo PDF
