@@ -1388,6 +1388,7 @@ listarMembrosComissao(function(result) {
 	document.getElementById("sexoCoordenador").addEventListener("change", atualizarOpcoesTitulacaoCoordenador);
 	document.getElementById("sexoOutroCoordenador").addEventListener("change", atualizarOpcoesTitulacaoOutroCoordenador);
 
+	// Ajuste o formato da data para ficar no estilo 20 de dezembro de 2024
 	function ajustarFormatoData(data) {
 		const meses = [
         "janeiro", "fevereiro", "março", "abril", "maio", "junho",
@@ -1637,7 +1638,7 @@ listarMembrosComissao(function(result) {
 				dados.PRNCoordenador = "a"
 				dados.PRNTxtCoordenador = "a"
 			}
-
+			// Verifica se possui outro cordenador e se sim vai precisar adicionar o pronome e o titulo vice-coordenador
 			if(dados.possuiOutroCoordenador === "sim") {
 				if(dados.sexoViceCoordenador === "masculino") {
 					dados.pronomeViceCoordenador = "o"
@@ -1702,6 +1703,8 @@ listarMembrosComissao(function(result) {
 				}
 			}
 			
+			// Aqui verifica se o tipo de documento não é um relatorio final e nem parcial
+			// Dependendo do tipo o primeiro topico pode ser DESCRIÇÃO ou RELATÓRIO
 			if(dados.TIPODOCUMENTO === 'nao'){
 				dados.paragrafo8 = "Acerca da quantidade de horas a serem alocadas, por se tratar de um projeto" + dados.cargaHoraria + "para " +  dados.PRNCoordenador + " " +  dados.coordenadorPRNTxtCoordenador + ", " + dados.partePrg8 
 				// Topico 1
@@ -1770,7 +1773,7 @@ listarMembrosComissao(function(result) {
 
 			dados.dataAtual = getDataAtual()	
 			
-			console.log(dados)
+			console.log('dados para o relatorio: ', dados)
 			// Aqui define o nome do arquivo PDF
 			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
 			
@@ -1783,6 +1786,7 @@ listarMembrosComissao(function(result) {
 			})
 			.then(response => response.blob())
 			.then(blob => {
+				// aqui construi o componente e ativa para baixar pelo navegador
 				const url = window.URL.createObjectURL(blob);
 				const a = document.createElement('a');
 				a.style.display = 'none';
