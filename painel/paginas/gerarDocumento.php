@@ -52,28 +52,47 @@ function substituirTextoNoDocx($caminhoArquivoOrigem, $caminhoArquivoDestino, $d
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    try{
+    try {
+        // Detecta o sistema operacional
+        $os = strtoupper(substr(PHP_OS, 0, 3));
+        if ($os === 'WIN') {
+            $libreOfficePath = '"C:\\Program Files\\LibreOffice\\program\\soffice.exe"';
+        } else {
+            $libreOfficePath = '/usr/bin/libreoffice';
+        }
+
+        // Obtém os dados JSON
         $dadosJson = file_get_contents('php://input');
         $dados = json_decode($dadosJson, true);
-        
+
+        if (!isset($dados['dados']) || !is_array($dados['dados'])) {
+            throw new Exception("Dados inválidos ou faltando.");
+        }
+
         $dados = $dados['dados'];
 
+        // Caminhos dos arquivos
         $caminhoArquivoDocx = '../../docs/relatorioParecer.docx';
         $dataAtual = date('Y-m-d_H-i-s');
-        $nomeArquivoEditadoDocx = 'parecer_' . $dataAtual . '.docx';
-        $caminhoArquivoEditadoDocx = '../../docs/' . $nomeArquivoEditadoDocx;
+        $nomeArquivoEditadoDocx = "parecer_$dataAtual.docx";
+        $caminhoArquivoEditadoDocx = "../../docs/$nomeArquivoEditadoDocx";
+        $caminhoPdfGerado = "../../docs/parecer_$dataAtual.pdf";
 
-        $caminhoPdfGerado = '../../docs/relatorio_' . $dataAtual . '.pdf';
-
+        // Substituir texto no DOCX
         substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
 
-        ConvertApi::setApiCredentials('secret_IhqDw42KktD4C1Mg');
+        // Comando para conversão com LibreOffice
+        $comando = "$libreOfficePath --headless --convert-to pdf --outdir " . escapeshellarg(dirname($caminhoPdfGerado)) . " " . escapeshellarg($caminhoArquivoEditadoDocx);
+        exec($comando, $output, $returnCode);
 
-        $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
-        $resultado->saveFiles($caminhoPdfGerado); 
+        if ($returnCode !== 0 || !file_exists($caminhoPdfGerado)) {
+            throw new Exception("Erro ao converter DOCX para PDF com LibreOffice. Saída: " . implode("\n", $output));
+        }
 
+        // Envia o PDF para o cliente
         header('Content-Description: File Transfer');
         header('Content-Type: application/pdf');
+        header('Content-Disposition: attachment; filename="' . basename($caminhoPdfGerado) . '"');
         header('Content-Transfer-Encoding: binary');
         header('Expires: 0');
         header('Cache-Control: must-revalidate');
@@ -82,12 +101,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         readfile($caminhoPdfGerado);
 
+        // Remove arquivos temporários
         unlink($caminhoArquivoEditadoDocx);
         unlink($caminhoPdfGerado);
         exit();
+
     } catch (Exception $e) {
-        error_log("Erro no processo de geração do PDF: " . $e->getMessage());
+        error_log("Erro: " . $e->getMessage());
         http_response_code(500);
+        echo json_encode(['erro' => $e->getMessage()]);
     }
 }
+
+
 ?>
