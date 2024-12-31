@@ -59,6 +59,12 @@ if (@$copeps == 'ocultar') {
 					<div class="tab-content" id="myTabContent">
 						<div class="tab-pane fade" id="home" role="tabpanel" aria-labelledby="home-tab">
 							<div class="row">
+								
+								<div class="col-md-3 hidden">
+									<label for="ano">Id:</label>
+									<input type="text" class="form-control" id="id_dados" name="id_dados" readonly>
+								</div>
+
 								<div class="col-md-3">
 									<label for="numeroParecer">Número do Parecer:</label>
 									<input type="text" class="form-control" id="numeroParecer" name="numeroParecer">
@@ -1173,12 +1179,16 @@ if (@$copeps == 'ocultar') {
 	});
 
 $('#loading').hide();
+listarParecer();
+
 var dados = {
+	id: "",
     numeroParecer: "",
     anoParecer: "",
     numeroOficio: "",
     itemOficio: "",
     dataEnvio: "",
+	dataEnvio_nao_formatada: "",
     textoAnalisado: "",
     tituloProjetoAnalisado: "",
     documentosEnviados: [],
@@ -1203,7 +1213,7 @@ var dados = {
     titulacaoCoordenador: "",
     faculdadeCoordenador: "",
 	descricaoCoordenadores: "",
-    possuiOutroCoordenador: null,
+    possuiOutroCoordenador: "",
 
 	nomeViceCoordenador: "",
 	pronomeViceCoordenador: "",
@@ -1218,6 +1228,7 @@ var dados = {
 	numeroDoc: "",
 	dataAprovacao: null,
 	obs5: "",
+	justificativa: "",
 
 	nomeRelator: "",
 	sexoRelator: "",
@@ -1514,7 +1525,7 @@ listarMembrosComissao(function(result) {
 			return false;
 		}
 
-		if (dados.possuiOutroCoordenador === null) {
+		if (!dados.possuiOutroCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe se possui outro coordenador");
 			return false;
@@ -1530,26 +1541,45 @@ listarMembrosComissao(function(result) {
 
 	// Pega os dados do formulario do parecer e coloca no objeto dados para depois preencher no doc
 	function preencherDados(){
+		dados.id = $("#id_dados").val();
+		// Dados iniciais
 		dados.numeroParecer = $("#numeroParecer").val();
 		dados.anoParecer = $("#ano").val();
 		dados.numeroOficio = $("#numeroOficio").val();
 		dados.itemOficio = $("#item_field").val();
+		dados.dataEnvio_nao_formatada = $("#data").val() || '';
 		dados.dataEnvio = ajustarFormatoData($("#data").val()) || '';
 		dados.textoAnalisado = $("#obs1").val();
 		dados.tituloProjetoAnalisado = $("#obs2").val();
-		dados.descricaoProposta = $("#obs4").val();
 
+		documentosEnviados = []
+
+		for (let i = 1; i <= 6; i++) {
+			if($(`#doc${i}`).val()) {
+				documentosEnviados.push(`(${String.fromCharCode(97 + (i))}) ` + $(`#doc${i}`).val())
+				
+			}			
+		}
+
+		if (documentosEnviados.length > 1) {
+			const ultimoDocumento = documentosEnviados.pop();
+			dados.documentosEnviados = documentosEnviados.join('; ') + ' e ' + ultimoDocumento;
+		} else {
+    		dados.documentosEnviados = documentosEnviados.join('');
+		}
+
+		// dados documentos
+		// nomeRelatorio esta sendo adicionado na função mudarRelatorio()
 		dados.TIPODOCUMENTO = document.querySelector('input[name="tipo-desenvolvimento"]:checked')?.value || null;
 		dados.periodoProjeto = $("#mesesSelect").val();
 		dados.cargaHoraria = $("#tipo-carga").val();
-		// nomeRelatorio esta sendo adicionado na função mudarRelatorio()
-
+		// dados coordenador
 		dados.nomeCoordenador = $("#nome_coordenador").val();
 		dados.sexoCoordenador = $("#sexoCoordenador").val();
 		dados.titulacaoCoordenador = $("#titulacaoCoordenador").val();
 		dados.faculdadeCoordenador = $("#faculdadeCoordenador").val();
 		dados.possuiOutroCoordenador = $('input[name="possuiOutroCoordenador"]:checked')?.val() || null;
-		
+
 		if(dados.possuiOutroCoordenador === "sim") {
 			dados.nomeViceCoordenador = $("#nomeOutroCoordenador").val();
 			dados.sexoViceCoordenador = $("#sexoOutroCoordenador").val();
@@ -1562,26 +1592,17 @@ listarMembrosComissao(function(result) {
 			dados.sexoViceCoordenador =  ""
 			dados.titulacaoViceCoordenador = "" 	
 		}
+
+		// dados relator
+		dados.descricaoProposta = $("#obs4").val();
+		
 		dados.aprovacaoFaculdade = $("#aprovacaoFaculdade").val();
 		dados.numeroDoc = $('#numeroDocumento').val();
 		dados.dataAprovacao = $("#qualDia").val()
-		dados.obs5 = $("#obs5").val()
+		dados.obs5 = $("#obs5").val();
+		dados.justificativa = $("#obs5").val()
 		dados.obs5 = '"' + dados.obs5 + '"'
 
-		documentosEnviados = []
-
-		for (let i = 1; i <= 6; i++) {
-			if($(`#doc${i}`).val()) {
-				documentosEnviados.push(`(${String.fromCharCode(97 + (i))}) ` + $(`#doc${i}`).val())
-				
-			}			
-		}
-		if (documentosEnviados.length > 1) {
-			const ultimoDocumento = documentosEnviados.pop();
-			dados.documentosEnviados = documentosEnviados.join('; ') + ' e ' + ultimoDocumento;
-		} else {
-    		dados.documentosEnviados = documentosEnviados.join('');
-		}
 		dados.sexoRelator = $("#sexoRelator").val()
 
 		const selecionado = document.querySelector('input[name="parecerRelator"]:checked');
@@ -1593,9 +1614,7 @@ listarMembrosComissao(function(result) {
 		
 		const relator = document.getElementById('nomeRelator')
     	const selectedText = relator.options[relator.selectedIndex].text;
-    	console.log(selectedText); // Exibe o nome selecionado no console
 		
-
 		dados.nomeRelator = selectedText;
 
     }
@@ -1612,7 +1631,9 @@ listarMembrosComissao(function(result) {
 			preencherDados()
 			// Aqui verifica se todos os campos necessarios foram preenchidos.
 			if(!validarCampos()) return;
-				
+
+			adicionarParecer();
+			// return;
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
 				dados.pronomeTxt = "a"
@@ -1691,7 +1712,6 @@ listarMembrosComissao(function(result) {
 				
 				elementosCH = capturarCheckboxesEspecificos(horasSelecionadasNumero, dados.nomeRelatorio)
 				textos = elementosCH.map((element, index) => `(${String.fromCharCode(97 + index)}) ${element.texto.trim().replace(/[;.]$/, '')}`);
-				console.log(textos)
 
 				if (textos.length > 1) {
 					let penultimoEultimo = textos.slice(-2).map(txt => txt.replace(/[;.]$/, '')).join(' e '); // Remove o ";" e une com " e "
@@ -1933,6 +1953,26 @@ listarMembrosComissao(function(result) {
 		}
 
 	}
+	function adicionarParecer() {
+		console.log('dados: ', dados)
+		$.ajax({
+			url: 'paginas/adicionarParecer.php',
+			type: 'POST',
+			data: dados,
+			success: function (mensagem) {
+				console.log('salvo', mensagem)
+			},
+		});
+		listarParecer();
+	}
+
+	function listarParecer() {
+		$.ajax({
+			url: 'paginas/adicionarParecer.php',
+			type: 'GET',
+		});
+	}
+
 	function listarMembrosComissao(callback) {
     // Faz a requisição AJAX
 		$.ajax({

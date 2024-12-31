@@ -5,7 +5,7 @@ $id_usuario = $_SESSION['id'];
 $nivel_usuario = $_SESSION['nivel']; 
 require_once("../../../conexao.php");
 
-$query = $pdo->query("SELECT * from membros where comissao = 1 order by id desc");
+$query = $pdo->query("SELECT * from pareceres");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
@@ -14,14 +14,14 @@ echo <<<HTML
 	<table class="table table-hover" id="tabela">
 	<thead> 
 	<tr> 
-	<th>Nome</th>		
-	<th class="esc">Email</th>
-	<th class="esc">Nível</th>	
-	<th class="esc">Tipo de Membro</th>
-	<th class="esc">Comissão</th>
-	<th class="esc">Matrícula</th>
-	<th class="esc">Telefone</th>	
-	<th class="esc">Foto</th>	
+	<th>titulo</th>		
+	<th class="esc">Nº parecer</th>
+	<th class="esc">Ano</th>	
+	<th class="esc">Nº Oficio</th>
+	<th class="esc">Item oficio</th>
+	<th class="esc">Data envio</th>
+	<th class="esc">Coordenador</th>
+	<th class="esc">Relator</th>	
 	<th>Ações</th>
 	</tr> 
 	</thead> 
@@ -32,71 +32,84 @@ HTML;
 
 for($i=0; $i<$linhas; $i++){
 	$id = $res[$i]['id'];
-	$nome = $res[$i]['nome'];
-	$cpf = $res[$i]['cpf'];
-	$telefone = $res[$i]['telefone'];
-	$email = $res[$i]['email'];	
-	$foto = $res[$i]['foto'];
-	$cargo = $res[$i]['cargo']; //chave estrangeira que guarda id da tabela cargo
-	$tipo_membro = $res[$i]['tipo_membro'];
-	$comissao = $res[$i]['comissao'];
-	$endereco = $res[$i]['endereco'];
-	$cidade = $res[$i]['cidade'];
-	$estado = $res[$i]['estado'];
-	$pais = $res[$i]['pais'];
-	$ativo = $res[$i]['ativo'];
-	$data = $res[$i]['data'];
-	$matricula = $res[$i]['matricula'];
-	$obs = $res[$i]['obs'];
 
-
-	//retirar quebra de texto do obs
-	$obs = str_replace(array("\n", "\r"), ' + ', $obs);
-
+	// Dados Iniciais
+	$numeroParecer = $res[$i]['numeroParecer'];
+	$ano = $res[$i]['ano'];
+	$numeroOficio = $res[$i]['numeroOficio'];
+	$itemOficio = $res[$i]['itemOficio'];
+	$dataEnvio = $res[$i]['dataEnvio'];
+	$textoAnalisado = $res[$i]['textoAnalise'];
+	$tituloProjeto = $res[$i]['tituloProjeto'];
+	$documentosEnviados = $res[$i]['documEnviados'];
+	// Dados documento
+	$TIPODOCUMENTO = $res[$i]['TIPODOCUMENTO'];
+	$cargaHoraria = $res[$i]['cargaHoraria'];
+	$periodoProjeto = $res[$i]['periodoProjeto'];
+	$nomeRelatorio = $res[$i]['nomeRelatorio'];
+	// Dados coordenador	
+	$nomeCoordenador = $res[$i]['nomeCoordenador'];
+	$sexoCoordenador = $res[$i]['sexoCoordenador'];
+	$titulacaoCoordenador = $res[$i]['titulacaoCoordenador'];
+	$faculdadeCoordenador = $res[$i]['faculdadeCoordenador'];
+	$possuiOutroCoordenador = $res[$i]['possuiOutroCoordenador'];
+	$nomeViceCoordenador = $res[$i]['nomeViceCoordenador'];
+	$sexoViceCoordenador = $res[$i]['sexoViceCoordenador'];
+	$titulacaoViceCoordenador = $res[$i]['titulacaoViceCoordenador'];
+	// Dados Relator
+	$descricaoProposta = $res[$i]['descricaoProposta'];
+	$nomeRelator = $res[$i]['nomeRelator'];
+	$sexoRelator = $res[$i]['sexoRelator'];
+	$aprovacaoFaculdade = $res[$i]['aprovacaoFaculdade'];
+	$dataAprovacao = $res[$i]['dataAprovacao'];
+	$numeroDocumento = $res[$i]['numeroDocumento'];
+	$justificativa = $res[$i]['justificativa'];
+	$comentariosParecer = $res[$i]['comentariosParecer'];
+	$parecerRelator = $res[$i]['parecerRelator'];
+	
 	//Exibindo a data formatada
-	$dataF = implode('/', array_reverse(explode('-', $data)));
-
-	//$nome_cargo = "";
-	//$nome_comissao = "";
-
-	//Exibindo o nome do Cargo/membro da tabela membros ao inves do numero correspondente
-	$query2 = $pdo->query("SELECT * FROM cargos where id = '$cargo'");
-	$res2 = $query2->fetchAll(PDO::FETCH_ASSOC);
-	if(@count($res2) > 0){
-		$nome_cargo = $res2[0]['nome'];
-	}else{
-		$nome_cargo = 'Sem Cargo';
-	}
-
-
-	//Exibindo o nome da Comissao da tabela comissoes ao inves do numero correspondente
-	$query3 = $pdo->query("SELECT * FROM comissoes where id = '$comissao'");
-	$res3 = $query3->fetchAll(PDO::FETCH_ASSOC);
-	if(@count($res3) > 0){
-		$nome_comissao = $res3[0]['nome'];
-	}else{
-		$nome_comissao = 'Sem comissao';
-	}
-
-		
+	$dataF = implode('/', array_reverse(explode('-', $dataEnvio)));
 
 
 echo <<<HTML
 <tr> 
 <td>
-<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
-{$nome}
+	<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
+	{$tituloProjeto}
 </td>
-<td class="esc">{$email}</td>
-<td class="esc">{$nome_cargo}</td>
-<td class="esc">{$tipo_membro}</td>
-<td class="esc">{$nome_comissao}</td>
-<td class="esc">{$matricula}</td>
-<td class="esc">{$telefone}</td>
-<td class="esc"><img src="images/perfil/{$foto}" width="25px"></td>
+<td>
+	{$numeroParecer}
+</td>
+<td>
+	{$ano}
+</td>
+<td>
+	{$numeroOficio}
+</td>
+<td>
+	{$itemOficio}
+</td>
+<td>
+	{$dataF}
+</td>
+<td>
+	{$nomeCoordenador}
+</td>
+<td>
+	{$nomeRelator}
+</td>
 <td>
 	   <!-- Editar -->
-	<big><a href="#" onclick="editar('{$id}','{$nome}','{$cpf}','{$telefone}','{$email}', '{$cargo}', '{$comissao}','{$endereco}','{$cidade}', '{$estado}','{$pais}','{$matricula}','{$obs}', '{$foto}')" title="Editar Dados"><i class="fa fa-edit text-primary"></i></a></big>
+	<big>
+	<a 
+		href="#" 
+		onclick="editar('{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
+		title="Editar Dados"
+	>
+			<i class="fa fa-edit text-primary">
+			</i>
+		</a>
+	</big>
 
 
 	  <!-- Excluir -->
@@ -107,21 +120,16 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}','{$nome}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
 				
 		</div>
 		</li>										
 		</ul>
 	</li>
 
-	<!-- Mostrar Dados --> 
-	<big><a href="#" onclick="mostrar('{$nome}','{$cpf}','{$telefone}','{$email}', '{$nome_cargo}', '{$nome_comissao}', '{$tipo_membro}', '{$ativo}','{$dataF}','{$endereco}','{$cidade}', '{$estado}','{$pais}','{$matricula}','{$obs}', '{$foto}')" title="Mostrar Dados"><i class="fa fa-info-circle text-primary"></i></a></big>	
-
-
 </td>
 </tr>
 HTML;
-
 }
 
 echo <<<HTML
@@ -135,7 +143,6 @@ HTML;
 	echo '<small>Nenhum Registro Encontrado!</small>';
 }
 ?> 
-
 
 <!-- Iniciando e Mostrando o Datatables dos membros --> 
 <script type="text/javascript">
@@ -157,109 +164,144 @@ HTML;
 } );
 </script>  
 
-
-
 <!-- Ajax função editar --> 
 <script type="text/javascript"> //tem que ser na mesma orderm do editar acima
-	function editar(id, nome, cpf, telefone, email, cargo, comissao, endereco, cidade, estado, pais, matricula, obs, foto){
 
-		for(let letra of obs){  				
-			if (letra === '+'){
-				obs = obs.replace(' +  + ', '\n')
-			}			
+	function popularSelect(select, paraComparar){
+		const campoSelect = document.getElementById(select)
+		const options = campoSelect.getElementsByTagName('option');
+
+		for (let i = 0; i < options.length; i++) {
+			const option = options[i];
+			if (option.textContent.trim() === paraComparar) {
+				campoSelect.value = option.value;
+				$(campoSelect).trigger('change'); 
+				break;
+			}
 		}
+	}
 
+	function editar(
+		id, 
+		numeroParecer, 
+		ano, 
+		numeroOficio, 
+		itemOficio, 
+		dataEnvio, 
+		tituloProjeto, 
+		nomeCoordenador, 
+		nomeRelator, 
+		documentosEnviados, 
+		textoAnalisado, 
+		TIPODOCUMENTO, 
+		cargaHoraria, 
+		periodoProjeto, 
+		nomeRelatorio,
+		sexoCoordenador, 
+		titulacaoCoordenador, 
+		faculdadeCoordenador, 
+		descricaoProposta, 
+		sexoRelator, 
+		possuiOutroCoordenador,
+		nomeViceCoordenador,
+		sexoViceCoordenador,
+		titulacaoViceCoordenador,
+		aprovacaoFaculdade,
+		dataAprovacao,
+		numeroDocumento,
+		comentariosParecer,
+		justificativa,
+		parecerRelator
+	) {
+		limparCamposParecer();
+		// falta preencher documentosEnviados
 		$('#mensagem').text('');
     	$('#titulo_inserir').text('Editar Registro');
+		$('#id_dados').val(id);
 
-    	$('#id').val(id);
-    	$('#nome').val(nome);
-    	$('#cpf').val(cpf);
-    	$('#telefone').val(telefone);
-    	$('#email').val(email);
-    	$('#cargo').val(cargo).change();//usa o .change() pq e um campo tipo select;
-    	$('#comissao').val(comissao).change();//usa o .change() pq e um campo tipo select;
-    	$('#endereco').val(endereco);
-    	$('#cidade').val(cidade);
-    	$('#estado').val(estado);
-    	$('#pais').val(pais);
-    	$('#matricula').val(matricula);    	
-    	$("#matricula ").attr("readonly", true); 
-    	$('#obs').val(obs);    	
-    	$('#foto').val('');
-		$('#target').attr('src','images/perfil/' + foto);    	
-    	
-		
-    	$('#modalForm').modal('show');
-    	
-	}
+		// Dados Iniciais
+		$('#numeroParecer').val(numeroParecer);
+		$('#ano').val(ano);
+		$('#numeroOficio').val(numeroOficio);
+		$('#item_field').val(itemOficio);
+		$('#data').val(dataEnvio);
+		$('#obs1').val(textoAnalisado);
+		$('#obs2').val(tituloProjeto);
 
-</script>
+		let documentosArray = documentosEnviados.split(';'); // Divide os documentos em um array
+		let indice = 1;
 
+		for (let i = 0; i < documentosArray.length; i++) {
+			let doc = documentosArray[i].trim();
+			let textoSemParenteses = doc.replace(/\([^\)]*\)/g, '').trim();
 
-
-
-<!-- Ajax função mostrar -->
-<script type="text/javascript">//tem que ser na mesma orderm do mostrar acima
-	function mostrar(nome, cpf, telefone, email, cargo, comissao, tipoMembro, ativo, data, endereco, cidade, estado, pais, matricula, obs, foto){
-
-		for(let letra of obs){  				
-			if (letra === '+'){
-				obs = obs.replace(' +  + ', '\n')
-			}			
+			if (textoSemParenteses.includes(' e ')) {
+				let partes = textoSemParenteses.split(' e '); // Divide no 'e'
+				for(let j=0;j<partes.length;j++){
+					const item = partes[j].trim()
+					$(`#doc${indice}`).val(item);
+					indice++;
+					addInput()
+				}
+			} else {
+				$(`#doc${indice}`).val(textoSemParenteses);
+				addInput()
+			}
 		}
-		    	
-    	$('#titulo_dados').text(nome);    	
-    	$('#cpf_dados').text(cpf);
-    	$('#telefone_dados').text(telefone);
-    	$('#email_dados').text(email);
-    	$('#cargo_dados').text(cargo);
-		$('#tipo_membro').text(tipoMembro);
-		$('#comissao_dados').text(comissao);
-    	$('#ativo_dados').text(ativo);
-    	$('#data_dados').text(data);
-    	$('#endereco_dados').text(endereco);
-    	$('#cidade_dados').text(cidade);
-    	$('#estado_dados').text(estado);
-    	$('#pais_dados').text(pais);
-    	$('#matricula_dados').text(matricula);
-    	$('#obs_dados').text(obs);
-    	$('#foto_dados').attr("src", "images/perfil/" + foto);
-    	
 
-    	$('#modalDados').modal('show');
+		// dados documento
+		$('input[name="tipo-desenvolvimento"][value="' + TIPODOCUMENTO + '"]').prop('checked', true);
+		mudarRelatorio();
+
+		if (cargaHoraria !== 'desabilitado') {
+			$('#tipo-sim').prop('checked', true); 
+		} else {
+			console.log('cargaHoraria: ', cargaHoraria)
+			// $('#tipo-carga').val(cargaHoraria);
+			$('#tipo-nao').prop('checked', true);
+			mostrarBlocosRequisitos('simc', cargaHoraria);
+		}
+		mudarCarga();
+		$('#mesesSelect').val(periodoProjeto);
+	
+		// dados coordenador
+		$('#nome_coordenador').val(nomeCoordenador);
+		$('#sexoCoordenador').val(sexoCoordenador);
+
+		atualizarOpcoesTitulacaoCoordenador();
+		atualizarOpcoesTitulacaoOutroCoordenador();
+	
+		popularSelect("titulacaoCoordenador", titulacaoCoordenador);
+		
+		$('#faculdadeCoordenador').val(faculdadeCoordenador);
+		if (possuiOutroCoordenador === "sim") {
+			$('#possui-outro-sim').prop('checked', true); 
+			outroCordenador();
+			
+			$('#nomeOutroCoordenador').val(nomeViceCoordenador);
+			$('#sexoOutroCoordenador').val(sexoViceCoordenador);
+			atualizarOpcoesTitulacaoOutroCoordenador();
+			popularSelect("titulacaoOutroCoordenador", titulacaoViceCoordenador);
+		} else {
+			$('#possui-outro-nao').prop('checked', true);
+		}
+		
+
+		// Dados relator
+		popularSelect("nomeRelator", nomeRelator);
+		$('#sexoRelator').val(sexoRelator);
+		$('#aprovacaoFaculdade').val(aprovacaoFaculdade);
+		$('#qualDia').val(dataAprovacao);
+		$('#numeroDocumento').val(numeroDocumento);
+		$('#obs4').val(descricaoProposta);
+		$('#obs5').val(justificativa);
+		$('#obs6').val(comentariosParecer);
+    	$('input[name="parecerRelator"][value="' + parecerRelator + '"]').prop('checked', true);
+
+    	$('#modalForm').modal('show');
 	}
+
 </script>
-
-
-<!-- Ajax função limpar campos -->
-<script type="text/javascript">	
-
-	function limparCampos(){
-		$('#id').val('');
-    	$('#nome').val('');
-    	$('#cpf').val('');
-    	$('#telefone').val('');
-    	$('#email').val('');
-    	$('#cargo').val('').change();
-    	$('#comissao').val('').change();
-    	$('#endereco').val('');
-    	$('#cidade').val('');
-    	$('#estado').val('');
-    	$('#pais').val('');
-    	$('#matricula').val('');
-    	$("#matricula ").attr("readonly", false);    	
-    	$('#obs').val('');
-    	$('#foto').val('');
-    	$('#target').attr('src','images/perfil/sem-foto.jpg');
-
-
-    	$('#ids').val('');
-    	$('#btn-deletar').hide();	
-	}
-</script>
-
-
 
 <!-- Ajax função selecionar campos input pelo checkbox -->
 <script type="text/javascript">
@@ -298,28 +340,63 @@ HTML;
 		for(i=0; i<id.length-1; i++){
 			excluir(id[i]);			
 		}
-
-		limparCampos();
 	}
 	
 </script>
 
-
-
-
-<!-- Ajax função permissoes campos -->
+<!-- Ajax função limpar campos -->
 <script type="text/javascript">	
+	function limparCamposParecer(){
+		$('#id_dados').val('');
+		$('#numeroParecer').val('');
+		$('#ano').val(new Date().getFullYear());
+		$('#numeroOficio').val('');
+		$('#item_field').val('');
+		$('#data').val('');
+		$('#obs1').val('');
+		$('#obs2').val('');
+		$('#nome_coordenador').val('');
+		$('#sexoCoordenador').val('');
+		$('#sexoRelator').val('');
+		$('#aprovacaoFaculdade').val('');
+		$('#qualDia').val('');
+		$('#numeroDocumento').val('');
+		$('#obs4').val('');
+		$('#obs5').val('');
+		$('#obs6').val('');
+		$('#nomeOutroCoordenador').val('');
+		$('#sexoOutroCoordenador').val('');
+		let i = 1;
+		while ($('#doc' + i).length) {
+			$('#doc' + i).val('');
+			i++;
+		}
 
-	function permissoes(id, nome){
-		    	
-    	$('#id_permissoes').val(id);
-    	$('#nome_permissoes').text(nome);    	
+		// $('input[name="tipo-desenvolvimento"]').prop('checked', false);
 
-    	$('#modalPermissoes').modal('show');
-    	listarPermissoes(id);
 	}
 	
+	function limparCampos(){
+		$('#id').val('');
+    	$('#nome').val('');
+    	$('#cpf').val('');
+    	$('#telefone').val('');
+    	$('#email').val('');
+    	$('#cargo').val('').change();
+    	$('#comissao').val('').change();
+    	$('#endereco').val('');
+    	$('#cidade').val('');
+    	$('#estado').val('');
+    	$('#pais').val('');
+    	$('#matricula').val('');
+    	$("#matricula ").attr("readonly", false);    	
+    	$('#obs').val('');
+    	$('#foto').val('');
+    	$('#target').attr('src','images/perfil/sem-foto.jpg');
+		
+		limparCamposParecer();
+
+    	$('#ids').val('');
+    	$('#btn-deletar').hide();	
+	}
 </script>
-
-
-
