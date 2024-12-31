@@ -922,7 +922,7 @@ if (@$copeps == 'ocultar') {
 	}
 
 	function mostrarBlocosRequisitos(escolha, horasSelecionadas) {
-		
+
 		if(!dados.nomeRelatorio){
 			$('#mensagem').addClass('text-danger').text("Informe relatório");
 		}
@@ -1625,7 +1625,7 @@ listarMembrosComissao(function(result) {
 			event.preventDefault(); 
 
 			salvarParecer();
-			return;
+
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
 				dados.pronomeTxt = "a"
@@ -1957,7 +1957,9 @@ listarMembrosComissao(function(result) {
 			success: function(response) {
 				let res = JSON.parse(response);
 				if(res.id){
-					alert('Parecer salvo com sucesso!')
+					// mostra o alert apenas se clicar no botão de salvar
+					if(acao === "atualizar") alert('Parecer salvo com sucesso!')
+					// adiciona o id para referenciar qual é o parecer salvo no banco
 					$("#id_dados").val(res.id)
 				}
 			},

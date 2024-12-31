@@ -181,7 +181,7 @@ HTML;
 		}
 	}
 
-	async function editar(
+	function editar(
 		id, 
 		numeroParecer, 
 		ano, 
@@ -261,6 +261,7 @@ HTML;
 				let opcoes = elementoFilho.options;
 				for (let i = 0; i < opcoes.length; i++) {
 					if (opcoes[i].text === nomeRelatorio) {
+						dados.nomeRelatorio = nomeRelatorio
 						elementoFilho.value = opcoes[i].value;  // Define o valor do select
 						break;
 					}
