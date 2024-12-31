@@ -181,7 +181,7 @@ HTML;
 		}
 	}
 
-	function editar(
+	async function editar(
 		id, 
 		numeroParecer, 
 		ano, 
@@ -253,15 +253,50 @@ HTML;
 		$('input[name="tipo-desenvolvimento"][value="' + TIPODOCUMENTO + '"]').prop('checked', true);
 		mudarRelatorio();
 
+		let elemento_relatorio = document.getElementById('listar_relatorios');
+		let observer = new MutationObserver(() => {
+			let elementoFilho = elemento_relatorio.querySelector('#tipo');
+			if (elementoFilho) {
+				// Percorre todas as opções e seleciona a que corresponde ao nomeRelatorio
+				let opcoes = elementoFilho.options;
+				for (let i = 0; i < opcoes.length; i++) {
+					if (opcoes[i].text === nomeRelatorio) {
+						elementoFilho.value = opcoes[i].value;  // Define o valor do select
+						break;
+					}
+				}
+				observer.disconnect();  // Para de observar após encontrar
+			}
+		});
+		observer.observe(elemento_relatorio, { childList: true, subtree: true });
+
 		$('#tipo-carga').val(cargaHoraria)
 		if (cargaHoraria !== 'desabilitado') {
 			$('#tipo-sim').prop('checked', true); 
-			mostrarBlocosRequisitos('simc', cargaHoraria);
 		} else {
 			$('#tipo-nao').prop('checked', true);
-			mostrarBlocosRequisitos('naoc', cargaHoraria);
 		}
 		mudarCarga();
+
+		let elemento_carga = document.getElementById('listar_cargas_container');
+		let observer_carga = new MutationObserver(() => {
+			let elemento_tipo_carga = elemento_carga.querySelector('#tipo-carga');
+			if (elemento_tipo_carga) {
+			// 	// Percorre todas as opções e seleciona a que corresponde a cargaHoraria
+				let opcoes = elemento_tipo_carga.options;
+				for (let i = 0; i < opcoes.length; i++) {
+					if (opcoes[i].text === cargaHoraria) {
+						elemento_tipo_carga.value = opcoes[i].value;  // Define o valor do select
+						const opcao_simc_naoc = $('input[name="tipo-carga"]:checked').val();
+						mostrarBlocosRequisitos(opcao_simc_naoc, cargaHoraria);
+						break;
+					}
+				}
+				observer_carga.disconnect();  // Para de observar após encontrar
+			}
+		});
+		observer_carga.observe(elemento_carga, { childList: true, subtree: true });
+
 		$('#mesesSelect').val(periodoProjeto);
 		// dados coordenador
 		$('#nome_coordenador').val(nomeCoordenador);
@@ -395,6 +430,8 @@ HTML;
 		atualizarOpcoesTitulacaoOutroCoordenador();
 		outroCordenador();
 		// dados relator
+		$('#nomeRelator').val('');	// nomeRelator precisa resetar o campo com val e com o change
+		$('#nomeRelator').change();
 		$('#sexoRelator').val('');
 		$('#aprovacaoFaculdade').val('');
 		$('#qualDia').val('');
