@@ -662,7 +662,7 @@ if (@$copeps == 'ocultar') {
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="button" onclick="salvarParecer()" class="btn btn-primary">Salvar</button>
+									<button type="button" onclick="salvarParecer('atualizar')" class="btn btn-primary">Salvar</button>
 									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-primary">Baixar e salvar</button>
 								</div>
 
@@ -1176,7 +1176,6 @@ if (@$copeps == 'ocultar') {
 	});
 
 $('#loading').hide();
-listarParecer();
 
 var dados = {
 	id: "",
@@ -1785,8 +1784,6 @@ listarMembrosComissao(function(result) {
 			}
 
 			dados.dataAtual = getDataAtual()	
-			
-			console.log('dados para o relatorio: ', dados)
 			// Aqui define o nome do arquivo PDF
 			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
 			
@@ -1946,26 +1943,27 @@ listarMembrosComissao(function(result) {
 		}
 
 	}
-	function salvarParecer() {
+	function salvarParecer(acao) {
 		// a função preencher dados pega os dados dos campos e armazena em um unico objeto
 		preencherDados()
 		// a função validar verifica se todos os campos necessarios foram preenchidos.
 		if(!validarCampos()) return;
-		console.log('dados: ', dados)
+		console.log('dados do parecer: ', dados)
 		// requisição para salvar no banco de dados, note que envia apenas um unico objeto que contém todos os dados
 		$.ajax({
 			url: 'paginas/adicionarParecer.php',
 			type: 'POST',
 			data: dados,
-		});
-		// lista os pareceres para atualizar a tabela que mostra todos os pareceres atualizados		
-		listarParecer();
-	}
-
-	function listarParecer() {
-		$.ajax({
-			url: 'paginas/adicionarParecer.php',
-			type: 'GET',
+			success: function(response) {
+				let res = JSON.parse(response);
+				if(res.id){
+					alert('Parecer salvo com sucesso!')
+					$("#id_dados").val(res.id)
+				}
+			},
+			error: function() {
+				alert('Erro na comunicação com o servidor.');
+			}
 		});
 	}
 

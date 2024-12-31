@@ -71,7 +71,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id_reg = $ult_id;
     require_once("../inserir-logs.php");
 
-    echo 'Salvo com Sucesso';    
+    echo json_encode([
+        'status' => 'success',
+        'message' => 'Salvo com sucesso',
+        'id' => $ult_id
+    ]);
 }
 
 ?>
