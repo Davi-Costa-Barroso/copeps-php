@@ -345,7 +345,7 @@ HTML;
 		var id = ids.split("-");
 		
 		for(i=0; i<id.length-1; i++){
-			excluir(id[i]);			
+			excluirParecer(id[i]);			
 		}
 	}
 	

@@ -662,7 +662,8 @@ if (@$copeps == 'ocultar') {
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-primary">Baixar parecer</button>
+									<button type="button" onclick="salvarParecer()" class="btn btn-primary">Salvar</button>
+									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-primary">Baixar e salvar</button>
 								</div>
 
 							</div>
@@ -1624,11 +1625,7 @@ listarMembrosComissao(function(result) {
 		$('#baixarParecer').click(function(event) {
 			event.preventDefault(); 
 
-			preencherDados()
-			// Aqui verifica se todos os campos necessarios foram preenchidos.
-			if(!validarCampos()) return;
-
-			adicionarParecer();
+			salvarParecer();
 			return;
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
@@ -1949,16 +1946,19 @@ listarMembrosComissao(function(result) {
 		}
 
 	}
-	function adicionarParecer() {
+	function salvarParecer() {
+		// a função preencher dados pega os dados dos campos e armazena em um unico objeto
+		preencherDados()
+		// a função validar verifica se todos os campos necessarios foram preenchidos.
+		if(!validarCampos()) return;
 		console.log('dados: ', dados)
+		// requisição para salvar no banco de dados, note que envia apenas um unico objeto que contém todos os dados
 		$.ajax({
 			url: 'paginas/adicionarParecer.php',
 			type: 'POST',
 			data: dados,
-			success: function (mensagem) {
-				console.log('salvo', mensagem)
-			},
 		});
+		// lista os pareceres para atualizar a tabela que mostra todos os pareceres atualizados		
 		listarParecer();
 	}
 
