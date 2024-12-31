@@ -826,7 +826,6 @@ if (@$copeps == 'ocultar') {
 			},
 			dataType: 'json',
 			success: function(result) {
-				console.log(result)
 				// Cria um novo <select> com as opções retornadas do PHP
 				var select = $('<select class="form-select" name="tipo" id="tipo">');
 				for (var i = 0; i < result.length; i++) {
@@ -991,7 +990,6 @@ if (@$copeps == 'ocultar') {
 	}
 
 	function contarCheckboxEnsino() {
-		console.log($('input[name^="requisito_a"]:checked'))
 		var totalSelecionados2 = $('input[name^="requisito_a"]:checked, input[name^="requisito_b"]:checked, input[name^="requisito_c"]:checked, input[name^="requisito_d"]:checked, input[name^="requisito_e"]:checked, input[name^="requisito_f"]:checked').length;
 		$('.contadorEnsino').text(totalSelecionados2);
 		$.ajax({
@@ -1146,8 +1144,6 @@ if (@$copeps == 'ocultar') {
 			},
 			dataType: 'json',
 			success: function(result) {
-				console.log(result);
-
 				// Verificar se a opção selecionada requer a ocultação do campo comentariosParecer
 				if (result.ocultarComentariosParecer) {
 					$("#comentariosParecer").hide();
@@ -1633,7 +1629,7 @@ listarMembrosComissao(function(result) {
 			if(!validarCampos()) return;
 
 			adicionarParecer();
-			// return;
+			return;
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
 				dados.pronomeTxt = "a"

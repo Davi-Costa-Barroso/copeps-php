@@ -120,7 +120,7 @@ echo <<<HTML
 		<ul class="dropdown-menu" style="margin-left:-230px;">
 		<li>
 		<div class="notification_desc2">
-		<p>Confirmar Exclusão? <a href="#" onclick="excluir('{$id}')"><span class="text-danger">Sim</span></a></p>
+		<p>Confirmar Exclusão? <a href="#" onclick="excluirParecer('{$id}')"><span class="text-danger">Sim</span></a></p>
 				
 		</div>
 		</li>										
@@ -253,23 +253,21 @@ HTML;
 		$('input[name="tipo-desenvolvimento"][value="' + TIPODOCUMENTO + '"]').prop('checked', true);
 		mudarRelatorio();
 
+		$('#tipo-carga').val(cargaHoraria)
 		if (cargaHoraria !== 'desabilitado') {
 			$('#tipo-sim').prop('checked', true); 
-		} else {
-			console.log('cargaHoraria: ', cargaHoraria)
-			// $('#tipo-carga').val(cargaHoraria);
-			$('#tipo-nao').prop('checked', true);
 			mostrarBlocosRequisitos('simc', cargaHoraria);
+		} else {
+			$('#tipo-nao').prop('checked', true);
+			mostrarBlocosRequisitos('naoc', cargaHoraria);
 		}
 		mudarCarga();
 		$('#mesesSelect').val(periodoProjeto);
-	
 		// dados coordenador
 		$('#nome_coordenador').val(nomeCoordenador);
 		$('#sexoCoordenador').val(sexoCoordenador);
 
 		atualizarOpcoesTitulacaoCoordenador();
-		atualizarOpcoesTitulacaoOutroCoordenador();
 	
 		popularSelect("titulacaoCoordenador", titulacaoCoordenador);
 		
@@ -326,6 +324,15 @@ HTML;
 		}
 	}
 
+	function excluirParecer(id){
+		$.ajax({
+			url: '/loginusuario/painel/paginas/excluirParecer.php',
+			type: 'POST',
+			data: {id},
+		});
+		location.reload(); 
+	}
+
 </script>
 
 
@@ -348,15 +355,46 @@ HTML;
 <script type="text/javascript">	
 	function limparCamposParecer(){
 		$('#id_dados').val('');
+		// dados inciais
 		$('#numeroParecer').val('');
 		$('#ano').val(new Date().getFullYear());
 		$('#numeroOficio').val('');
-		$('#item_field').val('');
+		$('#item_field').val('1');
 		$('#data').val('');
 		$('#obs1').val('');
 		$('#obs2').val('');
+		let i = 1;
+		while ($('#doc' + i).length) {
+			$('#doc' + i).val('');
+			i++;
+		}
+		const container = document.getElementById("input-container");
+		const inputs = container.getElementsByTagName("input");
+		for (let i = inputs.length - 1; i > 0; i--) inputs[i].remove();
+		// dados documentos
+		$('#listar_cargas_container').html('');
+		$('#listar_relatorios').html('');
+		$('input[name="tipo-desenvolvimento"]').prop('checked', false);
+		$('#bloco_pesquisa').hide();
+		$('#bloco_ensino').hide();
+		$('#bloco_extensao').hide();
+		$('#tipo-sim').prop('checked', false); 
+		$('#tipo-nao').prop('checked', false);
+		$('#mesesSelect').val('3 (Três) meses');
+		// dados coordenador
 		$('#nome_coordenador').val('');
 		$('#sexoCoordenador').val('');
+		$('#faculdadeCoordenador').val('');
+		$('#titulacaoCoordenador').val('');
+		$('#nomeOutroCoordenador').val('');
+		$('#sexoOutroCoordenador').val('');
+		$('#titulacaoOutroCoordenador').val('');
+		$('#possui-outro-nao').prop('checked', false);
+		$('#possui-outro-sim').prop('checked', false); 
+		atualizarOpcoesTitulacaoCoordenador();
+		atualizarOpcoesTitulacaoOutroCoordenador();
+		outroCordenador();
+		// dados relator
 		$('#sexoRelator').val('');
 		$('#aprovacaoFaculdade').val('');
 		$('#qualDia').val('');
@@ -364,15 +402,7 @@ HTML;
 		$('#obs4').val('');
 		$('#obs5').val('');
 		$('#obs6').val('');
-		$('#nomeOutroCoordenador').val('');
-		$('#sexoOutroCoordenador').val('');
-		let i = 1;
-		while ($('#doc' + i).length) {
-			$('#doc' + i).val('');
-			i++;
-		}
-
-		// $('input[name="tipo-desenvolvimento"]').prop('checked', false);
+		$('input[name="parecerRelator"]').prop('checked', false);
 
 	}
 	
