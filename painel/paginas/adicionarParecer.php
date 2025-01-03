@@ -79,13 +79,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'GET') {
-    // Consulta para buscar o maior ID na tabela
-    $query = "SELECT MAX(id) AS ultimo_id FROM $tabela";
-    $stmt = $pdo->query($query);
+    // Consulta para obter o próximo valor de auto-increment
+    $stmt = $pdo->query("SHOW TABLE STATUS LIKE '$tabela'");
     $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    // Calcula o próximo ID (incrementa em 1)
-    $proximo_id = $resultado['ultimo_id'] ? $resultado['ultimo_id'] + 1 : 1;
+    $proximo_id = $resultado['Auto_increment'] ?? 1;
 
     echo json_encode([
         'status' => 'success',
