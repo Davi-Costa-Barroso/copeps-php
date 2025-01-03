@@ -50,7 +50,7 @@ if (@$copeps == 'ocultar') {
 						</ul>
 					</small>
 				</h4>
-				<button id="btn-fechar" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -50px">
+				<button id="btn-fechar" type="button" class="close" onclick="limparDados()" data-dismiss="modal" aria-label="Close" style="margin-top: -50px">
 					<span>&times;</span>
 				</button>
 			</div>
@@ -67,7 +67,7 @@ if (@$copeps == 'ocultar') {
 
 								<div class="col-md-3">
 									<label for="numeroParecer">Número do Parecer:</label>
-									<input type="text" class="form-control" id="numeroParecer" name="numeroParecer">
+									<input type="text" class="form-control" id="numeroParecer" name="numeroParecer" readonly>
 								</div>
 
 								<div class="col-md-3">
@@ -1402,7 +1402,7 @@ listarMembrosComissao(function(result) {
         "julho", "agosto", "setembro", "outubro", "novembro", "dezembro"
     	];
 
-    	const partes = data.split("-");
+    	const partes = data?.split("-");
 
 		const ano = partes[0]; // Ano
 		const mes = parseInt(partes[1], 10) - 1; // Mês (convertendo para índice do array)
@@ -1625,7 +1625,7 @@ listarMembrosComissao(function(result) {
 			event.preventDefault(); 
 
 			salvarParecer();
-
+			if(!validarCampos()) return;
 			if(dados.sexoRelator === "feminino") {
 				dados.pronRelat = "a"
 				dados.pronomeTxt = "a"
@@ -1662,7 +1662,6 @@ listarMembrosComissao(function(result) {
 					dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenadora" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
 
 				}
-
 			}
 
 			// verificar o pronome do relatório ou proposição
@@ -1678,14 +1677,13 @@ listarMembrosComissao(function(result) {
 
 			// verificar o pronome da faculdade
 			let pronomeFaculdade = ""
-			if(dados.faculdadeCoordenador.startsWith("F")) {
+			if(dados.faculdadeCoordenador?.startsWith("F")) {
 				pronomeFaculdade = "a";
 			}
 			else{
 				pronomeFaculdade = "o";
 
 			}
-
 
 			// I.TIPODOCUMENTO
 			dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
@@ -1696,7 +1694,7 @@ listarMembrosComissao(function(result) {
 				dados.partePrg8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
 			} else{
 				let textos = [];
-				let horasSelecionadasNumero = parseInt(dados.horasSelecionadas.split(' ')[0]);
+				let horasSelecionadasNumero = parseInt(dados.horasSelecionadas?.split(' ')[0]);
 				let elementosCH = [];
 
 				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
@@ -1771,13 +1769,13 @@ listarMembrosComissao(function(result) {
 			dados.dataAprovacao = ajustarFormatoData(dados.dataAprovacao) || '';
 			// paragrafo 2
 			if(dados.aprovacaoFaculdade === "ad-referendum") {
-				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador.split("-")[1] + ", emitido em " + dados.dataAprovacao + ", e o projeto é " + dados.cargaHoraria
+				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador?.split("-")[1] + ", emitido em " + dados.dataAprovacao + ", e o projeto é " + dados.cargaHoraria
 			}
 			else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 			else if (dados.aprovacaoFaculdade === "ata-reuniao-extraordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
 			}
 			else{
 				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
@@ -1912,7 +1910,8 @@ listarMembrosComissao(function(result) {
 	function verificarInput() {
 		const addButton = document.getElementById("add-input");
 
-		if(document.getElementById(`doc${inputCount}`).value) {
+		console.log(document.getElementById(`doc${inputCount}`)?.value)
+		if(document.getElementById(`doc${inputCount}`)?.value) {
 			addButton.disabled = false; 
 		}
 		else {
@@ -1961,6 +1960,8 @@ listarMembrosComissao(function(result) {
 					if(acao === "atualizar") alert('Parecer salvo com sucesso!')
 					// adiciona o id para referenciar qual é o parecer salvo no banco
 					$("#id_dados").val(res.id)
+					listar();
+					$('#modalForm').modal('hide');
 				}
 			},
 			error: function() {
@@ -1993,56 +1994,53 @@ listarMembrosComissao(function(result) {
 
 	function capturarCheckboxesEspecificos(horas, tipoDocumento) {
     // Define os checkboxes relevantes com base no tipo de documento
-    let seletores = "";
-    switch (tipoDocumento) {
-        case "Relatório Parcial de Projeto de Pesquisa" || "Projeto de Pesquisa" || "Relatório Final de Projeto de Pesquisa":
-            seletores = 'input[name^="requisito_a_pesquisa"], input[name^="requisito_b_pesquisa"], input[name^="requisito_c_pesquisa"], input[name^="requisito_d_pesquisa"], input[name^="requisito_e_pesquisa"]';
-            break;
-        case "Relatório Parcial de Projeto de Ensino" || "Projeto de Ensino" || "Relatório Final de Projeto de Ensino" :
-            seletores = 'input[name^="requisito_a"], input[name^="requisito_b"], input[name^="requisito_c"], input[name^="requisito_d"], input[name^="requisito_e"], input[name^="requisito_f"]';
-            break;
-        case "Relatório Parcial de Projeto de Extensão" || "Projeto de Extensão" || "Relatório Final de Projeto de Extensão":
-            seletores = 'input[name^="requisito_a_extensao"], input[name^="requisito_b_extensao"], input[name^="requisito_c_extensao"], input[name^="requisito_d_extensao"]';
-            break;
-        default:
-            console.error("Tipo de documento desconhecido:", tipoDocumento);
-            return [];
-    }
+		let seletores = "";
+		switch (tipoDocumento) {
+			case "Relatório Parcial de Projeto de Pesquisa" || "Projeto de Pesquisa" || "Relatório Final de Projeto de Pesquisa":
+				seletores = 'input[name^="requisito_a_pesquisa"], input[name^="requisito_b_pesquisa"], input[name^="requisito_c_pesquisa"], input[name^="requisito_d_pesquisa"], input[name^="requisito_e_pesquisa"]';
+				break;
+			case "Relatório Parcial de Projeto de Ensino" || "Projeto de Ensino" || "Relatório Final de Projeto de Ensino" :
+				seletores = 'input[name^="requisito_a"], input[name^="requisito_b"], input[name^="requisito_c"], input[name^="requisito_d"], input[name^="requisito_e"], input[name^="requisito_f"]';
+				break;
+			case "Relatório Parcial de Projeto de Extensão" || "Projeto de Extensão" || "Relatório Final de Projeto de Extensão":
+				seletores = 'input[name^="requisito_a_extensao"], input[name^="requisito_b_extensao"], input[name^="requisito_c_extensao"], input[name^="requisito_d_extensao"]';
+				break;
+			default:
+				console.error("Tipo de documento desconhecido:", tipoDocumento);
+				return [];
+		}
 
-    // Seleciona os checkboxes com base nos seletores definidos
-    const checkboxesRelevantes = document.querySelectorAll(seletores);
+		// Seleciona os checkboxes com base nos seletores definidos
+		const checkboxesRelevantes = document.querySelectorAll(seletores);
 
-    let resultados = [];
+		let resultados = [];
 
-    // Itera sobre os checkboxes relevantes
-    checkboxesRelevantes.forEach((checkbox) => {
-        if (checkbox.checked) {
-            let textoAssociado = "";
-            let elementosIrmaos = checkbox.parentNode.childNodes;
+		// Itera sobre os checkboxes relevantes
+		checkboxesRelevantes.forEach((checkbox) => {
+			if (checkbox.checked) {
+				let textoAssociado = "";
+				let elementosIrmaos = checkbox.parentNode.childNodes;
 
-            elementosIrmaos.forEach(elemento => {
-                if (elemento.nodeType === Node.TEXT_NODE) {
-                    textoAssociado += elemento.textContent.trim();
-                } else if (elemento.nodeType === Node.ELEMENT_NODE && elemento.tagName === 'SPAN') {
-                    if (elemento.classList.contains(`listar_checkbox${horas}horas`)) {
-                        textoAssociado += elemento.textContent.trim();
-                    }
-                }
-            });
+				elementosIrmaos.forEach(elemento => {
+					if (elemento.nodeType === Node.TEXT_NODE) {
+						textoAssociado += elemento.textContent.trim();
+					} else if (elemento.nodeType === Node.ELEMENT_NODE && elemento.tagName === 'SPAN') {
+						if (elemento.classList.contains(`listar_checkbox${horas}horas`)) {
+							textoAssociado += elemento.textContent.trim();
+						}
+					}
+				});
 
-            resultados.push({
-                valor: checkbox.value,
-                texto: textoAssociado,
-            });
-        }
-    });
+				resultados.push({
+					valor: checkbox.value,
+					texto: textoAssociado,
+				});
+			}
+		});
 
-    return resultados;
-}
-
-
+		return resultados;
+	}
 
 
-		
-    
+
 </script>

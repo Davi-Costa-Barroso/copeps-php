@@ -78,4 +78,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    // Consulta para buscar o maior ID na tabela
+    $query = "SELECT MAX(id) AS ultimo_id FROM $tabela";
+    $stmt = $pdo->query($query);
+    $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Calcula o próximo ID (incrementa em 1)
+    $proximo_id = $resultado['ultimo_id'] ? $resultado['ultimo_id'] + 1 : 1;
+
+    echo json_encode([
+        'status' => 'success',
+        'proximo_id' => $proximo_id
+    ]);
+}
+
 ?>

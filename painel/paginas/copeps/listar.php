@@ -213,7 +213,7 @@ HTML;
 		justificativa,
 		parecerRelator
 	) {
-		limparCamposParecer();
+		limparCamposParecer('editar');
 		// falta preencher documentosEnviados
 		$('#mensagem').text('');
     	$('#titulo_inserir').text('Editar Registro');
@@ -389,10 +389,9 @@ HTML;
 
 <!-- Ajax função limpar campos -->
 <script type="text/javascript">	
-	function limparCamposParecer(){
+	function limparCamposParecer(acao){
 		$('#id_dados').val('');
 		// dados inciais
-		$('#numeroParecer').val('');
 		$('#ano').val(new Date().getFullYear());
 		$('#numeroOficio').val('');
 		$('#item_field').val('1');
@@ -442,6 +441,97 @@ HTML;
 		$('#obs6').val('');
 		$('input[name="parecerRelator"]').prop('checked', false);
 
+		if(acao !== 'editar'){
+			$.ajax({
+				url: 'paginas/adicionarParecer.php',
+				type: 'GET',
+				success: function(response) {
+					const res = JSON.parse(response);
+					$('#numeroParecer').val(res.proximo_id);
+					dados.numeroParecer = res.proximo_id;
+				},
+				error: function() {
+					alert('Erro na comunicação com o servidor.');
+				}
+			});
+		}
+		limparDados();
+	}
+
+	function limparDados() {
+
+		dados.id = "";
+		dados.anoParecer = "";
+		dados.numeroOficio = "";
+		dados.itemOficio = "";
+		dados.dataEnvio = "";
+		dados.dataEnvio_nao_formatada = "";
+		dados.textoAnalisado = "";
+		dados.tituloProjetoAnalisado = "";
+		dados.documentosEnviados = [];
+
+		dados.TIPODOCUMENTO = "RELATÓRIO";
+		dados.nomeRelatorio = "";
+		dados.periodoProjeto = "";
+		dados.cargaHoraria = "";
+		dados.pedidoAprovacao = "";
+		dados.letra = "";
+		dados.paragrafo5 = "";
+		dados.artgo = "";
+		dados.capitulo = "";
+		dados.proj_Ana_Enc = "";
+		dados.paragrafo7 = "";
+		dados.descricaoProposta = "";
+
+		dados.nomeCoordenador = "";
+		dados.sexoCoordenador = "";
+		dados.PRNCoordenador = "";
+		dados.PRNTxtCoordenador = "";
+		dados.titulacaoCoordenador = "";
+		dados.faculdadeCoordenador = "";
+		dados.descricaoCoordenadores = "";
+		dados.possuiOutroCoordenador = "";
+
+		dados.nomeViceCoordenador = "";
+		dados.pronomeViceCoordenador = "";
+		dados.sexoViceCoordenador = "";
+		dados.titulacaoViceCoordenador = "";
+
+		dados.objetivoDescricaoProposta = "";
+		dados.objetivoProjeto = "";
+		dados.proposicaoOuRelatorio = "";
+		dados.aprovacaoFaculdade = "";
+		dados.paragrafo2 = "";
+		dados.numeroDoc = "";
+		dados.dataAprovacao = null;
+		dados.obs5 = "";
+		dados.justificativa = "";
+
+		dados.nomeRelator = "";
+		dados.sexoRelator = "";
+		dados.pronRelat = "";
+		dados.pronomeTxt = "";
+
+		dados.situacaoRelatorio = "";
+		dados.aprovOuReprov = "";
+
+		dados.paragrafo8 = "";
+		dados.partePrg8 = "";
+		dados.comentariosParecer = "";
+		dados.paragrafo9 = "";
+		dados.dataAtual = "";
+
+		dados.nomePresid = "";
+		dados.nomeDocTit1 = "";
+		dados.nomeDocTit2 = "";
+		dados.nomeDocSup1 = "";
+		dados.nomeDocSup2 = "";
+		dados.nomeTecTit = "";
+		dados.nomeTecSup = "";
+		dados.nomeDiscTit = "";
+		dados.nomeDiscSup = "";
+		dados.elementosCargaHoraria = [];
+		inputCount = 1;
 	}
 	
 	function limparCampos(){
