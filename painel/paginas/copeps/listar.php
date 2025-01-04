@@ -460,7 +460,7 @@ HTML;
 
 	function limparDados() {
 
-		dados.id = "";
+		dados.id_dados = "";
 		dados.anoParecer = "";
 		dados.numeroOficio = "";
 		dados.itemOficio = "";
@@ -520,16 +520,6 @@ HTML;
 		dados.comentariosParecer = "";
 		dados.paragrafo9 = "";
 		dados.dataAtual = "";
-
-		dados.nomePresid = "";
-		dados.nomeDocTit1 = "";
-		dados.nomeDocTit2 = "";
-		dados.nomeDocSup1 = "";
-		dados.nomeDocSup2 = "";
-		dados.nomeTecTit = "";
-		dados.nomeTecSup = "";
-		dados.nomeDiscTit = "";
-		dados.nomeDiscSup = "";
 		dados.elementosCargaHoraria = [];
 		inputCount = 1;
 	}

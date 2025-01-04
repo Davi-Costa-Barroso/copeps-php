@@ -5,7 +5,7 @@ require_once("../../conexao.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $dados = [
-        'id' => $_POST['id'],
+        'id' => $_POST['id_dados'],
         // dados iniciais
         'numeroParecer' => $_POST['numeroParecer'],
         'ano' => $_POST['anoParecer'],

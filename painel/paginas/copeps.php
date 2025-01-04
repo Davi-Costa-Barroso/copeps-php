@@ -1178,7 +1178,7 @@ if (@$copeps == 'ocultar') {
 $('#loading').hide();
 
 var dados = {
-	id: "",
+	id_dados: "",
     numeroParecer: "",
     anoParecer: "",
     numeroOficio: "",
@@ -1537,7 +1537,7 @@ listarMembrosComissao(function(result) {
 
 	// Pega os dados do formulario do parecer e coloca no objeto dados para depois preencher no doc
 	function preencherDados(){
-		dados.id = $("#id_dados").val();
+		dados.id_dados = $("#id_dados").val();
 		// Dados iniciais
 		dados.numeroParecer = $("#numeroParecer").val();
 		dados.anoParecer = $("#ano").val();
