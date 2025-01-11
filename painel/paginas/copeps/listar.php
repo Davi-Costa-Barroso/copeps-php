@@ -103,15 +103,22 @@ echo <<<HTML
 	<big>
 	<a 
 		href="#" 
-		onclick="editar('{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
+		onclick="editar('editar', '{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
 		title="Editar Dados"
 	>
 			<i class="fa fa-edit text-primary">
 			</i>
 		</a>
+	
+
+	<a 
+		href="#" 
+		onclick="editar('baixar','{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
+		title="Baixar parecer"
+	>
+		<i class="fa fa-download text-primary"></i>
+	</a>
 	</big>
-
-
 	  <!-- Excluir -->
 	<li class="dropdown head-dpdn2" style="display: inline-block;">
 		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
@@ -182,6 +189,7 @@ HTML;
 	}
 
 	function editar(
+		acao,
 		id, 
 		numeroParecer, 
 		ano, 
@@ -332,7 +340,13 @@ HTML;
 		$('#obs6').val(comentariosParecer);
     	$('input[name="parecerRelator"][value="' + parecerRelator + '"]').prop('checked', true);
 
-    	$('#modalForm').modal('show');
+		if(acao !== 'baixar'){
+			$('#modalForm').modal('show');
+		}else{
+			setTimeout(() => {
+				baixarParecer();
+			}, 1000);
+		}
 	}
 
 </script>

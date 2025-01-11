@@ -1424,114 +1424,134 @@ listarMembrosComissao(function(result) {
 	}
 
 	// Verifica se todos os campos foram preenchidos antes de baixar o relatorio
-	function validarCampos(){
+	function validarCampos() {
 		if (!dados.numeroParecer) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe número do parecer");
+			console.log("Erro: Número do parecer não informado.");
 			return false;
 		}
 
 		if (!dados.anoParecer) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe ano do parecer");
+			console.log("Erro: Ano do parecer não informado.");
 			return false;
 		}
 
 		if (!dados.numeroOficio) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe número do ofício");
+			console.log("Erro: Número do ofício não informado.");
 			return false;
 		}
 
 		if (!dados.itemOficio) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe item do ofício");
+			console.log("Erro: Item do ofício não informado.");
 			return false;
 		}
 
 		if (!dados.dataEnvio) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe a data de envio");
+			console.log("Erro: Data de envio não informada.");
 			return false;
 		}
 
 		if (!dados.textoAnalisado) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o texto analisado");
+			console.log("Erro: Texto analisado não informado.");
 			return false;
 		}
 
 		if (!dados.tituloProjetoAnalisado) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o título do projeto analisado");
+			console.log("Erro: Título do projeto analisado não informado.");
 			return false;
 		}
 
 		if (!dados.documentosEnviados) {
-		 	$('#mensagem').addClass('text-danger');
-		 	$('#mensagem').text("Informe os documentos enviados");
-		 	return false;
+			$('#mensagem').addClass('text-danger');
+			$('#mensagem').text("Informe os documentos enviados");
+			console.log("Erro: Documentos enviados não informados.");
+			return false;
 		}
 
 		if (!dados.TIPODOCUMENTO) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o tipo do documento");
+			console.log("Erro: Tipo do documento não informado.");
 			return false;
 		}
 
 		if (!dados.nomeRelatorio) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o relatório");
+			console.log("Erro: Nome do relatório não informado.");
 			return false;
 		}
 
 		if (!dados.periodoProjeto) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o período do projeto");
+			console.log("Erro: Período do projeto não informado.");
 			return false;
 		}
 
 		if (!dados.cargaHoraria) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe a carga horária");
+			console.log("Erro: Carga horária não informada.");
 			return false;
 		}
 
 		if (!dados.nomeCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o nome do coordenador");
+			console.log("Erro: Nome do coordenador não informado.");
 			return false;
 		}
 
 		if (!dados.sexoCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe o sexo do coordenador");
+			console.log("Erro: Sexo do coordenador não informado.");
 			return false;
 		}
 
 		if (!dados.titulacaoCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe a titulação do coordenador");
+			console.log("Erro: Titulação do coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.faculdadeCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe a faculdade do coordenador");
+			console.log("Erro: Faculdade do coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.possuiOutroCoordenador) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe se possui outro coordenador");
+			console.log("Erro: Informação sobre outro coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.descricaoProposta) {
 			$('#mensagem').addClass('text-danger');
 			$('#mensagem').text("Informe descrição de proposta.");
+			console.log("Erro: Descrição de proposta não informada.");
 			return false;
 		}
+
+		console.log("Todos os campos foram validados com sucesso.");
 		return true;
 	}
 
@@ -1623,192 +1643,196 @@ listarMembrosComissao(function(result) {
 	$(document).ready(function() {
 		$('#baixarParecer').click(function(event) {
 			event.preventDefault(); 
-
-			salvarParecer();
-			if(!validarCampos()) return;
-			if(dados.sexoRelator === "feminino") {
-				dados.pronRelat = "a"
-				dados.pronomeTxt = "a"
-			}
-			else{
-				dados.pronRelat = "o"
-				dados.pronomeTxt = ""
-			}
-			
-			if(dados.situacaoRelatorio === "aprovado") {
-				dados.aprovOuReprov = "Aprovação"
-				dados.paragrafo9 = "são suficientes para considerá-la aprovada, ratificando a decisão da Subunidade"
-			}
-			else{
-				dados.aprovOuReprov = "Reprovação"
-				dados.paragrafo9 = "não são suficientes para considerá-la aprovada, discordando da decisão da Subunidade"
-			}
-			if(dados.sexoCoordenador === "masculino") {
-				dados.PRNCoordenador = "o"
-				dados.PRNTxtCoordenador = ""
-			}
-			else{
-				dados.PRNCoordenador = "a"
-				dados.PRNTxtCoordenador = "a"
-			}
-			// Verifica se possui outro cordenador e se sim vai precisar adicionar o pronome e o titulo vice-coordenador
-			if(dados.possuiOutroCoordenador === "sim") {
-				if(dados.sexoViceCoordenador === "masculino") {
-					dados.pronomeViceCoordenador = "o"
-					dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenador" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
-				}
-				else{
-					dados.pronomeViceCoordenador = "a"
-					dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenadora" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
-
-				}
-			}
-
-			// verificar o pronome do relatório ou proposição
-			let pronomeRelatorio = ""
-
-			if(dados.proposicaoOuRelatorio === "A proposição") {
-				pronomeRelatorio = "a";
-			}
-			else{
-				pronomeRelatorio = "o";
-
-			}
-
-			// verificar o pronome da faculdade
-			let pronomeFaculdade = ""
-			if(dados.faculdadeCoordenador?.startsWith("F")) {
-				pronomeFaculdade = "a";
-			}
-			else{
-				pronomeFaculdade = "o";
-
-			}
-
-			// I.TIPODOCUMENTO
-			dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
-
-			// Aqui define como deve ser a frase quando tem ou não carga horaria
-			if(dados.cargaHoraria === 'desabilitado'){
-				dados.cargaHoraria = 'sem alocação de Carga Horária';
-				dados.partePrg8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
-			} else{
-				let textos = [];
-				let horasSelecionadasNumero = parseInt(dados.horasSelecionadas?.split(' ')[0]);
-				let elementosCH = [];
-
-				dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
-				dados.partePrg8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
-				
-				elementosCH = capturarCheckboxesEspecificos(horasSelecionadasNumero, dados.nomeRelatorio)
-				textos = elementosCH.map((element, index) => `(${String.fromCharCode(97 + index)}) ${element.texto.trim().replace(/[;.]$/, '')}`);
-
-				if (textos.length > 1) {
-					let penultimoEultimo = textos.slice(-2).map(txt => txt.replace(/[;.]$/, '')).join(' e '); // Remove o ";" e une com " e "
-					dados.elementosCargaHoraria = textos.slice(0, -2).join(' ') + (textos.length > 2 ? ' ' : '') + penultimoEultimo;
-				} else if (textos.length === 1) {
-					dados.elementosCargaHoraria = textos[0]; // Apenas um elemento
-				} else {
-					dados.elementosCargaHoraria = []; // Nenhum elemento
-				}
-			}
-			
-			// Aqui verifica se o tipo de documento não é um relatorio final e nem parcial
-			// Dependendo do tipo o primeiro topico pode ser DESCRIÇÃO ou RELATÓRIO
-			if(dados.TIPODOCUMENTO === 'nao'){
-				dados.paragrafo8 = "Acerca da quantidade de horas a serem alocadas, por se tratar de um projeto" + dados.cargaHoraria + "para " +  dados.PRNCoordenador + " " +  dados.coordenadorPRNTxtCoordenador + ", " + dados.partePrg8 
-				// Topico 1
-				dados.TIPODOCUMENTO = "DESCRIÇÃO";
-				dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
-				dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
-				dados.objetivoProjeto = 'O objetivo do projeto é';
-				dados.proposicaoOuRelatorio = "A proposição";
-				dados.letra = "i";
-				dados.paragrafo5 = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”";
-
-				if(dados.nomeRelatorio === "Projeto de Extensão") {
-					dados.artgo = "192 a 197";
-					dados.capitulo = "VII, da Extensão";
-					dados.paragrafo7 = "na definição de extensão estabelecida no art. 192 do Regimento Geral da UFPA, pois é um processo educativo e científico articulado ao ensino e à pesquisa, de modo indissociável, que promove a relação transformadora entre a Universidade e a sociedade por meio de ações acadêmicas de natureza contínua que visem tanto à qualificação prática e à formação cidadã do discente quanto à melhoria da qualidade de vida da comunidade envolvida. O financiamento do projeto será com recursos próprios e pleiteando recursos externos, atendendo ao disposto no art. 195 do Regimento Geral."
-					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição";
-
-				}
-				else{
-					dados.artgo = "184 a 191";
-					dados.capitulo = "VI, da Pesquisa";
-					
-					dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral."
-					+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição";
-				}
-				dados.proj_Ana_Enc = "analisado";
-
-			}else{
-				// Topico 1
-				dados.TIPODOCUMENTO = "RELATÓRIO";
-				dados.pedidoAprovacao = '';
-				dados.objetivoDescricaoProposta = "";
-				dados.objetivoProjeto = "";
-				dados.proposicaoOuRelatorio = "O relatório"
-				dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”";
-				dados.letra = "j";
-				dados.proj_Ana_Enc = "encerrado";
-				dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dados.descricaoProposta 
-								+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral"
-
-				if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
-					dados.artgo = "192 a 197";
-					dados.capitulo = "VII, da Extensão";
-				}else{
-					dados.artgo = "184 a 191";
-					dados.capitulo = "VI, da Pesquisa";
-
-				}
-				dados.paragrafo8 = "As atividades de coordenação de projeto foram exercidas " + dados.cargaHoraria + " de carga horária. Portanto, deveria atender às exigências do Anexo 1 da Resolução 4.918, de 2017, do CONSEPE. Verificou-se, na documentação encaminhada, que foram atendidos os seguintes quesitos, nos termos da Resolução: "  + dados.elementosCargaHoraria + ". Assim, consideram-se cumpridas as exigências e disposições presentes no capítulo mencionado do Regimento Geral"
-							
-			}
-			dados.dataAprovacao = ajustarFormatoData(dados.dataAprovacao) || '';
-			// paragrafo 2
-			if(dados.aprovacaoFaculdade === "ad-referendum") {
-				dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador?.split("-")[1] + ", emitido em " + dados.dataAprovacao + ", e o projeto é " + dados.cargaHoraria
-			}
-			else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
-			}
-			else if (dados.aprovacaoFaculdade === "ata-reuniao-extraordinaria"){
-				dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
-			}
-			else{
-				dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
-			}
-
-			dados.dataAtual = getDataAtual()	
-			// Aqui define o nome do arquivo PDF
-			const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
-			
-			// Aqui faz a requisção para baixar o PARECER em PDF
-			$('#loading').show()
-			fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
-				method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify({dados})
-			})
-			.then(response => response.blob())
-			.then(blob => {
-				// aqui construi o componente e ativa para baixar pelo navegador
-				const url = window.URL.createObjectURL(blob);
-				const a = document.createElement('a');
-				a.style.display = 'none';
-				a.href = url;
-				a.download = nomeArquivo;
-				document.body.appendChild(a);
-				a.click();
-				window.URL.revokeObjectURL(url);
-			})
-			.catch(error => console.error('Erro ao gerar o documento:', error))
-			.finally(()=>$('#loading').hide());
+ 			baixarParecer();
 		});
 	});
 
+	function baixarParecer(){
+
+		salvarParecer();
+		if(!validarCampos()) return;
+
+		if(dados.sexoRelator === "feminino") {
+			dados.pronRelat = "a"
+			dados.pronomeTxt = "a"
+		}
+		else{
+			dados.pronRelat = "o"
+			dados.pronomeTxt = ""
+		}
+		
+		if(dados.situacaoRelatorio === "aprovado") {
+			dados.aprovOuReprov = "Aprovação"
+			dados.paragrafo9 = "são suficientes para considerá-la aprovada, ratificando a decisão da Subunidade"
+		}
+		else{
+			dados.aprovOuReprov = "Reprovação"
+			dados.paragrafo9 = "não são suficientes para considerá-la aprovada, discordando da decisão da Subunidade"
+		}
+		if(dados.sexoCoordenador === "masculino") {
+			dados.PRNCoordenador = "o"
+			dados.PRNTxtCoordenador = ""
+		}
+		else{
+			dados.PRNCoordenador = "a"
+			dados.PRNTxtCoordenador = "a"
+		}
+		// Verifica se possui outro cordenador e se sim vai precisar adicionar o pronome e o titulo vice-coordenador
+		if(dados.possuiOutroCoordenador === "sim") {
+			if(dados.sexoViceCoordenador === "masculino") {
+				dados.pronomeViceCoordenador = "o"
+				dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenador" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
+			}
+			else{
+				dados.pronomeViceCoordenador = "a"
+				dados.textoComViceCoordenador = " e pel" + dados.pronomeViceCoordenador + " vice-coordenadora" + " " + dados.titulacaoViceCoordenador + " " +  dados.nomeViceCoordenador
+
+			}
+		}
+
+		// verificar o pronome do relatório ou proposição
+		let pronomeRelatorio = ""
+
+		if(dados.proposicaoOuRelatorio === "A proposição") {
+			pronomeRelatorio = "a";
+		}
+		else{
+			pronomeRelatorio = "o";
+
+		}
+
+		// verificar o pronome da faculdade
+		let pronomeFaculdade = ""
+		if(dados.faculdadeCoordenador?.startsWith("F")) {
+			pronomeFaculdade = "a";
+		}
+		else{
+			pronomeFaculdade = "o";
+
+		}
+
+		// I.TIPODOCUMENTO
+		dados.descricaoCoordenadores = dados.titulacaoCoordenador + " " + dados.nomeCoordenador + dados.textoComViceCoordenador
+
+		// Aqui define como deve ser a frase quando tem ou não carga horaria
+		if(dados.cargaHoraria === 'desabilitado'){
+			dados.cargaHoraria = 'sem alocação de Carga Horária';
+			dados.partePrg8 = "não há necessidade de análise nos termos da Resolução Nº 4.918, de 2017, do CONSEPE, referente à segunda solicitação de liberação e às solicitações subsequentes."
+		} else{
+			let textos = [];
+			let horasSelecionadasNumero = parseInt(dados.horasSelecionadas?.split(' ')[0]);
+			let elementosCH = [];
+
+			dados.cargaHoraria = 'com alocação de '+ dados.horasSelecionadas
+			dados.partePrg8 = "deve-se verificar o atendimento aos critérios da Resolução Nº 4.918, de 2017, do CONSEPE. Observou-se que a proposição atendeu a todas as exigências da referida Resolução."
+			
+			elementosCH = capturarCheckboxesEspecificos(horasSelecionadasNumero, dados.nomeRelatorio)
+			textos = elementosCH.map((element, index) => `(${String.fromCharCode(97 + index)}) ${element.texto.trim().replace(/[;.]$/, '')}`);
+
+			if (textos.length > 1) {
+				let penultimoEultimo = textos.slice(-2).map(txt => txt.replace(/[;.]$/, '')).join(' e '); // Remove o ";" e une com " e "
+				dados.elementosCargaHoraria = textos.slice(0, -2).join(' ') + (textos.length > 2 ? ' ' : '') + penultimoEultimo;
+			} else if (textos.length === 1) {
+				dados.elementosCargaHoraria = textos[0]; // Apenas um elemento
+			} else {
+				dados.elementosCargaHoraria = []; // Nenhum elemento
+			}
+		}
+		
+		// Aqui verifica se o tipo de documento não é um relatorio final e nem parcial
+		// Dependendo do tipo o primeiro topico pode ser DESCRIÇÃO ou RELATÓRIO
+		if(dados.TIPODOCUMENTO === 'nao'){
+			dados.paragrafo8 = "Acerca da quantidade de horas a serem alocadas, por se tratar de um projeto" + dados.cargaHoraria + "para " +  dados.PRNCoordenador + " " +  dados.coordenadorPRNTxtCoordenador + ", " + dados.partePrg8 
+			// Topico 1
+			dados.TIPODOCUMENTO = "DESCRIÇÃO";
+			dados.pedidoAprovacao = "\u00A0pedido de aprovação de";
+			dados.objetivoDescricaoProposta = '"' + dados.descricaoProposta + '".';
+			dados.objetivoProjeto = 'O objetivo do projeto é';
+			dados.proposicaoOuRelatorio = "A proposição";
+			dados.letra = "i";
+			dados.paragrafo5 = "COPEP “A aprovação dos projetos de pesquisa e extensão pelas subunidades, observando a carga horária deliberada”";
+
+			if(dados.nomeRelatorio === "Projeto de Extensão") {
+				dados.artgo = "192 a 197";
+				dados.capitulo = "VII, da Extensão";
+				dados.paragrafo7 = "na definição de extensão estabelecida no art. 192 do Regimento Geral da UFPA, pois é um processo educativo e científico articulado ao ensino e à pesquisa, de modo indissociável, que promove a relação transformadora entre a Universidade e a sociedade por meio de ações acadêmicas de natureza contínua que visem tanto à qualificação prática e à formação cidadã do discente quanto à melhoria da qualidade de vida da comunidade envolvida. O financiamento do projeto será com recursos próprios e pleiteando recursos externos, atendendo ao disposto no art. 195 do Regimento Geral."
+				+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição";
+
+			}
+			else{
+				dados.artgo = "184 a 191";
+				dados.capitulo = "VI, da Pesquisa";
+				
+				dados.paragrafo7 = "na definição de pesquisa estabelecida no art. 184 do Regimento Geral da UFPA, pois objetiva gerar, ampliar e difundir conhecimento científico e tecnológico. O financiamento do projeto será com recursos próprios, atendendo ao disposto no art. 185 do Regimento Geral, e ainda aproveitará os recursos humanos e laboratoriais da Universidade, conforme previsto na alínea 'a' do art. 186. A proposta possui um coordenador, atendendo também ao parágrafo 4º do art. 189 do Regimento Geral."
+				+ " Deste modo, " + dados.pronRelat + " relator" + dados.pronomeTxt + " afirma que a proposta está de acordo com as diretrizes da Instituição";
+			}
+			dados.proj_Ana_Enc = "analisado";
+
+		}else{
+			// Topico 1
+			dados.TIPODOCUMENTO = "RELATÓRIO";
+			dados.pedidoAprovacao = '';
+			dados.objetivoDescricaoProposta = "";
+			dados.objetivoProjeto = "";
+			dados.proposicaoOuRelatorio = "O relatório"
+			dados.paragrafo5 = "CAPEP “emitir parecer sobre a aprovação dos relatórios parciais e finais das atividades de pesquisa e extensão observando os critérios estabelecidos para a concessão de carga horária para cada projeto”";
+			dados.letra = "j";
+			dados.proj_Ana_Enc = "encerrado";
+			dados.paragrafo7 = "no que dispõe o art. 192 do Regimento Geral da instituição. Por meio da atividade, buscou-se " + dados.descricaoProposta 
+							+ ". Também esteve adequado às demais disposições presentes no capítulo mencionado do Regimento Geral"
+
+			if(dados.nomeRelatorio === 'Relatório Parcial de Projeto de Extensão' || dados.nomeRelatorio === 'Relatório Final de Projeto de Extensão'){
+				dados.artgo = "192 a 197";
+				dados.capitulo = "VII, da Extensão";
+			}else{
+				dados.artgo = "184 a 191";
+				dados.capitulo = "VI, da Pesquisa";
+
+			}
+			dados.paragrafo8 = "As atividades de coordenação de projeto foram exercidas " + dados.cargaHoraria + " de carga horária. Portanto, deveria atender às exigências do Anexo 1 da Resolução 4.918, de 2017, do CONSEPE. Verificou-se, na documentação encaminhada, que foram atendidos os seguintes quesitos, nos termos da Resolução: "  + dados.elementosCargaHoraria + ". Assim, consideram-se cumpridas as exigências e disposições presentes no capítulo mencionado do Regimento Geral"
+						
+		}
+		dados.dataAprovacao = ajustarFormatoData(dados.dataAprovacao) || '';
+		// paragrafo 2
+		if(dados.aprovacaoFaculdade === "ad-referendum") {
+			dados.paragrafo2 = " ainda será aprovad" + pronomeRelatorio +  " em reunião da Subunidade Acadêmica, porém possui o Ad Referendum Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -" + dados.faculdadeCoordenador?.split("-")[1] + ", emitido em " + dados.dataAprovacao + ", e o projeto é " + dados.cargaHoraria
+		}
+		else if(dados.aprovacaoFaculdade === "ata-reuniao-ordinaria"){
+			dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Ordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+		}
+		else if (dados.aprovacaoFaculdade === "ata-reuniao-extraordinaria"){
+			dados.paragrafo2 = " foi aprovad" + pronomeRelatorio +  " em " + dados.dataAprovacao + " pel" + pronomeFaculdade + " " + dados.faculdadeCoordenador + ", foi aprovad"  + pronomeRelatorio +  " em Ata de Reunião Extraordinária Nº " + dados.numeroDoc + "/" + dados.anoParecer + " -"  + dados.faculdadeCoordenador?.split("-")[1] + " da subunidade, por um período de " + dados.periodoProjeto + ", " + dados.cargaHoraria
+		}
+		else{
+			dados.paragrafo2 = " não foi aprovad" + pronomeRelatorio +  " pela faculdade, a justificativa informada foi " + dados.obs5
+		}
+
+		dados.dataAtual = getDataAtual()	
+		// Aqui define o nome do arquivo PDF
+		const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
+		
+		// Aqui faz a requisção para baixar o PARECER em PDF
+		$('#loading').show()
+		fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
+			method: 'POST',
+			headers: {'Content-Type': 'application/json'},
+			body: JSON.stringify({dados})
+		})
+		.then(response => response.blob())
+		.then(blob => {
+			// aqui construi o componente e ativa para baixar pelo navegador
+			const url = window.URL.createObjectURL(blob);
+			const a = document.createElement('a');
+			a.style.display = 'none';
+			a.href = url;
+			a.download = nomeArquivo;
+			document.body.appendChild(a);
+			a.click();
+			window.URL.revokeObjectURL(url);
+		})
+		.catch(error => console.error('Erro ao gerar o documento:', error))
+		.finally(()=>$('#loading').hide());
+	}
 	// Carregamento da foto para o formulari de membros 
 	function carregarImg() {
 		var target = document.getElementById('target');
