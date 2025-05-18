@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
 
-        ConvertApi::setApiCredentials('secret_9qluJwu6oplICV7L');
+        ConvertApi::setApiCredentials('secret_Q4GsyMy8clhZA63A');
 
         $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
         $resultado->saveFiles($caminhoPdfGerado); 

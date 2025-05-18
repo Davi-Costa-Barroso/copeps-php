@@ -451,7 +451,7 @@ HTML;
 			$('#modalForm').modal('show');
 		}else{
 			setTimeout(() => {
-				baixarParecer();
+				escolherTipDownload();
 			}, 1000);
 		}
 	}

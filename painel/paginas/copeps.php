@@ -201,10 +201,15 @@ if (@$copeps == 'ocultar') {
 							        <span class="fa fa-floppy-o icon-salvar"></span>
 							    </button>
 							</li>
-
 							<li class="navbar" style="display: flex; align-items: center; justify-content: flex-start; margin-left: 10px;">
-							    <button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-dark btn-lg icon-container" title="Download"><span class="fa fa-download icon-salvar"></button>
-									
+							    <button 
+									type="button" 
+									onclick="escolherTipDownload()" 
+									class="btn btn-dark btn-lg icon-container" 
+									title="Download"
+								>
+							        <span class="fa fa-download icon-salvar"></span>
+							    </button>
 							</li>
 						</ul>
 					</small>
@@ -293,7 +298,7 @@ if (@$copeps == 'ocultar') {
 							<div class="form-group">
 								<label>DOCUMENTOS ENVIADOS:* <small>(Máx. 6)</small></label>
 								<div id="input-container">
-									<input oninput="verificarInput()" type="text" class="in-doc form-control" name="docs[]" id="doc1" required>
+									<input oninput="verificarInput()" type="text" class="in-doc form-control" name="docs[]" id="doc1">
 								</div>
 								<button disabled type="button" id="add-input" class="btn btn-primary" onclick="addInput()">Adicionar Novo Documento</button>
 							</div>
@@ -623,7 +628,7 @@ if (@$copeps == 'ocultar') {
 							<div class="row">
 								<div class="col-md-8">
 									<label>Nome do Coordenador</label>
-									<select class="form-control sel" name="nome_coordenador" id="nome_coordenador" required style="width:100%;">
+									<select class="form-control sel" name="nome_coordenador" id="nome_coordenador" style="width:100%;">
 										<option value="" disabled selected>- Selecione -</option> 
 											<?php 
 											$query = $pdo->query("SELECT * FROM corpo_docentes order by nome asc");
@@ -694,7 +699,7 @@ if (@$copeps == 'ocultar') {
 							<div class="row" id="outroCoordenadorInfo" style="display: none;">
 								<div class="col-md-6">
 									<label for="nomeOutroCoordenador">Nome do Outro Coordenador</label>
-									<select class="form-control sel" name="nomeOutroCoordenador" id="nomeOutroCoordenador" required style="width:100%;">
+									<select class="form-control sel" name="nomeOutroCoordenador" id="nomeOutroCoordenador" style="width:100%;">
 										<option value="" disabled selected>- Selecione -</option> 
 											<?php 
 											$query = $pdo->query("SELECT * FROM corpo_docentes order by nome asc");
@@ -851,9 +856,26 @@ if (@$copeps == 'ocultar') {
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="button" onclick="salvarParecer('atualizar')" class="btn btn-primary btn-lg"><span class="fa fa-floppy-o"> Salvar</button>
-									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-success btn-lg"><span class="fa fa-download"> Baixar e salvar</button>
-									<button type="button" class="btn btn-link btn-sm" data-dismiss="modal"><span class="fa fa-times"> sair</button>
+									<button 
+										type="button" 
+										onclick="salvarParecer('atualizar')" 
+										class="btn btn-primary btn-lg"
+									>
+										<span class="fa fa-floppy-o"> 
+										Salvar
+									</button>
+									<button 
+										onclick="escolherTipDownload()"
+										type="button"
+										class="btn btn-success btn-lg"
+									>
+										<span class="fa fa-download"> 
+											Baixar e salvar
+										</button>
+									<button type="button" class="btn btn-link btn-sm" data-dismiss="modal">
+										<span class="fa fa-times" aria-hidden="true"> 
+											sair
+										</button>
 								</div>
 
 							</div>
@@ -911,6 +933,40 @@ if (@$copeps == 'ocultar') {
 
 <div id="loading" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); z-index: 9999; display: flex; justify-content: center; align-items: center;">
     <div class="spinner" style="border: 4px solid #f3f3f3; border-top: 4px solid #3498db; border-radius: 50%; width: 50px; height: 50px; animation: spin 2s linear infinite;"></div>
+</div>
+
+<div class="modal fade" id="modalTipoDownload" tabindex="-1">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Escolha o formato do arquivo</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Fechar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body text-center">
+        <button id="baixarPdf" class="btn btn-danger m-2">PDF</button>
+        <button id="baixarWord" class="btn btn-primary m-2">Word</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="popupAviso" style="
+  display: none;
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: #ffa726; /* laranja */
+  color: white;
+  padding: 12px 20px;
+  border-radius: 8px;
+  box-shadow: 0px 2px 6px rgba(0,0,0,0.3);
+  font-size: 16px;
+  z-index: 9999;
+">
+   <span class="fa fa-exclamation-triangle" aria-hidden="true" style="font-size: 20px;"></span> 
+   <span id="popupTexto" style="margin-left: 10px; font-weight: 600;"></span>
 </div>
 
 <style>
@@ -1537,132 +1593,167 @@ listarMembrosComissao(function(result) {
 	// Verifica se todos os campos foram preenchidos antes de baixar o relatorio
 	function validarCampos() {
 		if (!dados.numeroParecer) {
+			const msg = "Informe número do parecer";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe número do parecer");
-			console.log("Erro: Número do parecer não informado.");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
+			console.log(msg);
 			return false;
 		}
 
 		if (!dados.anoParecer) {
+			const msg = "Informe ano do parecer";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe ano do parecer");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Ano do parecer não informado.");
 			return false;
 		}
 
 		if (!dados.numeroOficio) {
+			const msg = "Informe número do ofício";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe número do ofício");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Número do ofício não informado.");
 			return false;
 		}
 
 		if (!dados.itemOficio) {
+			const msg = "Informe item do ofício";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe item do ofício");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Item do ofício não informado.");
 			return false;
 		}
 
 		if (!dados.dataEnvio) {
+			const msg = "Informe a data de envio";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe a data de envio");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Data de envio não informada.");
 			return false;
 		}
 
 		if (!dados.textoAnalisado) {
+			const msg = "Informe o texto analisado";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o texto analisado");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Texto analisado não informado.");
 			return false;
 		}
 
 		if (!dados.tituloProjetoAnalisado) {
+			const msg = "Informe o título do projeto analisado";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o título do projeto analisado");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Título do projeto analisado não informado.");
 			return false;
 		}
 
 		if (!dados.documentosEnviados) {
+			const msg = "Informe os documentos enviados";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe os documentos enviados");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Documentos enviados não informados.");
 			return false;
 		}
 
 		if (!dados.TIPODOCUMENTO) {
+			const msg = "Informe o tipo do documento";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o tipo do documento");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Tipo do documento não informado.");
 			return false;
 		}
 
 		if (!dados.nomeRelatorio) {
+			const msg = "Informe o relatório";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o relatório");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Nome do relatório não informado.");
 			return false;
 		}
 
 		if (!dados.periodoProjeto) {
+			const msg = "Informe o período do projeto";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o período do projeto");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Período do projeto não informado.");
 			return false;
 		}
 
 		if (!dados.cargaHoraria) {
+			const msg = "Informe a carga horária";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe a carga horária");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Carga horária não informada.");
 			return false;
 		}
 
 		if (!dados.nomeCoordenador) {
+			const msg = "Informe o nome do coordenador";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o nome do coordenador");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Nome do coordenador não informado.");
 			return false;
 		}
 
 		if (!dados.sexoCoordenador) {
+			const msg = "Informe o sexo do coordenador";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe o sexo do coordenador");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Sexo do coordenador não informado.");
 			return false;
 		}
 
 		if (!dados.titulacaoCoordenador) {
+			const msg = "Informe a titulação do coordenador";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe a titulação do coordenador");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Titulação do coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.faculdadeCoordenador) {
+			const msg = "Informe a faculdade do coordenador";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe a faculdade do coordenador");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Faculdade do coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.possuiOutroCoordenador) {
+			const msg = "Informe se possui outro coordenador";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe se possui outro coordenador");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Informação sobre outro coordenador não informada.");
 			return false;
 		}
 
 		if (!dados.descricaoProposta) {
+			const msg = "Informe descrição de proposta.";
 			$('#mensagem').addClass('text-danger');
-			$('#mensagem').text("Informe descrição de proposta.");
+			$('#mensagem').text(msg);
+			mostrarPopupAviso(msg);
 			console.log("Erro: Descrição de proposta não informada.");
 			return false;
 		}
 
-		console.log("Todos os campos foram validados com sucesso.");
 		return true;
 	}
 
@@ -1751,17 +1842,58 @@ listarMembrosComissao(function(result) {
 		$('#mensagem').text("")
 	});
 
-	$(document).ready(function() {
-		$('#baixarParecer').click(function(event) {
-			event.preventDefault(); 
- 			baixarParecer();
-		});
+	// $(document).ready(function() {
+	// 	$('#baixarParecer').click(function(event) {
+	// 		event.preventDefault(); 
+ 	// 		baixarParecer();
+	// 	});
+	// });
+
+	// Quando o botão PDF for clicado
+	$('#baixarPdf').click(function() {
+		$('#modalTipoDownload').modal('hide');
+		// Chamada para baixar em PDF
+		baixarParecer('pdf');
 	});
 
-	function baixarParecer(){
+	// Quando o botão Word for clicado
+	$('#baixarWord').click(function() {
+		$('#modalTipoDownload').modal('hide');
+		// Chamada para baixar em Word
+		baixarParecer('word');
+	});
+
+	function mostrarPopupAviso(texto) {
+		const popup = document.getElementById('popupAviso');
+		popup.textContent = '';  // limpa conteúdo anterior
+
+		// Cria o ícone com span Font Awesome
+		const icone = document.createElement('span');
+		icone.className = 'fa fa-exclamation-triangle';
+		icone.setAttribute('aria-hidden', 'true');
+		icone.style.fontSize = '20px';
+		icone.style.marginRight = '8px';
+
+		// Adiciona o ícone e o texto ao popup
+		popup.appendChild(icone);
+		popup.appendChild(document.createTextNode(texto));
+
+		popup.style.display = 'flex';
+
+		setTimeout(() => { popup.style.display = 'none'}, 2500);
+	}
+
+	function escolherTipDownload() {
+		preencherDados();
+		if(!validarCampos()) return
+
+		$('#modalForm').modal('hide');
+		$('#modalTipoDownload').modal('show');
+	}
+
+	function baixarParecer(tipoDownload){
 
 		salvarParecer();
-		if(!validarCampos()) return;
 
 		if(dados.sexoRelator === "feminino") {
 			dados.pronRelat = "a"
@@ -1920,10 +2052,15 @@ listarMembrosComissao(function(result) {
 
 		dados.dataAtual = getDataAtual()	
 		// Aqui define o nome do arquivo PDF
-		const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
+		const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}`;
 		// Aqui faz a requisção para baixar o PARECER em PDF
 		$('#loading').show()
-		fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
+	
+		const URL_API = tipoDownload === "pdf" ? 'gerarParecerPDF.php' : 'gerarParecerDOC.php';
+		const extensao =  tipoDownload === "pdf" ? '.pdf' : '.docx';
+		console.log(nomeArquivo + extensao)
+		console.log(URL_API)
+		fetch(`/loginusuario/painel/paginas/${URL_API}`, {
 			method: 'POST',
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({dados})
@@ -1941,16 +2078,15 @@ listarMembrosComissao(function(result) {
 			const a = document.createElement('a');
 			a.style.display = 'none';
 			a.href = url;
-			a.download = nomeArquivo;
+			a.download = nomeArquivo + extensao;
 			document.body.appendChild(a);
 			a.click();
 			window.URL.revokeObjectURL(url);
 		})
 		.catch((error) => {
-			console.error('Erro ao gerar o documento:', error)
-			alert('Erro na API ao gerar PDF ')
+			alert('Erro na API ao gerar PARECER ')
 		})
-		.finally(()=>$('#loading').hide());
+		$('#loading').hide()
 	}
 	// Carregamento da foto para o formulari de membros 
 	function carregarImg() {
