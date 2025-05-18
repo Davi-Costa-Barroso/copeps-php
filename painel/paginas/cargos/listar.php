@@ -7,9 +7,23 @@ $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
+<style type="text/css">
+.dataTables_length {
+    margin-bottom: 1rem; /* Espaço abaixo do "Mostrar registros" */
+}
+
+.dataTables_filter {
+    margin-bottom: 1rem; /* Espaço abaixo do "Buscar" */
+}
+
+/* Se quiser alinhar melhor */
+.dataTables_wrapper .row {
+    margin-bottom: 1rem;
+}
+</style>
 <small>
 	<table class="table table-hover" id="tabela">
-	<thead> 
+	<thead style="background-color: #303030; color: white;"> 
 	<tr>
 	<th>ID</th> 
 	<th>Nome</th> 

@@ -7,7 +7,7 @@ if (isset($_POST['escolhido'])) {
 
     // Define os valores dos selects como arrays
     $select1 = [
-        "Projeto de Ensino",
+        // "Projeto de Ensino",
         "Projeto de Pesquisa",
         "Projeto de Extensão",
         "Alocação de Carga horária",

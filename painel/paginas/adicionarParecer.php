@@ -1,10 +1,19 @@
 <?php
+session_start(); // Inicia a sessão para acessar $_SESSION['id'] //EU COLOQUEIIIIII
+error_log("ID do usuário da sessão: " . $_SESSION['id']); // Grava no log do servidor EU COLOQUEIIII
+
+// Desativar exibição de erros na tela para evitar quebra do JSON
+ini_set('display_errors', 0);
+error_reporting(E_ALL); // Logs continuam funcionando
 
 $tabela = 'pareceres';
 require_once("../../conexao.php");
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id_usuario = $_SESSION['id']; // Captura o ID do usuário logado EU COLOQUEIII
+
     $dados = [
+        'data' => $_POST['data'],
         'id' => $_POST['id_dados'],
         // dados iniciais
         'numeroParecer' => $_POST['numeroParecer'],
@@ -40,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'justificativa' => $_POST['justificativa'], // campo $obs5
         'comentariosParecer' => $_POST['comentariosParecer'], // campo $obs6
         'parecerRelator' => $_POST['situacaoRelatorio'],
+        'id_usuario' => $id_usuario // Adiciona o id_usuario ao array("Verde" NOME QUE vem bd)-COLOQUEI ISSO
     ];
     
     $campos = array_keys($dados);

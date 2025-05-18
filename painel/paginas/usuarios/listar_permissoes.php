@@ -5,6 +5,7 @@ require_once("../../../conexao.php");
 $id_usuario = @$_POST['id']; 
 
 $checked = '';
+//BUSCANDO ACESSOS SEM GRUPOS E EXIBINDO ELES
 $query = $pdo->query("SELECT * FROM acessos where grupo = 0 order by id asc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);
@@ -43,7 +44,7 @@ echo '</div><hr>';
 
 
 
-
+//BUSCANDO TODOS OS GRUPOS E EXIBINDO ELES
 $query = $pdo->query("SELECT * FROM grupo_acessos ORDER BY id asc");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);

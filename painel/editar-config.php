@@ -30,7 +30,7 @@ if(@$_FILES['foto-logo']['name'] != ""){
 }
 
 
-//foto logo rel
+//foto logo rel, so pode receber extençao jpg
 $caminho = '../img/logo.jpg';
 $imagem_temp = @$_FILES['foto-logo-rel']['tmp_name']; 
 
@@ -62,7 +62,7 @@ if(@$_FILES['foto-icone']['name'] != ""){
 }
 
 
-$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram, logo_rel = '$logo_rel', logs = '$logs', dias_limpar_logs = '$dias_limpar_logs', relatorio_pdf = '$relatorio_pdf'");
+$query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, endereco = :endereco, instagram = :instagram, logo_rel = '$logo_rel', logs = '$logs', dias_limpar_logs = '$dias_limpar_logs', relatorio_pdf = '$relatorio_pdf'"); //eu coloquei where id = 1, mas não deu certo
 
 $query->bindValue(":nome", "$nome");
 $query->bindValue(":email", "$email");

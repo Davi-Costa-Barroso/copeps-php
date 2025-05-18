@@ -5,7 +5,7 @@ require_once("../../../conexao.php");
 $id = $_POST['id'];
 //@$nome = $_POST['nome'];  
 
-//fiz esse comando pra pegar o $nome pra usar no logs
+//fiz essa consulta pra pegar o $nome pra usar no logs
 $query3 = $pdo->query("SELECT * from cargos where id = '$id' ");
 $res3 = $query3->fetchAll(PDO::FETCH_ASSOC);
 $nome = $res3[0]['nome']; 

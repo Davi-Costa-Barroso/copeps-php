@@ -3,7 +3,7 @@
 $tabela = 'cargos'; 
 require_once("../../../conexao.php");
 
-$nome = $_POST['nome']; // ['nome'] vem do imput name da Modal Form Usuario
+$nome = $_POST['nome']; // ['nome'] vem do imput name da Modal Form Cargos
 $id = $_POST['id'];
 
 
@@ -33,9 +33,10 @@ if($id == ""){
 
 $query->bindValue(":nome", "$nome"); 
 $query->execute();
-$ult_id = $pdo->lastInsertId(); //"$pdo->lastInsertId()" comando p/ receber o ultimo id executado no bd
+$ult_id = $pdo->lastInsertId(); // comando p/ receber o ultimo id executado no bd
 
 
+//pega o ultimo id que está fazendo a edição
 if($ult_id == "" || $ult_id == 0){
 	$ult_id = $id;
 }

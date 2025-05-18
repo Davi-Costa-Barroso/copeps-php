@@ -4,20 +4,19 @@
  }
 
 
- .container { 
+ .container {
+ 	position: relative; 
  	width: 570px;
  	height: 470px;	 
-  	margin-top: 80px;
-  	margin-left: 95px;
+  	margin: 3% 0 0 3%;
   	background: #dce8e8;
   	top: 50%;
   	left: 40%;
   	transform: translate(-40%, 8%);
 
-  	position: relative;
 }
 
-
+ 
 
 
 #tamanho{			
@@ -38,7 +37,8 @@
 
 div {
 	position: relative;
-	width: 490px;  /*Comprimento dos imputs e do botao*/
+	width: auto;  /*Comprimento dos imputs e do botao*/
+
 }
 
 
@@ -83,5 +83,31 @@ a{
 	color: black;
 			
 }
+
+.imagem{
+
+	width: 60px;
+ 			 
+}
+
+.login-btn {
+	padding: 13px 20px 12px;
+	background-color: #000;
+	border-radius: 4px;
+	font-family: "Verdana", sans-serif;	
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 20px;
+	color: #ffffff;
+	margin-bottom: 12px;	
+
+}
+
+.login-btn:hover {
+	border: 1.7px solid #000;
+	background: #423e3e;
+	color: #1ffa02;
+}
+
 
 

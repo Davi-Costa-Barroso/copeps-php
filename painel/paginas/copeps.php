@@ -5,13 +5,130 @@ if (@$copeps == 'ocultar') {
 	echo '<script>window.location="../index.php"</script>';
 	exit();
 }
+
+
 ?>
 
-<!-- Botão Inserir novo membro com a função "inserir()" via "ajax.js" -->
-<a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Parecer</a>
 
-<li class="dropdown head-dpdn2" style="display: inline-block;">
-	<a href="#" data-toggle="dropdown" class="btn btn-danger dropdown-toggle" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
+<style>
+/* Ajustes para o modal */
+.modal-dialog {
+    max-height: 80vh; /* Altura máxima do modal (80% da viewport) */
+    display: flex;
+    flex-direction: column;
+}
+
+.modal-content {
+    overflow: hidden; /* Evita transbordo do conteudo */
+    display: flex;
+    flex-direction: column;
+    height: 100%; /* Ocupa toda a altura do modal-dialog */
+}
+
+.modal-header {
+    background-color: black; /* Fundo preto mantido */
+    color: white !important; /* Texto branco */
+    flex-shrink: 0; /* Impede que o header de encolher */
+    position: sticky; /* Fixa o header no topo */
+    top: 0;
+    z-index: 1; /* Garante que fique acima do conteúdo rolável */
+    padding-bottom: 0; /* Remove padding inferior para alinhar abas */
+}
+
+.modal-body {
+    overflow-y: auto; /* Adiciona barra de rolagem vertical */
+    flex-grow: 1; /* Ocupa o espaço restante */
+    max-height: calc(95vh - 100px); /* Define altura máxima subtraindo o header(apareceu barra de rollagem) */
+    padding: 20px; /* Padding padrão do Bootstrap, ajuste se necessário */
+    margin-top: 0; /* Remove margem superior para alinhar com as abas */
+}
+
+/* Estilização das abas (mantendo seu estilo original) */
+.nav-tabs .nav-link {
+    color: #8cecff; /* Cor dos links */
+    background-color: transparent;
+    font-size: 1.02rem;
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: transparent;
+    color: white;
+    font-size: 1.3rem;
+}
+
+/* Botão de fechar (mantendo seu estilo original) */
+.modal-header .close {
+    color: white;
+    font-size: 1.8rem;
+    opacity: 1;
+}
+
+.modal-header .close:hover {
+    color: #b1f1fc;
+    font-size: 2.1rem;
+}
+
+/* Ajuste para o conteúdo das abas -  Garante que o conteúdo das abas seja rolável */
+.tab-content {
+    height: 100%; /* Ocupa toda a altura disponível no modal-body */
+}
+
+/* Remove a rolagem desnecessária que você adicionou inline */
+.modal-dialog {
+    overflow: unset; /* Remove o overflow: scroll inline */
+    scrollbar-width: none; /* Remove a barra de rolagem do modal-dialog */
+}
+</style>
+
+
+
+
+
+	
+
+<style type="text/css">
+	/* Ajusta o container da tabela */
+        .table-container {
+            width: auto;
+            margin: 5%;
+        }
+</style>
+
+<style type="text/css">
+	.btn-fixo4 {
+     position: fixed;
+     top: 79px;
+     left: 246px;
+     z-index: 1000; 
+
+}
+</style>
+
+<style type="text/css">
+  .btn-fixo5 {
+     position: fixed;
+     top: 79px;
+     left: 352px;
+     z-index: 1000;
+  }
+</style>
+
+<style type="text/css">
+  .btn-fixo6 {
+     position: fixed;
+     top: 83px;
+     left: 456px;
+     z-index: 1000;
+  }
+</style>
+
+<div class="table-container">
+
+<!-- Botão Inserir novo parecer com a função "inserir()" via "ajax.js" -->
+<a onclick="inserir()" title="Criar Parecer" type="button" class="btn btn-primary btn-fixo4"><span class="fa fa-plus"></span> Parecer</a>
+
+<li class="dropdown head-dpdn2 btn-fixo6" style="display: inline-block;">
+	<a href="#" data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-fixo5" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
 
 	<ul class="dropdown-menu">
 		<li>
@@ -21,15 +138,18 @@ if (@$copeps == 'ocultar') {
 		</li>
 	</ul>
 </li>
+</div>
+
 
 <div class="bs-example widget-shadow" style="padding:15px" id="listar">
 </div>
+
 
 <input type="hidden" id="ids">
 
 <!-- Modal Form Cadastro Parecer -->
 <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="exampleModalLabel" data-backdrop="static">
-	<div class="modal-dialog modal-lg" role="document" style="width:60%; overflow: scroll; height:auto; max-height: 590px; scrollbar-width: thin;" bis_skin_checked="1">
+	<div class="modal-dialog modal-lg" role="document" style="width: 61%; max-height: 640px;">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_inserir"></span>
@@ -67,7 +187,7 @@ if (@$copeps == 'ocultar') {
 
 								<div class="col-md-3">
 									<label for="numeroParecer">Número do Parecer:</label>
-									<input type="text" class="form-control" id="numeroParecer" name="numeroParecer" readonly>
+									<input type="text" class="form-control" id="numeroParecer" name="numeroParecer">
 								</div>
 
 								<div class="col-md-3">
@@ -104,6 +224,10 @@ if (@$copeps == 'ocultar') {
 										<option value="15">Item 14</option>
 										<option value="16">Item 15</option>
 										<option value="17">Item 16</option>
+										<option value="18">Item 17</option>
+										<option value="19">Item 18</option>
+										<option value="20">Item 19</option>
+										<option value="21">Item 20</option>										
 									</select>
 
 								</div>
@@ -137,7 +261,7 @@ if (@$copeps == 'ocultar') {
 
 							<hr>
 							<div align="right">
-								<button type="button" id="seguinte_aba2" name="seguinte_aba2" class="btn btn-primary">Seguinte</button>
+								<button type="button" id="seguinte_aba2" name="seguinte_aba2" class="btn btn-primary">Seguinte <span class="fa fa-arrow-right"></button>
 							</div>
 						</div>
 
@@ -445,22 +569,35 @@ if (@$copeps == 'ocultar') {
 							<hr>
 							<div class="row">
 								<div class="col-md-6">
-									<button type="button" id="voltar_aba1" name="voltar_aba1" class="btn btn-primary">Voltar</button>
+									<button type="button" id="voltar_aba1" name="voltar_aba1" class="btn btn-primary"><span class="fa fa-arrow-left"> Voltar</button>
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="button" id="seguinte_aba3" name="seguinte_aba3" class="btn btn-primary">Seguinte</button>
+									<button type="button" id="seguinte_aba3" name="seguinte_aba3" class="btn btn-primary">Seguinte <span class="fa fa-arrow-right"></button>
 								</div>
 
 							</div>
 						</div>
 
-						<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">Contact
+						<div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">
 
 							<div class="row">
 								<div class="col-md-8">
 									<label>Nome do Coordenador</label>
-									<input type="text" class="form-control" id="nome_coordenador" name="nome_coordenador" placeholder="Nome do Coordenador" >
+									<select class="form-control sel" name="nome_coordenador" id="nome_coordenador" required style="width:100%;">
+										<option value="" disabled selected>- Selecione -</option> 
+											<?php 
+											$query = $pdo->query("SELECT * FROM corpo_docentes order by nome asc");
+											$res = $query->fetchAll(PDO::FETCH_ASSOC);
+											for($i=0; $i < @count($res); $i++){
+												foreach ($res[$i] as $key => $value){}
+													
+													?>	
+												<option value="<?php echo $res[$i]['nome'] ?>"><?php echo $res[$i]['nome'] ?></option>
+
+											<?php } ?>
+									</select>
+									<!-- <input type="text" class="form-control" id="nome_coordenador" name="nome_coordenador" placeholder="Nome do Coordenador" > -->
 								</div>
 								
 								<div class="col-md-4">
@@ -518,7 +655,20 @@ if (@$copeps == 'ocultar') {
 							<div class="row" id="outroCoordenadorInfo" style="display: none;">
 								<div class="col-md-6">
 									<label for="nomeOutroCoordenador">Nome do Outro Coordenador</label>
-									<input type="text" class="form-control" id="nomeOutroCoordenador" name="nomeOutroCoordenador" placeholder="Nome do Outro Coordenador" >
+									<select class="form-control sel" name="nomeOutroCoordenador" id="nomeOutroCoordenador" required style="width:100%;">
+										<option value="" disabled selected>- Selecione -</option> 
+											<?php 
+											$query = $pdo->query("SELECT * FROM corpo_docentes order by nome asc");
+											$res = $query->fetchAll(PDO::FETCH_ASSOC);
+											for($i=0; $i < @count($res); $i++){
+												foreach ($res[$i] as $key => $value){}
+													
+													?>	
+												<option value="<?php echo $res[$i]['nome'] ?>"><?php echo $res[$i]['nome'] ?></option>
+
+											<?php } ?>
+									</select>
+									<!-- <input type="text" class="form-control" id="nomeOutroCoordenador" name="nomeOutroCoordenador" placeholder="Nome do Outro Coordenador" > -->
 								</div>
 
 								<div class="col-md-4">
@@ -542,11 +692,11 @@ if (@$copeps == 'ocultar') {
 							<hr>
 							<div class="row">
 								<div class="col-md-6">
-									<button type="button" id="voltar_aba2" name="voltar_aba2" class="btn btn-primary">Voltar</button>
+									<button type="button" id="voltar_aba2" name="voltar_aba2" class="btn btn-primary"><span class="fa fa-arrow-left"> Voltar</button>
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="button" id="seguinte_aba4" name="seguinte_aba4" class="btn btn-primary">Seguinte</button>
+									<button type="button" id="seguinte_aba4" name="seguinte_aba4" class="btn btn-primary">Seguinte <span class="fa fa-arrow-right"></button>
 								</div>
 							</div>
 						</div>
@@ -658,12 +808,13 @@ if (@$copeps == 'ocultar') {
 							<hr>
 							<div class="row">
 								<div class="col-md-6">
-									<button type="button" id="voltar_aba3" name="voltar_aba3" class="btn btn-primary">Voltar</button>
+									<button type="button" id="voltar_aba3" name="voltar_aba3" class="btn btn-primary"><span class="fa fa-arrow-left"> voltar</button>
 								</div>
 
 								<div class="col-md-6" align="right">
-									<button type="button" onclick="salvarParecer('atualizar')" class="btn btn-primary">Salvar</button>
-									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-primary">Baixar e salvar</button>
+									<button type="button" onclick="salvarParecer('atualizar')" class="btn btn-primary btn-lg"><span class="fa fa-floppy-o"> Salvar</button>
+									<button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-success btn-lg"><span class="fa fa-download"> Baixar e salvar</button>
+									<button type="button" class="btn btn-link btn-sm" data-dismiss="modal"><span class="fa fa-times"> sair</button>
 								</div>
 
 							</div>
@@ -683,87 +834,7 @@ if (@$copeps == 'ocultar') {
 	</div>
 </div>
 
-<!-- Modal Exibir Dados Membros-->
-<div class="modal fade" id="modalDados" tabindex="-1" aria-labelledby="exampleModalLabel">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_dados"></span></h4>
-				<button id="btn-fechar-dados" type="button" class="close" data-dismiss="modal" aria-label="Close" style="margin-top: -25px">
-					<span>&times;</span>
-				</button>
-			</div>
 
-			<div class="modal-body">
-				<div class="row" style="margin-top: 0px; border-bottom: 1px solid #cac7c7;">
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Telefone: </b></span><span id="telefone_dados"></span>
-					</div>
-
-					<div class="col-md-8" style="margin-bottom: 5px">
-						<span><b>Email: </b></span><span id="email_dados"></span>
-					</div>
-
-					<div class="col-md-8" style="margin-bottom: 5px">
-						<span><b>Matrícula: </b></span><span id="matricula_dados"></span>
-					</div>
-
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Cargo: </b></span><span id="cargo_dados"></span>
-					</div>
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Tipo de Membro: </b></span><span id="tipo_membro"></span>
-					</div>
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Comissão: </b></span><span id="comissao_dados"></span>
-					</div>
-
-					
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Ativo: </b></span><span id="ativo_dados"></span>
-					</div>
-
-					<div class="col-md-6" style="margin-bottom: 5px">
-						<span><b>Data Cadastro: </b></span><span id="data_dados"></span>
-					</div>
-
-					<div class="col-md-12" style="margin-bottom: 5px">
-						<span><b>Endereço: </b></span><span id="endereco_dados"></span>
-					</div>
-
-					<div class="col-md-4" style="margin-bottom: 5px">
-						<span><b>Cidade: </b></span><span id="cidade_dados"></span>
-					</div>
-
-					<div class="col-md-4" style="margin-bottom: 5px">
-						<span><b>Estado: </b></span><span id="estado_dados"></span>
-					</div>
-
-					<div class="col-md-4" style="margin-bottom: 10px">
-						<span><b>País: </b></span><span id="pais_dados"></span>
-					</div>
-
-					<div class="row" style="border-bottom: 1px solid #cac7c7;">
-						<div class="col-md-12">
-							<span><b>OBS: </b></span>
-							<span id="obs_dados"></span>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-12" style="margin-bottom: 10px">
-							<div align="center"><img src="" id="foto_dados" width="100px"></div>
-						</div>
-					</div>
-				</div>
-			</div>
-
-		</div>
-	</div>
-</div>
 
 <!-- Modal Permissoes -->
 <div class="modal fade" id="modalPermissoes" tabindex="-1" aria-labelledby="exampleModalLabel">
@@ -850,10 +921,10 @@ if (@$copeps == 'ocultar') {
 						var terceiroSelect = $('<div id="terceiro_select_container"></div>');
 						terceiroSelect.prepend('<label for="tipo">Tipo de Projeto?</label>');
 						terceiroSelect.append($('<select class="form-select" name="tipo" id="tipo">'));
-						terceiroSelect.find('#tipo').append($('<option>', {
-							value: "Projeto de Ensino",
-							text: "Projeto de Ensino"
-						}));
+						// terceiroSelect.find('#tipo').append($('<option>', {
+						// 	value: "Projeto de Ensino",
+						// 	text: "Projeto de Ensino"
+						// }));
 						terceiroSelect.find('#tipo').append($('<option>', {
 							value: "Projeto de Pesquisa",
 							text: "Projeto de Pesquisa"
@@ -1178,6 +1249,7 @@ if (@$copeps == 'ocultar') {
 $('#loading').hide();
 
 var dados = {
+	data: null,
 	id_dados: "",
     numeroParecer: "",
     anoParecer: "",
@@ -1810,7 +1882,6 @@ listarMembrosComissao(function(result) {
 		dados.dataAtual = getDataAtual()	
 		// Aqui define o nome do arquivo PDF
 		const nomeArquivo = `PARECER N º ${dados.numeroParecer}, de ${dados.anoParecer} - OC ${dados.numeroOficio} - ITEM ${dados.itemOficio}.pdf`;
-		
 		// Aqui faz a requisção para baixar o PARECER em PDF
 		$('#loading').show()
 		fetch('/loginusuario/painel/paginas/gerarDocumento.php', {
@@ -1818,7 +1889,13 @@ listarMembrosComissao(function(result) {
 			headers: {'Content-Type': 'application/json'},
 			body: JSON.stringify({dados})
 		})
-		.then(response => response.blob())
+		.then(async response => {
+			if (!response.ok) {
+				const errorJson = await response.json();
+				throw errorJson;
+			}
+			return response.blob();
+		})
 		.then(blob => {
 			// aqui construi o componente e ativa para baixar pelo navegador
 			const url = window.URL.createObjectURL(blob);
@@ -1830,7 +1907,10 @@ listarMembrosComissao(function(result) {
 			a.click();
 			window.URL.revokeObjectURL(url);
 		})
-		.catch(error => console.error('Erro ao gerar o documento:', error))
+		.catch((error) => {
+			console.error('Erro ao gerar o documento:', error)
+			alert('Erro na API ao gerar PDF ')
+		})
 		.finally(()=>$('#loading').hide());
 	}
 	// Carregamento da foto para o formulari de membros 
@@ -1966,13 +2046,33 @@ listarMembrosComissao(function(result) {
 		}
 
 	}
+
+	function getDataFormatada() {
+		const agora = new Date();
+
+		const ano = agora.getFullYear();
+		const mes = String(agora.getMonth() + 1).padStart(2, '0'); // meses de 0 a 11
+		const dia = String(agora.getDate()).padStart(2, '0');
+
+		const horas = String(agora.getHours()).padStart(2, '0');
+		const minutos = String(agora.getMinutes()).padStart(2, '0');
+		const segundos = String(agora.getSeconds()).padStart(2, '0');
+
+		return `${ano}-${mes}-${dia} ${horas}:${minutos}:${segundos}`;
+	}
+//************************ SALVAR PARECER ******************************************************
 	function salvarParecer(acao) {
 		// a função preencher dados pega os dados dos campos e armazena em um unico objeto
 		preencherDados()
 		// a função validar verifica se todos os campos necessarios foram preenchidos.
 		if(!validarCampos()) return;
+		dados.data = getDataFormatada(); // salva a data da ultima atualização
 		console.log('dados do parecer: ', dados)
 		// requisição para salvar no banco de dados, note que envia apenas um unico objeto que contém todos os dados
+
+		// Prevenir múltiplos cliques
+   	    $('#btn-salvar-parecer').prop('disabled', true);
+
 		$.ajax({
 			url: 'paginas/adicionarParecer.php',
 			type: 'POST',
@@ -1989,10 +2089,14 @@ listarMembrosComissao(function(result) {
 				}
 			},
 			error: function() {
-				alert('Erro na comunicação com o servidor.');
-			}
-		});
+            alert('Erro na comunicação com o servidor.');
+	        },
+	        complete: function() {
+	            $('#btn-salvar-parecer').prop('disabled', false);
+	        }
+	    });
 	}
+//*************************************************************************************************
 
 	function listarMembrosComissao(callback) {
     // Faz a requisição AJAX
@@ -2068,3 +2172,25 @@ listarMembrosComissao(function(result) {
 
 
 </script>
+
+<!-- jQuery e Bootstrap -->
+
+
+
+
+
+<script>
+// Torna o modal arrastável quando ele for exibido bootstrap 4
+//precisa de - jquery-ui.js e 	
+$(document).ready(function(){
+    $("#modalForm").on("shown.bs.modal", function () {
+        $(".modal-dialog").draggable({
+            handle: ".modal-header", // Arrasta segurando a barra de título
+            containment: "window"   // Mantém dentro da tela
+        });
+    });
+});
+</script>
+
+
+

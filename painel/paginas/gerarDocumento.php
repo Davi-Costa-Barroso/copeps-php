@@ -67,7 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         substituirTextoNoDocx($caminhoArquivoDocx, $caminhoArquivoEditadoDocx, $dados);
 
-        ConvertApi::setApiCredentials('secret_IhqDw42KktD4C1Mg');
+        ConvertApi::setApiCredentials('secret_9qluJwu6oplICV7L');
 
         $resultado = ConvertApi::convert('pdf', [ 'File' => $caminhoArquivoEditadoDocx], 'docx');
         $resultado->saveFiles($caminhoPdfGerado); 
@@ -87,6 +87,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     } catch (Exception $e) {
         error_log("Erro no processo de geração do PDF: " . $e->getMessage());
+        unlink($caminhoArquivoEditadoDocx);//coloquei isso
         http_response_code(500);
     }
 }

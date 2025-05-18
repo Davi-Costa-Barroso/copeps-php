@@ -1,9 +1,9 @@
-$(document).ready(function() {  
+$(document).ready(function() {  //quando a função for lida, chama a função listar
  
     listar();    
 } );
 
-//listar
+//listar  "+ pag +"  é uma pasta que foi passada pela variavel var pag em usuarios.php
 function listar( p1, p2, p3, p4, p5, p6){  
     $.ajax({
         url: 'paginas/' + pag + "/listar.php",
@@ -32,7 +32,7 @@ function inserir(){
 
 
 
-//Ajax p/a salvar atraves do botao submit da Modal form do Usuario
+//Ajax p/a salvar formulario atraves do botao submit da Modal form do Usuario
 $("#form").submit(function () {
 
     event.preventDefault();

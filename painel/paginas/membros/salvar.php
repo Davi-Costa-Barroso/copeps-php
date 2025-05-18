@@ -1,10 +1,10 @@
 <?php 
 
-$tabela = 'membros';
+$tabela = 'membros'; 
 require_once("../../../conexao.php");
 
-$id = $_POST['id'];
-$nome = $_POST['nome']; // ['nome'] vem do imput name da Modal Form Usuario
+$id = $_POST['id']; //usa o id, pq eu salvo e edito no msm formulario
+$nome = $_POST['nome']; // ['nome'] vem do imput name da Modal Form Membro
 $email = $_POST['email'];
 $matricula = $_POST['matricula'];
 $cargo = $_POST['cargo'];
@@ -152,29 +152,31 @@ if($nome_comissao == 'CAEG'){
 
 
 
-//se ele não passou nada "", faz a inserção
-if($id == ""){
+//Faz a inserção tabela Membro, se ele não passou nada "" 
+if($id == ""){//primeiro é o nome do variavel do BD e o segundo é a variavel do salvar.php
 	$query = $pdo->prepare("INSERT INTO $tabela SET nome = :nome, email = :email, matricula = :matricula, cargo = '$cargo', comissao = '$comissao', telefone = :telefone, cpf = :cpf, endereco = :endereco, cidade = :cidade, estado = :estado, pais = :pais,  foto = '$foto', data = curDate(), ativo = 'Sim', obs = :obs");
 
 	$query->bindValue(":nome", "$nome");
 	$query->bindValue(":email", "$email");
 	$query->bindValue(":matricula", "$matricula");
 	$query->bindValue(":telefone", "$telefone");
-	$query->bindValue(":cpf", "$cpf");
+	$query->bindValue(":cpf", "$cpf");   
 	$query->bindValue(":endereco", "$endereco");
 	$query->bindValue(":cidade", "$cidade");
 	$query->bindValue(":estado", "$estado");
 	$query->bindValue(":pais", "$pais");
 	$query->bindValue(":obs", "$obs");
 	$query->execute();
-	$ult_id = $pdo->lastInsertId(); 
+
+	$ult_id_membro = $pdo->lastInsertId(); //Captura o último ID gerado do membros.php automaticamente por uma inserção em uma tabela de uma coluna AUTO_INCREMENT, como a chave primária id em usuarios.
+
 
 	$acao = 'inserção';  //eu coloquei por causa do log
 
 
 //inserir o membro na tabela de usuários	
-	if(@$nivel_usu != ""){
-		$query_usu = $pdo->prepare("INSERT INTO usuarios SET nome = :nome, email = :email, senha_crip = :senha_crip, senha = :senha, nivel = '$nivel_usu', telefone = :telefone, endereco = :endereco, data = curDate(), ativo = 'Sim', matricula = :matricula, comissao = '$nivel_com', foto = '$foto', id_pessoa = '$ult_id'"); 
+	if(@$nivel_usu != ""){ //primeiro é o nome do variavel do BD e o segundo é a variavel do salvar.php
+		$query_usu = $pdo->prepare("INSERT INTO usuarios SET nome = :nome, email = :email, senha_crip = :senha_crip, senha = :senha, nivel = '$nivel_usu', telefone = :telefone, endereco = :endereco, data = curDate(), ativo = 'Sim', matricula = :matricula, comissao = '$nivel_com', foto = '$foto', id_pessoa = '$ult_id_membro'"); 
 
 
 		$senha_crip = md5('123');
@@ -186,6 +188,15 @@ if($id == ""){
 		$query_usu->bindValue(":endereco", "$endereco");
 		$query_usu->bindValue(":matricula", "$matricula");			
 		$query_usu->execute();
+
+		//foi inserido algo novo pela IA
+		$ult_id_usuario = $pdo->lastInsertId(); // ID de usuarios
+
+
+		// Atualizar membros com o id de usuarios
+        $query_update_membro = $pdo->prepare("UPDATE $tabela SET id_pessoa = '$ult_id_usuario' WHERE id = '$ult_id_membro'");
+        
+        $query_update_membro->execute();
 
 		$acao = 'inserção';  //eu coloquei por causa do log
 	}
@@ -204,11 +215,14 @@ if($id == ""){
 	$query->bindValue(":pais", "$pais");
 	$query->bindValue(":obs", "$obs");
 	$query->execute();
-	$ult_id = $pdo->lastInsertId(); //eu coloquei por causa do log
+
+
+	$ult_id = $id; //COLOQUE P/A FAZER TESTES
+	//$ult_id = $pdo->lastInsertId(); //eu coloquei por causa do log (COMENTEI P/ FAZER TESTES)
 
 	$acao = 'edição';  //eu coloquei por causa do log
 
-	//atualizar na tabela de usuários
+	//atualizar na tabela de usuários 
 	if(@$nivel_usu != ""){
 		$query_usu = $pdo->prepare("UPDATE usuarios SET nome = :nome, matricula = :matricula, email = :email, nivel = '$nivel_usu', comissao = '$nivel_com', telefone = :telefone, endereco = :endereco, foto = '$foto' WHERE id_pessoa = '$id'");
 
@@ -220,7 +234,9 @@ if($id == ""){
 			$query_usu->bindValue(":endereco", "$endereco");
 			$query_usu->bindValue(":matricula", "$matricula");						
 			$query_usu->execute();
-			$ult_id = $pdo->lastInsertId(); //eu coloquei por causa do log
+
+			$ult_id = $id; //COLOQUE P/A FAZER TESTES
+			//$ult_id = $pdo->lastInsertId(); //eu coloquei por causa do log (COMENTEI P/ FAZER TESTES)
 
 
 			if($ult_id == "" || $ult_id == 0){
@@ -239,7 +255,7 @@ if($id == ""){
 
 //inserir log
 $acao = $acao;
-$descricao = $nome;
+$descricao = $nome; //nome do usuario que foi editado
 $id_reg = $ult_id;
 require_once("../../inserir-logs.php");
 

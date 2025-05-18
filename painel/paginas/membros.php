@@ -6,15 +6,52 @@ if(@$membros == 'ocultar') {
 	exit();
 }
 
-?> 
+?>
+<style>
+.modal-header {
+    background-color: #033238; /* Cor de fundo preta */
+    color: white; /* Cor do texto para ficar legível */
+}
+</style>
+<style>
+.modal-header .close {
+    color: white; /* Cor branca para contrastar com o fundo preto */
+    font-size: 1.5rem; /* Tamanho do ícone do X */
+    opacity: 1; /* Deixa o botão completamente visível */
+}
+.modal-header .close:hover {
+    color: #ddd; /* Cor mais clara ao passar o mouse */
+}
+</style> 
+
+<style>
+    
+.btn-fi {
+     position: fixed;
+     top: 11px;
+     left: 340px;
+     z-index: 1000;
+}
+
+.btn-fixo2-membro {
+	  position: fixed;
+	  top: 11px;
+	  left: 446px;
+	  z-index: 1000;
+}
+
+</style>
+
+ 
+
 
 	<!-- Botão Inserir novo membro com a função "inserir()" via "ajax.js" -->
-<a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Membro</a> 
+<a onclick="inserir()" title="Cadastrar Membro" style="display: inline;" type="button" class="btn btn-primary btn-dinamico-membro"><span class="fa fa-plus"></span> Membro</a>  
 
 
-
+   <!-- Botão Excluir com mult selecionados via "ajax.js" -->
 <li class="dropdown head-dpdn2" style="display: inline-block;">	
-		<a href="#" data-toggle="dropdown" class="btn btn-danger dropdown-toggle" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
+		<a href="#" data-toggle="dropdown" class="btn btn-danger dropdown-toggle btn-dinamico2" id="btn-deletar" style="display:none"><span class="fa fa-trash-o"></span> Deletar</a>
 
 		<ul class="dropdown-menu">
 		<li>
@@ -38,7 +75,7 @@ if(@$membros == 'ocultar') {
 
  
 <!-- Modal Form Cadastro Membro -->
-<div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="modalForm" data-backdrop="static" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg">
 		<div class="modal-content">
 			<div class="modal-header">
@@ -207,7 +244,8 @@ if(@$membros == 'ocultar') {
 				<small><div id="mensagem" align="center"></div></small>
 			</div>
 			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
+				<button type="submit" class="btn btn-primary btn-lg"><span class="fa fa-floppy-o"> Salvar</button>
+					<button type="button" class="btn btn-link btn-sm" data-dismiss="modal"><span class="fa fa-times"> sair</button>
 			</div>
 			</form>
 		</div>
@@ -463,5 +501,19 @@ if(@$membros == 'ocultar') {
     });
 	}
 
+</script>
+
+
+<script>
+// Torna o modal arrastável quando ele for exibido
+//precisa de - jquery-ui.js e 	
+$(document).ready(function(){
+    $("#modalForm").on("shown.bs.modal", function () {
+        $(".modal-dialog").draggable({
+            handle: ".modal-header", // Arrasta segurando a barra de título
+            containment: "window"   // Mantém dentro da tela
+        });
+    });
+});
 </script>
 

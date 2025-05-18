@@ -42,7 +42,7 @@ body a:hover{
 .sidebar-left .navbar-brand {
     height: 61px;
     padding: 10px 15px 10px 25px;
-    font-size: 25px;
+    font-size: 26px;
     text-transform: uppercase;
     color: #fff;
 }
@@ -72,7 +72,7 @@ span.dashboard_text {
     z-index: 100;
 }
 .header-section {
-    background:#FFF;
+    background:#e1e3e3;
     box-shadow:  1px 1px 4px rgba(0, 0, 0, 0.21);
     -webkit-box-shadow:  1px 1px 4px rgba(0, 0, 0, 0.21);
     -moz-box-shadow:  1px 1px 4px rgba(0, 0, 0, 0.21);
@@ -8500,7 +8500,7 @@ h4.asd label {
 
 
 .ocultar{
-    display:none;
+    display: none !important;
 }
 
 
@@ -8545,3 +8545,27 @@ h4.asd label {
 .in-doc {
   margin-bottom: 10px;
 }
+
+
+.btn-fixo {
+     position: fixed;
+     top: 15px;
+     left: 340px;
+     z-index: 1000;
+}
+
+.btn-fixo2 {
+     position: fixed;
+     top: 11px;
+     left: 499px;
+     z-index: 1000;
+}
+
+.btn-fixo3 {
+     position: fixed;
+     top: 11px;
+     left: 602px;
+     z-index: 1000;
+     background-color: #007bff;
+}
+

@@ -4,6 +4,8 @@ require_once("../../../conexao.php");
 $id_usuario = $_POST['usuario'];
 $id_permissao = $_POST['id'];
 
+//add_permissão ele faz os dois, insere e exclui da checkbox e no banco de dados
+
 $query = $pdo->query("SELECT * FROM usuarios_permissoes where permissao = '$id_permissao' and usuario = '$id_usuario'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $total_reg = @count($res);

@@ -7,6 +7,23 @@ if(@$acessos == 'ocultar'){
 }	
  ?>
 
+ <style>
+.modal-header {
+    background-color: #033238; /* Cor de fundo preta */
+    color: white; /* Cor do texto para ficar legível */
+}
+</style>
+<style>
+.modal-header .close {
+    color: white; /* Cor branca para contrastar com o fundo preto */
+    font-size: 1.5rem; /* Tamanho do ícone do X */
+    opacity: 1; /* Deixa o botão completamente visível */
+}
+.modal-header .close:hover {
+    color: #ddd; /* Cor mais clara ao passar o mouse */
+}
+</style>
+
 <div class="main-page margin-mobile">
 
 <a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Acesso</a>
@@ -36,7 +53,7 @@ if(@$acessos == 'ocultar'){
 
 <!-- Modal Perfil -->
 <div class="modal fade" id="modalForm" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog modal-lg" style="width:80%">
+	<div class="modal-dialog " style="width:70%">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" id="exampleModalLabel"><span id="titulo_inserir"></span></h4>
@@ -50,12 +67,12 @@ if(@$acessos == 'ocultar'){
 					<div class="row">
 						<div class="col-md-3">						
 								<label>Nome</label>
-								<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Menu" required>	
+								<input type="text" class="form-control" id="nome" name="nome" placeholder="Nome do Menu" title="Aparece para o usuario ver nas permissões" required>	
 						</div>
 
 						<div class="col-md-3">						
 								<label>Chave</label>
-								<input type="text" class="form-control" id="chave" name="chave" placeholder="Chave" required>	
+								<input type="text" class="form-control" id="chave" name="chave" placeholder="Chave" title="Geralmente usado mesma da página" required>	
 						</div>
 
 						<div class="col-md-2">	 					
@@ -84,8 +101,9 @@ if(@$acessos == 'ocultar'){
 								</select>	
 						</div>
 
-						<div class="col-md-1" style="margin-top: 22px">							
-								<button type="submit" class="btn btn-primary">Salvar</button>					
+						<div class="col-md-2" style="margin-top: 22px">							
+								<button type="submit" class="btn btn-primary btn-lg"><span class="fa fa-floppy-o"> Salvar</button>
+
 						</div>
 
 						
@@ -106,9 +124,23 @@ if(@$acessos == 'ocultar'){
 
 
 
-
+ 
 <script type="text/javascript">var pag = "<?=$pag?>"</script>
 <script src="js/ajax.js"></script>
+
+
+<script>
+// Torna o modal arrastável quando ele for exibido
+//precisa de - jquery-ui.js e 	
+$(document).ready(function(){
+    $("#modalForm").on("shown.bs.modal", function () {
+        $(".modal-dialog").draggable({
+            handle: ".modal-header", // Arrasta segurando a barra de título
+            containment: "window"   // Mantém dentro da tela
+        });
+    });
+});
+</script>
 
 
 

@@ -5,6 +5,22 @@ $pag = 'agenda';
 $data_atual = date('Y-m-d'); 
 ?> 
 
+<style>
+.modal-header {
+    background-color: #033238; /* Cor de fundo preta */
+    color: white; /* Cor do texto para ficar legível */
+}
+</style>
+<style>
+.modal-header .close {
+    color: white; /* Cor branca para contrastar com o fundo preto */
+    font-size: 1.5rem; /* Tamanho do ícone do X */
+    opacity: 1; /* Deixa o botão completamente visível */
+}
+.modal-header .close:hover {
+    color: #ddd; /* Cor mais clara ao passar o mouse */
+}
+</style>
 
 
 <button onclick="inserir()" type="button" class="btn btn-primary btn-flat btn-pri"><i class="fa fa-plus" aria-hidden="true"></i> Nova Tarefa</button>
@@ -370,3 +386,15 @@ $("#form-text").submit(function () {
 <script type="text/javascript">bkLib.onDomLoaded(nicEditors.allTextAreas);</script>
 
 
+<script>
+// Torna o modal arrastável quando ele for exibido
+//precisa de - jquery-ui.js e 	
+$(document).ready(function(){
+    $("#modalForm").on("shown.bs.modal", function () {
+        $(".modal-dialog").draggable({
+            handle: ".modal-header", // Arrasta segurando a barra de título
+            containment: "window"   // Mantém dentro da tela
+        });
+    });
+});
+</script>

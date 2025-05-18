@@ -35,8 +35,6 @@ $telefone_sistema = '(94)1000-0001';
 
 
 
-
-
 //Inserir registros na tabela config
 $query = $pdo->query("SELECT * from config");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
@@ -44,7 +42,7 @@ $linhas = @count($res);
 if($linhas == 0){
 	$pdo->query("INSERT INTO config SET nome = '$nome_sistema', email = '$email_sistema', logs = 'Sim', telefone = '$telefone_sistema', logo = 'logo.png', logo_rel = 'logo.jpg', icone = 'icone.png', ativo = 'Sim', dias_limpar_logs = 40, relatorio_pdf = 'pdf' ");
 }else{
-//VARIAVEIS DE CONFIGURAÇÕES DA TABELA CONFIG	
+//VARIAVEIS DE CONFIGURAÇÕES DA TABELA CONFIG exibindo no perfil config	
 $nome_sistema = $res[0]['nome'];
 $email_sistema = $res[0]['email'];
 $logs = $res[0]['logs'];
@@ -58,6 +56,8 @@ $logo_rel = $res[0]['logo_rel'];
 $icone_sistema = $res[0]['icone'];
 $ativo_sistema = $res[0]['ativo'];
 
+
+//bloquear sistema (planos futuros)
 if($ativo_sistema != 'Sim' and $ativo_sistema != ''){
 	echo 'Sistema Desativado';
 	exit();

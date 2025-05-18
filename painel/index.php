@@ -1,5 +1,6 @@
 <?php 
 @session_start();
+
 require_once("../conexao.php");
 require_once("verificar.php"); 
 
@@ -11,16 +12,17 @@ if(@$_SESSION['nivel'] != 'Administrador'){
 }
 
  
-
-if(@$_GET['pagina'] != ""){ //se existir uma página 
-	$pagina = @$_GET['pagina']; // carrega a página que foi chamado
+//verifica se existe uma variavel GET['pagina'] 
+if(@$_GET['pagina'] != ""){      //se existir uma página, ou seja diferente de vazia 
+	$pagina = @$_GET['pagina'];  // carrega a página que foi chamado
 }else{
-	$pagina = $pag_inicial; //recebe a página home 
+	$pagina = $pag_inicial;      //recebe a página home ou outra que vier
 }
 
 
-$id_usuario = @$_SESSION['id'];
+$id_usuario = @$_SESSION['id']; //Recupera o id do usuario que está logado, criado no autenticar.php
 
+//RECUPERANDO DADOS DO USUARIO LOGADO p/a usar na modal Perfil e em qualquer página que eu quiser.
 $query = $pdo->query("SELECT * from usuarios where id = '$id_usuario'");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
@@ -32,7 +34,8 @@ if($linhas > 0){
 	$nivel_usuario = $res[0]['nivel'];
 	$foto_usuario = $res[0]['foto'];
 	$endereco_usuario = $res[0]['endereco']; 
-	$matricula_usuario = $res[0]['matricula']; 
+	$matricula_usuario = $res[0]['matricula'];
+	
 
 }
 
@@ -95,6 +98,10 @@ $data_ano = $ano_atual."-01-01";
 
 	<!-- js-->
 	<script src="js/jquery-1.11.1.min.js"></script>
+
+	<!-- Ajax para funcionar Jquery-ui-1.14.1 - movimentar modal-->
+	<script src="js/jquery-ui-1.12.1/jquery-ui.js"></script> 
+	
 	<script src="js/modernizr.custom.js"></script>
 
 	<!--webfonts-->
@@ -115,6 +122,15 @@ $data_ano = $ano_atual."-01-01";
 			width: 100%;
 			height: 295px;
 		}
+
+	<style>
+    	.alert-small-inline {
+	        padding: 5px 10px;
+	        font-size: 14px;
+	        margin: 5px 0;
+	        display: inline-block;
+   		 }
+	</style>
 	</style>
 	<!--pie-chart --><!-- index page sales reviews visitors pie chart -->
 	<script src="js/pie-chart.js" type="text/javascript"></script>
@@ -159,9 +175,11 @@ $data_ano = $ano_atual."-01-01";
 
 
 
-	<!-- Inserção de DataTables p/ listar -->
+	<!-- Inserção de DataTables local p/ listar -->
 	<link rel="stylesheet" type="text/css" href="DataTables/datatables.min.css"/> <script src="DataTables/datatables.min.js"></script>
 	<script type="text/javascript" src="DataTables/datatables.min.js"></script>
+
+
 
 
 	<!-- Inserção do select2 via pasta -->
@@ -189,6 +207,7 @@ $data_ano = $ano_atual."-01-01";
 
 	
 </head> 
+
 <body class="cbp-spmenu-push">
 	<div class="main-content">
 		<div class="cbp-spmenu cbp-spmenu-vertical cbp-spmenu-left" id="cbp-spmenu-s1">
@@ -202,7 +221,7 @@ $data_ano = $ano_atual."-01-01";
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<h1><a class="navbar-brand" href="index.php"><span class="fa fa-university"></span> CAMTUC<span class="dashboard_text"><?php echo $nome_sistema ?></span></a></h1>
+						<h1><a class="navbar-brand" href="index.php"><span class="fa fa-graduation-cap"></span> CAMTUC<span class="dashboard_text"><?php echo $nome_sistema ?></span></a></h1>
 					</div>
 					<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 						<ul class="sidebar-menu">
@@ -215,23 +234,39 @@ $data_ano = $ano_atual."-01-01";
 							<li class="treeview <?php echo $menu_pessoas ?>">
 								<a href="#">
 									<i class="fa fa-users"></i>
-									<span>Pessoas</span>
+									<span>Cadastros Pessoas</span> 
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
-									<li class="<?php echo $membros ?>"><a href="index.php?pagina=membros"><i class="fa fa-angle-right"></i> Membros</a></li>
+									<li class="<?php echo $usuarios ?>"><a href="usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
 
-									<li class="<?php echo $usuarios ?>"><a href="index.php?pagina=usuarios"><i class="fa fa-angle-right"></i> Usuários</a></li>
+									<li class="<?php echo $membros ?>"><a href="membros"><i class="fa fa-angle-right"></i> Membros</a></li>					
 									
 								</ul>
 							</li>
 
+							
+							<li class="treeview <?php echo $menu_camaras ?>">
+								<a href="#" title="COMISSÕES DO CONSELHO">
+									<i class="fa fa-laptop"></i>
+									<span>Câmaras</span>
+									<i class="fa fa-angle-left pull-right"></i>
+								</a>
+								<ul class="treeview-menu">
+									<li class="<?php echo $copeps ?>"><a href="copeps"><i class="fa fa-angle-right"></i> Copep</a></li>								
+									
+								</ul>
+							</li>
+
+
+							
 							<li class="treeview <?php echo $menu_agenda ?>">
-								<a href="index.php?pagina=agenda">
+								<a href="menu_agenda" title="ANOTAÇÕES">
 									<i class="fa fa-calendar-o"></i> <span>Agenda</span>
 								</a>
 							</li>
 
+							
 
 							<li class="treeview <?php echo $menu_logs ?>">
 								<a href="#">
@@ -240,7 +275,7 @@ $data_ano = $ano_atual."-01-01";
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
 								<ul class="treeview-menu">
-									<li class="<?php echo $ver_logs ?>"><a href="index.php?pagina=logs"><i class="fa fa-angle-right"></i> Ver Logs</a></li>
+									<li class="<?php echo $ver_logs ?>"><a href="ver_logs"><i class="fa fa-angle-right"></i> Ver Logs</a></li>
 
 									<li class="<?php echo $relatorio_logs ?>"><a href="#" data-toggle="modal" data-target="#RelLogs"><i class="fa fa-angle-right"></i> Relatórios de Logs</a></li>						
 									
@@ -259,38 +294,28 @@ $data_ano = $ano_atual."-01-01";
 								</ul>
 							</li>
 
+							
 							<li class="treeview <?php echo $menu_cadastros ?>">
-								<a href="#">
-									<i class="fa fa-plus"></i>
-									<span>Cadastros</span>   
+								<a href="#" title="CONFIGURAÇÕES GERAIS">
+									<i class="fa fa-plus-square"></i>
+									<span>Cadastros Gerais</span>   
 									<i class="fa fa-angle-left pull-right"></i>
 								</a>
-								<ul class="treeview-menu">
-									<li class="<?php echo $cargos ?>"><a href="index.php?pagina=cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
+								<ul class="treeview-menu">	
 
-									<li class="<?php echo $comissoes ?>"><a href="index.php?pagina=comissoes"><i class="fa fa-angle-right"></i> Comissões</a></li>
+									<li class="<?php echo $coordenadores ?>"><a href="coordenadores" title="Corpo Docente"><i class="fa fa-angle-right"></i> Coordenadores</a></li>
 
-									<li class="<?php echo $grupo_acessos ?>"><a href="index.php?pagina=grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
+									<li class="<?php echo $cargos ?>"><a href="cargos"><i class="fa fa-angle-right"></i> Cargos</a></li>
 
-									<li class="<?php echo $acessos ?>"><a href="index.php?pagina=acessos"><i class="fa fa-angle-right"></i> Acessos</a></li>
-									
+									<li class="<?php echo $comissoes ?>"><a href="comissoes"><i class="fa fa-angle-right"></i> Comissões</a></li>
+
+									<li class="<?php echo $grupo_acessos ?>"><a href="grupo_acessos"><i class="fa fa-angle-right"></i> Grupos</a></li>
+
+									<li class="<?php echo $acessos ?>"><a href="acessos"><i class="fa fa-angle-right"></i> Acessos</a></li>
+
 								</ul>
 							</li>
-							<li class="header">COMISSÕES DO CONSELHO</li>
-
-							<li class="treeview <?php echo $menu_camaras ?>">
-								<a href="#">
-									<i class="fa fa-laptop"></i>
-									<span>Câmaras</span>
-									<i class="fa fa-angle-left pull-right"></i>
-								</a>
-								<ul class="treeview-menu">
-									<li class="<?php echo $copeps ?>"><a href="index.php?pagina=copeps"><i class="fa fa-angle-right"></i> Copep</a></li>
-
-									
-									
-								</ul>
-							</li>
+							
 
 						</ul>
 					</div>
@@ -364,7 +389,56 @@ $data_ano = $ano_atual."-01-01";
 							</ul>
 					<div class="clearfix"> </div>
 				</div>
-				
+				<?php
+					
+
+					// ID do usuário logado
+					$id_usuario_logado = isset($_SESSION['id']) ? $_SESSION['id'] : '0';
+
+					// Verificar se $pdo está definido
+					if (!isset($pdo)) {
+					    echo "Erro: \$pdo não está definido";
+					    exit;
+					}
+
+					// Testar conexão com o banco
+					try {
+					    $pdo->query("SELECT 1");
+					} catch (PDOException $e) {
+					    echo "Erro na conexão PDO: " . $e->getMessage();
+					    exit;
+					}
+
+					// Pegar o nível do usuário logado
+					$query_nivel = $pdo->query("SELECT nivel FROM usuarios WHERE id = '$id_usuario_logado'");
+					$resultado_nivel = $query_nivel->fetch(PDO::FETCH_ASSOC);
+					$nivel_usuario_logado = $resultado_nivel ? $resultado_nivel['nivel'] : 'Desconhecido';
+
+					// Só continuar se o usuário logado for Administrador
+					if ($nivel_usuario_logado === 'Administrador') {
+					    // Consulta para buscar TODOS os usuários com ativo = 'Não', exceto o usuário logado
+					    $query = $pdo->query("SELECT * FROM usuarios WHERE ativo = 'Não' AND id != '$id_usuario_logado'");
+					    $res = $query->fetchAll(PDO::FETCH_ASSOC);
+					    $usuariosDesbloquear = @count($res);
+
+					    // Verificar se o alerta foi fechado anteriormente
+					    if ($usuariosDesbloquear > 0 && !isset($_SESSION['alerta_fechado'])) {
+					        // Construir a lista de nomes
+					        $nomes = [];
+					        foreach ($res as $usuario) {
+					            $nomes[] = '"' . htmlspecialchars($usuario['nome']) . '"';
+					        }
+					        $mensagem = implode(', ', $nomes) . ' a ser(em) desbloqueado(s)!';
+
+					        echo '<div class="alert alert-danger alert-dismissible" role="alert" style="padding: 5px 10px; font-size: 15px; margin: 15px 15px; display: inline-block;">';
+					        echo $mensagem;
+					        echo '<button type="button" class="close" data-dismiss="alert" aria-label="Close" onclick="marcarFechado();">';
+					        echo '<span aria-hidden="true">×</span>';
+					        echo '</button>';
+					        echo '</div>';
+					    }
+					}
+					?>
 			</div>
 			<div class="header-right">
 
@@ -403,7 +477,7 @@ $data_ano = $ano_atual."-01-01";
 		<!-- main content start-->
 		<div id="page-wrapper">
 			<?php 
-			require_once('paginas/'.$pagina.'.php');
+			require_once('paginas/'.$pagina.'.php'); //carrega area de cada página, conteudo interno
 			?>
 		</div>
 
@@ -482,7 +556,7 @@ $data_ano = $ano_atual."-01-01";
 
 
 
-
+ 
 <!-- Modal Perfil -->
 <div class="modal fade" id="modalPerfil" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -494,7 +568,7 @@ $data_ano = $ano_atual."-01-01";
 				</button>
 			</div>
 			<form id="form-perfil">
-			<div class="modal-body">
+			<div class="modal-body"> 
 				
 
 					<div class="row">
@@ -566,7 +640,8 @@ $data_ano = $ano_atual."-01-01";
 				<small><div id="msg-perfil" align="center"></div></small>
 			</div>
 			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
+				<button type="submit" class="btn btn-primary"><span class="fa fa-floppy-o"> Salvar</button>
+				<button type="button" class="btn btn-link btn-sm" data-dismiss="modal"><span class="fa fa-times"> sair</button>
 			</div>
 			</form>
 		</div>
@@ -713,7 +788,8 @@ $data_ano = $ano_atual."-01-01";
 				<small><div id="msg-config" align="center"></div></small>
 			</div>
 			<div class="modal-footer">       
-				<button type="submit" class="btn btn-primary">Salvar</button>
+				<button type="submit" class="btn btn-primary"><span class="fa fa-floppy-o"> Salvar</button>
+				<button type="button" class="btn btn-link btn-sm" data-dismiss="modal"><span class="fa fa-times"> sair</button>
 			</div>
 			</form>
 		</div>
@@ -1061,4 +1137,24 @@ $data_ano = $ano_atual."-01-01";
 		document.getElementById(id).style.color = "blue";		
 	}
 </script>
+
+
+
+
+<script>
+function marcarFechado() {
+    localStorage.setItem('alerta_fechado', 'true');
+    fetch('marcar_fechado.php', { method: 'POST' })
+        .then(response => console.log('Alerta marcado como fechado'))
+        .catch(error => console.error('Erro:', error));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    if (localStorage.getItem('alerta_fechado') === 'true' && <?php echo isset($_SESSION['alerta_fechado']) ? 'false' : 'true'; ?>) {
+        fetch('marcar_fechado.php', { method: 'POST' });
+    }
+});
+</script>
+
+
 

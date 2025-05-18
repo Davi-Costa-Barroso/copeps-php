@@ -5,7 +5,7 @@ require_once("../../../conexao.php");
 
 $id = $_POST['id'];
 
-if(($_SESSION['nivel'] != 'Administrador') || ($_SESSION['nivel'] != 'Administrador')) {
+if(($_SESSION['nivel'] != 'Administrador') && ($_SESSION['nivel'] != 'Docente')) {
 	echo 'Somente um Administrador ou Docente pode excluir um membro';
 	exit();
 }

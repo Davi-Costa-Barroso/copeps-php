@@ -4,9 +4,27 @@ $pag = 'grupo_acessos';
 if(@$grupo_acessos == 'ocultar') {	
 	echo '<script>window.location="../index.php"</script>';
 	exit();
-}
+} 
 
 ?>
+
+
+<style>
+.modal-header {
+    background-color: #033238; /* Cor de fundo preta */
+    color: white; /* Cor do texto para ficar legível */
+}
+</style>
+<style>
+.modal-header .close {
+    color: white; /* Cor branca para contrastar com o fundo preto */
+    font-size: 1.5rem; /* Tamanho do ícone do X */
+    opacity: 1; /* Deixa o botão completamente visível */
+}
+.modal-header .close:hover {
+    color: #ddd; /* Cor mais clara ao passar o mouse */
+}
+</style>
 
 <a onclick="inserir()" type="button" class="btn btn-primary"><span class="fa fa-plus"></span> Grupo</a>
 
@@ -56,7 +74,8 @@ if(@$grupo_acessos == 'ocultar') {
 						</div>
 
 						<div class="col-md-6" style="margin-top: 22px">							
-								<button type="submit" class="btn btn-primary">Salvar</button>		
+								<button type="submit" class="btn btn-primary" >Salvar</button>
+								<button type="button" class="btn btn-link"  data-dismiss="modal" ><span class="fa fa-times"> sair</button>		
 						</div>
 						
 					</div>
@@ -141,4 +160,18 @@ if(@$grupo_acessos == 'ocultar') {
 
 <script type="text/javascript">var pag = "<?=$pag?>"</script>
 <script src="js/ajax.js"></script>
+
+
+<script>
+// Torna o modal arrastável quando ele for exibido
+//precisa de - jquery-ui.js e 	
+$(document).ready(function(){
+    $("#modalForm").on("shown.bs.modal", function () {
+        $(".modal-dialog").draggable({
+            handle: ".modal-header", // Arrasta segurando a barra de título
+            containment: "window"   // Mantém dentro da tela
+        });
+    });
+});
+</script>
 

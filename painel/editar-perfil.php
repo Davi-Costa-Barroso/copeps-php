@@ -12,6 +12,8 @@ $senha_crip = md5($senha);
 $id = $_POST['id_usuario'];
 $matricula = $_POST['matricula'];
 
+
+//validacao senha
 if($conf_senha != $senha){
 	echo 'As senhas não se coincidem';
 	exit();
@@ -72,7 +74,7 @@ if(@$_FILES['foto']['name'] != ""){
 	
 			//EXCLUO A FOTO ANTERIOR
 			if($foto != "sem-foto.jpg"){
-				@unlink('images/perfil/'.$foto);
+				@unlink('images/perfil/'.$foto); //remove a foto
 			}
 
 			$foto = $nome_img;
@@ -87,7 +89,7 @@ if(@$_FILES['foto']['name'] != ""){
 
 
 
-
+//Atualizando os dados da modal Perfil
 $query = $pdo->prepare("UPDATE $tabela SET nome = :nome, email = :email, telefone = :telefone, senha = :senha, senha_crip = '$senha_crip', matricula = :matricula, endereco = :endereco, foto = '$foto' where id = '$id'");
 
 $query->bindValue(":nome", "$nome");

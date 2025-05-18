@@ -5,23 +5,80 @@ $id_usuario = $_SESSION['id'];
 $nivel_usuario = $_SESSION['nivel']; 
 require_once("../../../conexao.php");
 
-$query = $pdo->query("SELECT * from pareceres");
+// Depuração: exibir valores da sessão EU COLOQUEI
+//echo "<pre>Usuário logado: ID = $id_usuario, Nível = $nivel_usuario</pre>";
+
+// Define o acesso geral (não afeta $id_usuario)
+$acesso = ($nivel_usuario == 'Administrador') ? '' : 'ocultar';
+
+
+
+
+// Modifica a query para incluir o nome do usuário com JOIN e ordenar por ID descendente
+$query = $pdo->query("SELECT p.*, u.nome AS nome_usuario 
+                      FROM pareceres p 
+                      LEFT JOIN usuarios u ON p.id_usuario = u.id ORDER BY p.id DESC");
 $res = $query->fetchAll(PDO::FETCH_ASSOC);
 $linhas = @count($res);
 if($linhas > 0){
 echo <<<HTML
+<style type="text/css">
+.dataTables_length {
+    margin-bottom: 1rem; /* Espaço abaixo do "Mostrar registros" */
+}
+
+.dataTables_filter {
+    margin-bottom: 1rem; /* Espaço abaixo do "Buscar" */
+}
+
+/* Se quiser alinhar melhor */
+.dataTables_wrapper .row {
+    margin-bottom: 1rem;
+}
+
+.dataTables_wrapper {
+    position: relative;
+    max-height: 522px; /* Ajuste conforme necessário */
+    overflow-y: auto;
+}
+
+/* Fixando o cabeçalho */
+thead th {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background-color: #303030;
+    color: white;
+    width: auto;
+}
+
+/* Estilizando os botões de ação */
+td .acao-btn {
+    display: inline-block; /* Garante que o transform funcione */
+    transition: transform 0.3s ease; /* Transição mais perceptível */
+    margin-right: 8px; /* Espaço à direita de cada botão */
+}
+
+/* Efeito de zoom ao passar o mouse */
+td .acao-btn:hover {
+    transform: scale(2.1); /* Aumentei para 50% para ser mais visível */
+}
+
+.ocultar { display: none !important;} /* Garantir que ocultar funciona */
+</style>
 <small>
 	<table class="table table-hover" id="tabela">
-	<thead> 
-	<tr> 
-	<th>titulo</th>		
+	<thead style="background-color: #303030; color: white;"> 
+	<tr>	 
+	<th>titulo</th>
+	<th class="esc">Criado Por</th> <!-- Nova coluna EU COLOQUEI ISSOOO-->		
 	<th class="esc">Nº parecer</th>
 	<th class="esc">Ano</th>	
 	<th class="esc">Nº Oficio</th>
 	<th class="esc">Item oficio</th>
 	<th class="esc">Data envio</th>
 	<th class="esc">Coordenador</th>
-	<th class="esc">Relator</th>	
+	<th class="esc">Relator</th>		
 	<th>Ações</th>
 	</tr> 
 	</thead> 
@@ -31,7 +88,11 @@ HTML;
 
 
 for($i=0; $i<$linhas; $i++){
+	$data = $res[$i]['data'];
 	$id = $res[$i]['id'];
+	$id_usuario_registro = $res[$i]['id_usuario']; // Campo que referencia o usuário que criou o parecer // Eu coloquei isso aqui e coloquei no bd
+	//$nome_usuario = $res[$i]['nome_usuario']; // Nome do usuário que criou o parecer
+	$nome_usuario = $res[$i]['nome_usuario'] ?? 'Desconhecido'; // Aqui é o lugar!
 
 	// Dados Iniciais
 	$numeroParecer = $res[$i]['numeroParecer'];
@@ -68,15 +129,42 @@ for($i=0; $i<$linhas; $i++){
 	$parecerRelator = $res[$i]['parecerRelator'];
 	
 	//Exibindo a data formatada
-	$dataF = implode('/', array_reverse(explode('-', $dataEnvio)));
+	$dataF = implode('/', array_reverse(@explode('-', $dataEnvio)));
 
+	// Depuração: exibir valores para comparação  - EU COLOQUEI ISOOOOOOOOOOOOOOOOOOOOOOOO
+      //   echo "<pre>ID Registro: $id, ID Usuário Registro: $id_usuario_registro</pre>";
+
+        
+    // Controle do botão "Editar" (permanece como estava)
+    $editar_acesso = 'ocultar';
+        if ($nivel_usuario == 'Administrador' || (int)$id_usuario === (int)$id_usuario_registro) {
+            $editar_acesso = '';
+            //echo "<pre>Botão visível para ID $id (Admin ou dono)</pre>";
+        }
+
+
+    // Controle do botão "Excluir" (apenas para Administrador)
+        $excluir_acesso = 'ocultar';
+        if ($nivel_usuario == 'Administrador') {
+            $excluir_acesso = '';
+        }
 
 echo <<<HTML
-<tr> 
-<td>
-	<input type="checkbox" id="seletor-{$id}" class="form-check-input" onchange="selecionar('{$id}')">
+	<tr> 
+	<td>
+HTML;
+
+	// Mostrar o checkbox apenas para Administrador  - EU COLOQUEI ISSOOOOOOOO
+        if ($nivel_usuario == 'Administrador') {
+            echo "<input type=\"checkbox\" id=\"seletor-{$id}\" class=\"form-check-input\" onchange=\"selecionar('{$id}')\">";
+        }
+
+echo <<<HTML
+
+	
 	{$tituloProjeto}
 </td>
+<td>{$nome_usuario}</td> <!-- Exibe o nome do usuário -->
 <td>
 	{$numeroParecer}
 </td>
@@ -98,13 +186,14 @@ echo <<<HTML
 <td>
 	{$nomeRelator}
 </td>
+
 <td>
 	   <!-- Editar -->
 	<big>
 	<a 
 		href="#" 
-		onclick="editar('editar', '{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
-		title="Editar Dados"
+		onclick="editar('editar','{$data}', '{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
+		title="Editar Dados" class="{$editar_acesso} acao-btn"
 	>
 			<i class="fa fa-edit text-primary">
 			</i>
@@ -113,15 +202,15 @@ echo <<<HTML
 
 	<a 
 		href="#" 
-		onclick="editar('baixar','{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
-		title="Baixar parecer"
+		onclick="editar('baixar','{$data}','{$id}', '{$numeroParecer}', '{$ano}', '{$numeroOficio}', '{$itemOficio}', '{$dataEnvio}', '{$tituloProjeto}', '{$nomeCoordenador}', '{$nomeRelator}', '{$documentosEnviados}', '{$textoAnalisado}', '{$TIPODOCUMENTO}', '{$cargaHoraria}', '{$periodoProjeto}','{$nomeRelatorio}' ,'{$sexoCoordenador}', '{$titulacaoCoordenador}', '{$faculdadeCoordenador}', '{$descricaoProposta}', '{$sexoRelator}', '{$possuiOutroCoordenador}', '{$nomeViceCoordenador}', '{$sexoViceCoordenador}', '{$titulacaoViceCoordenador}', '{$aprovacaoFaculdade}', '{$dataAprovacao}', '{$numeroDocumento}', '{$comentariosParecer}', '{$justificativa}', '{$parecerRelator}')" 
+		title="Baixar parecer" class="acao-btn"
 	>
 		<i class="fa fa-download text-primary"></i>
 	</a>
 	</big>
 	  <!-- Excluir -->
 	<li class="dropdown head-dpdn2" style="display: inline-block;">
-		<a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
+		<a href="#" title="Excluir Parecer" class="dropdown-toggle {$excluir_acesso} acao-btn" data-toggle="dropdown" aria-expanded="false"><big><i class="fa fa-trash-o text-danger"></i></big></a>
 
 
 		<ul class="dropdown-menu" style="margin-left:-230px;">
@@ -151,7 +240,14 @@ HTML;
 }
 ?> 
 
-<!-- Iniciando e Mostrando o Datatables dos membros --> 
+
+<!-- Script para passar o nível do usuário ao JavaScrip - EU COLOQUEI ISSOOOOOOO -->
+<script type="text/javascript">
+    var nivelUsuario = '<?php echo $nivel_usuario; ?>';
+</script>
+
+
+<!-- Iniciando e Mostrando o Datatables dos copeps --> 
 <script type="text/javascript">
 	$(document).ready( function () {
 	$('#btn-deletar').hide();	//fica oculto o btn deletar no inicio, + fica com delay ainda	
@@ -160,7 +256,8 @@ HTML;
             //"url" : '//cdn.datatables.net/plug-ins/1.13.2/i18n/pt-BR.json'
         },
         "ordering": false,
-		"stateSave": true
+		"stateSave": true,
+		"lengthMenu": [8, 10, 25, 50, 100] // Define as opções, incluindo 8
     });
 
     // In your Javascript - inicializao select2	
@@ -169,7 +266,11 @@ HTML;
     });
 
 } );
-</script>  
+</script>
+
+
+
+ 
 
 <!-- Ajax função editar --> 
 <script type="text/javascript"> //tem que ser na mesma orderm do editar acima
@@ -190,6 +291,7 @@ HTML;
 
 	function editar(
 		acao,
+		data,
 		id, 
 		numeroParecer, 
 		ano, 
@@ -222,13 +324,15 @@ HTML;
 		parecerRelator
 	) {
 		limparCamposParecer('editar');
+		
 		// falta preencher documentosEnviados
 		$('#mensagem').text('');
     	$('#titulo_inserir').text('Editar Registro');
 		$('#id_dados').val(id);
+		$('#data').val(data);
 
 		// Dados Iniciais
-		$('#numeroParecer').val(numeroParecer);
+		$('#numeroParecer').val(numeroParecer)  ;
 		$('#ano').val(ano);
 		$('#numeroOficio').val(numeroOficio);
 		$('#item_field').val(itemOficio);
@@ -307,8 +411,9 @@ HTML;
 		observer_carga.observe(elemento_carga, { childList: true, subtree: true });
 
 		$('#mesesSelect').val(periodoProjeto);
+		
 		// dados coordenador
-		$('#nome_coordenador').val(nomeCoordenador);
+		setTimeout(() => {$('#nome_coordenador').val(nomeCoordenador).trigger('change') }, 400);
 		$('#sexoCoordenador').val(sexoCoordenador);
 
 		atualizarOpcoesTitulacaoCoordenador();
@@ -320,6 +425,8 @@ HTML;
 			$('#possui-outro-sim').prop('checked', true); 
 			outroCordenador();
 			
+			setTimeout(() => { $('#nomeOutroCoordenador').val(nomeViceCoordenador).trigger('change')}, 400);
+
 			$('#nomeOutroCoordenador').val(nomeViceCoordenador);
 			$('#sexoOutroCoordenador').val(sexoViceCoordenador);
 			atualizarOpcoesTitulacaoOutroCoordenador();
@@ -367,7 +474,7 @@ HTML;
 		}
 
 		var ids_final = $('#ids').val();
-		if(ids_final == ""){
+		if (ids_final == "" || nivelUsuario !== 'Administrador') {//eu Alteria aquiiiiiiiiiiiiii
 			$('#btn-deletar').hide(); //não exibe o botão pois a variavel esta vazia
 		}else{
 			$('#btn-deletar').show(); // exibe o botão pois a variavel não esta vazia
@@ -431,7 +538,7 @@ HTML;
 		$('#tipo-nao').prop('checked', false);
 		$('#mesesSelect').val('3 (Três) meses');
 		// dados coordenador
-		$('#nome_coordenador').val('');
+		$('#nome_coordenador').val('');		
 		$('#sexoCoordenador').val('');
 		$('#faculdadeCoordenador').val('');
 		$('#titulacaoCoordenador').val('');
@@ -536,6 +643,21 @@ HTML;
 		dados.dataAtual = "";
 		dados.elementosCargaHoraria = [];
 		inputCount = 1;
+
+		$('input[name^="requisito_a_pesquisa"]:checked, input[name^="requisito_b_pesquisa"]:checked, input[name^="requisito_c_pesquisa"]:checked, input[name^="requisito_d_pesquisa"]:checked, input[name^="requisito_e_pesquisa"]:checked').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('.contadorPesquisa').text(0);
+
+		$('input[name^="requisito_a_extensao"]:checked, input[name^="requisito_b_extensao"]:checked, input[name^="requisito_c_extensao"]:checked, input[name^="requisito_d_extensao"]:checked').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('.contadorExtensao').text(0);
+
+		$('input[name^="requisito_a"]:checked, input[name^="requisito_b"]:checked, input[name^="requisito_c"]:checked, input[name^="requisito_d"]:checked, input[name^="requisito_e"]:checked, input[name^="requisito_f"]:checked').each(function() {
+			$(this).prop('checked', false);
+		});
+		$('.contadorEnsino').text(0);
 	}
 	
 	function limparCampos(){
@@ -562,3 +684,4 @@ HTML;
     	$('#btn-deletar').hide();	
 	}
 </script>
+
