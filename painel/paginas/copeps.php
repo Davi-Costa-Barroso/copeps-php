@@ -82,9 +82,36 @@ if (@$copeps == 'ocultar') {
 
 
 
+<style type="text/css">
+.icon-container:hover .icon-salvar {
+    font-size: 2em; /* Aumenta o tamanho do ícone ao passar o mouse na aba */
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s ease; /* Suave transição */
+}
+
+.icon-salvar {
+    font-size: 1.2em; /* Tamanho normal */
+    transition: font-size 0.3s ease; /* Suave transição para o tamanho */
+}
+</style>
+
 
 
 	
+<style type="text/css">
+	.custom-btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+}
+
+</style>
+
 
 <style type="text/css">
 	/* Ajusta o container da tabela */
@@ -121,6 +148,8 @@ if (@$copeps == 'ocultar') {
      z-index: 1000;
   }
 </style>
+
+
 
 <div class="table-container">
 
@@ -166,6 +195,16 @@ if (@$copeps == 'ocultar') {
 							</li>
 							<li class="nav-item">
 								<a class="nav-link" id="extra-tab" data-toggle="tab" href="#extra" role="tab" aria-controls="extra" aria-selected="false">Dados Relator</a>
+							</li>							
+							<li class="navbar" style="display: flex; align-items: center; justify-content: flex-start; margin-left: 120px;">
+							    <button type="button" onclick="salvarParecer('atualizar')" class="btn btn-dark btn-lg icon-container" title="Salvar">
+							        <span class="fa fa-floppy-o icon-salvar"></span>
+							    </button>
+							</li>
+
+							<li class="navbar" style="display: flex; align-items: center; justify-content: flex-start; margin-left: 10px;">
+							    <button type="submit" id="baixarParecer" name="baixarParecer" class="btn btn-dark btn-lg icon-container" title="Download"><span class="fa fa-download icon-salvar"></button>
+									
 							</li>
 						</ul>
 					</small>
